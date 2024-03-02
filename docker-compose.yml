@@ -1,0 +1,84 @@
+# docker-compose.yml
+
+version: "3.8" # Docker Composeファイルのバージョン
+services:      # アプリケーションを構成するサービス（コンテナ）を定義
+  db:          # データベースのサービス名 
+    image: mysql:8.2.0 # コンテナのベースとなる使用するイメージ名を定義
+                        # ただし「mysql:8.2.0 」の記載はDocker Hub上で公開されてる公式イメージを使用することを意味してる
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+    # Commandオプション：Docker Composeファイル内でサービスのコンテナが実行される際に、デフォルトのコマンドを上書きするために使用
+    # 　　　　　　　　　　コンテナ起動時に特定のコマンドを実行
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: airapp_db # コンテナに任意の名称をつける
+    ports:
+      - "3306:3306" #ポートマッピング→"ホストポート:コンテナポート"　
+                    # ホストポート: 外部からアクセスする際に使用するポート
+                    # コンテナポート: コンテナ内のアプリケーションがリッスンしているポート
+    volumes:
+      - db-data:/var/lib/mysql
+    # volumesについて→ホストマシンとDockerコンテナ間でディレクトリやファイルを共有するために使用（Dockerで編集した内容がリンクするようにする）
+    # 永続データの管理やアプリケーションのコードをコンテナに簡単に提供することが可能
+    # ボリュームマウントの構文「- ホストのパス:コンテナのパス」
+                          # ホストのパス: ホストマシン上の共有したいファイルやディレクトリのパス。相対パスまたは絶対パスで指定可能
+                          # コンテナのパス: マウント先のコンテナ内のパス。
+    # ※db-dataディレクトリはホストマシンには最初から存在しないので、Docker Composeが自動的に作成する
+
+  backend:
+    # コンテナに疑似TTY（仮想端末）を割り当てることを指示
+    # コンテナがバックグラウンドで実行される際に標準入力を開いた状態に保つために使用
+    tty: true
+    build: # Dockerfileのあるディレクトリパスを記載
+      # context: Dockerイメージのビルドコンテキスト。
+      # 　　　　　　Dockerデーモンに送られるディレクトリのパスで、基本的にDockerfileが参照するすべてのファイルを含むルートディレクトリ
+      context: ./backend
+      # dockerfile: ビルドに使用するDockerfileの名前とパスを指定。contextで指定されたディレクトリを基点とした相対パスで指定する
+      dockerfile: Dockerfile
+    command: rails server -b 0.0.0.0 # railsサーバの立ち上げ。どこからのネットワークのアクセスも許可する
+    image: airapp_backend_image # ./backend/Dockerfileを使用してビルドされるイメージの名称を定義
+    environment: # 環境変数の定義「- 変数名＝値」または辞書形式「キー: 値」（別途.envが必要）の形で定義
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST} # Docker Compose内のdatabaseの項のservices名を使用
+    container_name: airapp_backend
+    volumes:
+      - ./backend:/airapp
+    ports:
+      - "3000:3000"
+    depends_on: # 依存関係の設定→dbのサービスが起動してからbackendのサービスを起動するように設定している
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    image: airapp_frontend_image
+    container_name: airapp_frontend
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules # node_modulesをボリュームにマウントしホストマシンのnode_modulesをコンテナ内にマウントすることを防ぐ
+                                  # これによりホストのnode_modulesがコンテナのものと衝突することなく、依存関係がコンテナ内で完全に管理される
+    command: "yarn dev" # YarnはjavaScriptの依存関係管理ツールで、プロジェクトのパッケージインストールやスクリプトの実行などを行う
+    ports:
+      - "8000:3000"
+
+  # commons_ui:
+  #   build:
+  #     context: ./commons-ui/
+  #     dockerfile: Dockerfile.dev
+  #   image: yakushiru_commons_ui_image
+  #   container_name: yakushiru_commons_ui
+  #   volumes:
+  #     - ./commons-ui:/usr/src/app
+  #   command: "yarn start"
+  #   ports:
+  #     - "8080:3000"
+  #   tty: true
+
+volumes:
+  db-data:
