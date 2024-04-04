@@ -2,7 +2,7 @@
 // 空港検索用マップコンポーネント
 //----------------------------------------------------------------
 import React, { useRef } from 'react';
-import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
 import { useMap } from '../contexts/MapContext';
 
 // スタイルの定義
@@ -29,9 +29,6 @@ const inputStyle = {
   zIndex: 1000 // 前面に表示するためにz-indexを高く設定
 };
 
-// Autocompleteコンポーネントでplacesライブラリを利用
-const libraries = ['places']; 
-
 // マップの選択地情報（初期値）
 const initializedSelectedPlaceInfo = {
   center: { lat: 38.0, lng: 137.0 },
@@ -50,7 +47,7 @@ function Map() {
   // 検索結果でマップの表示情報を更新する関数
   const onPlaceSelected = (place) => { 
     // 選択地が空港か
-    if (place.geometry && place.types && place.types.includes("airport"))
+    if (place && place.geometry && place.types && place.types.includes("airport"))
     {
       // 日本国内であるか
       const isJapan = place.address_components.some(component =>
@@ -81,10 +78,7 @@ function Map() {
   };  
 
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-      libraries={libraries}
-    >
+    <div>
       <Autocomplete
         onLoad={(autocomplete) => {
           autocompleteRef.current = autocomplete; // onLoad で autocomplete オブジェクトを ref に保存
@@ -116,7 +110,7 @@ function Map() {
           </InfoWindow>
         )}
       </GoogleMap>
-    </LoadScript>
+    </div>
   );
 }
 
