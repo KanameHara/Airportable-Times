@@ -10,14 +10,15 @@ const theme = extendTheme({
 })
 
   // Autocompleteコンポーネントでplacesライブラリを利用
-  const libraries = ['places']; 
+  // const libraries = ['places']; 
+  const libraries: ("places" | "geometry")[] = ["places"];
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <MapProvider>
       <ChakraProvider theme={theme}>
       <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}
         libraries={libraries}
       >
         <Component {...pageProps} />

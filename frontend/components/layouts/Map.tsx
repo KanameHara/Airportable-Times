@@ -1,91 +1,82 @@
 //----------------------------------------------------------------
 // 空港検索用マップコンポーネント
 //----------------------------------------------------------------
-import React, { useRef } from 'react';
+import React, { useRef, FC } from 'react';
 import { GoogleMap, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
 import { useMap } from '../contexts/MapContext';
+import { SelectedPlaceInfoType } from '@/types/SelectedPlaceInfoType';
+import { initializedSelectedPlaceInfo } from '@/constants/InitializedSelectedPlaceInfo';
 
 // スタイルの定義
-const containerStyle = {
+const containerStyle: React.CSSProperties  = {
   width: '800px',
   height: '600px'
 };
 
-const inputStyle = {
-  boxSizing: `border-box`,
-  border: `1px solid transparent`,
-  width: `400px`,
-  height: `40px`,
-  padding: `0 12px`,
-  borderRadius: `5px`,
-  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-  fontSize: `14px`,
-  outline: `none`,
-  textOverflow: `ellipses`,
-  position: "absolute",
-  top: "355px",
-  left: "35%",
-  marginLeft: "-200px", // 400pxの幅の半分
-  zIndex: 1000 // 前面に表示するためにz-indexを高く設定
+const inputStyle: React.CSSProperties = {
+  boxSizing: 'border-box',
+  border: '1px solid transparent',
+  width: '400px',
+  height: '40px',
+  padding: '0 12px',
+  borderRadius: '5px',
+  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
+  fontSize: '14px',
+  outline: 'none',
+  textOverflow: 'ellipsis',
+  position: 'absolute',
+  top: '355px',
+  left: '35%',
+  marginLeft: '-200px',
+  zIndex: 1000, // 全面に表示するためにz-indexを高く設定
 };
 
-// マップの選択地情報（初期値）
-const initializedSelectedPlaceInfo = {
-  center: { lat: 38.0, lng: 137.0 },
-  zoom: 5,
-  markerPosition: null,
-  selectedPlace: null
-};
+const Map: FC = () => {
 
-function Map() {
-  // autocomplete オブジェクトを保持するための ref
-  const autocompleteRef = useRef(null); 
-  // マップ情報管理コンテキストから選択地情報と更新関数を取得
+  // autocomplete オブジェクトを保持するためのref
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  // マップの選択地情報を取得
   const { selectedPlaceInfo, updateSelectedPlaceInfo } = useMap();
-  
 
-  // 検索結果でマップの表示情報を更新する関数
-  const onPlaceSelected = (place) => { 
+  // 検索結果によりマップの選択地情報を更新する関数
+  const onPlaceSelected = (place: google.maps.places.PlaceResult | null) => {
 
     // 場所を選択しているか
-    if (place)
-    {
+    if (place) {
       // 選択地が空港か
-      if (place.geometry && place.types && place.types.includes("airport"))
-      {
-        // 日本国内であるか
-        const isJapan = place.address_components.some(component =>
+      if (place.geometry && place.types && place.types.includes("airport")) {
+        // 選択地が日本国内か
+        const isJapan = place.address_components?.some(component =>
           component.types.includes("country") && component.short_name === "JP"
-        );
-
-        // 選択地が日本国内の空港であれば選択地の情報を保持
-        if (isJapan)
-        {
-          // 選択地情報をコンテキストに設定
-          const newSelectedPlaceInfo = {
-            center: place.geometry.location,
+        ) || false;
+  
+        // 日本国内なら選択地情報を更新
+        if (isJapan && place.geometry.location) {
+          const newSelectedPlaceInfo: SelectedPlaceInfoType = {
+            center: place.geometry.location.toJSON(), // toJSON()で経度緯度情報をJSON形式に変換
             zoom: 14,
-            markerPosition: place.geometry.location,
+            markerPosition: place.geometry.location.toJSON(),
             selectedPlace: place,
           };
           updateSelectedPlaceInfo(newSelectedPlaceInfo);
         }
-        else  // 選択地が日本国内でない場合
-        {
+        // 日本国内ではない場合
+        else {
           alert("日本国内の空港を選択してください。");
         }
       }
-      else  // 選択地が空港でない場合
-      {
+      // 選択地が空港でない場合
+      else {
         alert("選択された場所は空港ではありません。");
       }
     }
-  };  
+  };
 
   return (
     <div>
       <Autocomplete
-        onLoad={(autocomplete) => {
+        onLoad={(autocomplete: google.maps.places.Autocomplete) => {
           autocompleteRef.current = autocomplete; // onLoad で autocomplete オブジェクトを ref に保存
         }}
         onPlaceChanged={() => {
@@ -106,9 +97,7 @@ function Map() {
         {selectedPlaceInfo.selectedPlace && (
           <InfoWindow
             position={selectedPlaceInfo.markerPosition}
-            onCloseClick={() => {
-              updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
-            }}>
+            onCloseClick={() => updateSelectedPlaceInfo(initializedSelectedPlaceInfo)}>
             <div>
               <h3>{selectedPlaceInfo.selectedPlace.name}</h3>
             </div>

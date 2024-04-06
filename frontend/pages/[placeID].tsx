@@ -8,11 +8,12 @@ import { GoogleMap, Marker } from '@react-google-maps/api';
 import Head from 'next/head';
 import Header from '../components/layouts/Header';
 import Image from 'next/image';
+import React, { FC } from 'react';
 
-const AirportTop = () => {
+const AirportTop: FC = () => {
 	
 	// スタイルの定義
-	const containerStyle = {
+	const containerStyle: React.CSSProperties = {
 		width: '800px',
 		height: '350px',
 		marginLeft: '40px',
@@ -25,10 +26,9 @@ const AirportTop = () => {
 	const handleBackButtonClick = () => { router.push('/home'); };	// home画面に遷移する
 
 	// 選択地なしの場合は何も表示しない
-	if ((selectedPlaceInfo.markerPosition === null) || (selectedPlaceInfo.selectedPlace === null))
-	{ 
-		return ("Error: No selected place.");
-	}
+	if (!selectedPlaceInfo.markerPosition || !selectedPlaceInfo.selectedPlace) {
+    return <div>Error: No selected place.</div>;
+  }
 
 	return (
 		<div>

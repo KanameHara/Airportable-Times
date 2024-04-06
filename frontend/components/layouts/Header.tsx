@@ -1,15 +1,16 @@
 //----------------------------------------------------------------
 // 全ページのヘッダーコンポーネント
 //----------------------------------------------------------------
-import { Box, Flex, Button } from '@chakra-ui/react'
+import { Box, Flex, Button } from '@chakra-ui/react';
 import Image from 'next/image';
+import React, { FC } from 'react';
 
 // スタイルの定義
-const containerStyle = {
+const containerStyle: React.CSSProperties = {
   position: 'relative'
 };
 
-const userNameStyle = {
+const userNameStyle: React.CSSProperties = {
   position: 'absolute',
   fontSize: '35px',
   color: 'white',
@@ -17,18 +18,22 @@ const userNameStyle = {
   left: '85%', // 左から85%の位置に配置
 };
 
-const buttonStyle = {
-  bgColor: "#BEE3F8",
-  size: 'lg',
+const buttonStyle: React.CSSProperties = {
   position: 'absolute',
   bottom: '1px', // 画像の下から1pxの位置に配置
   left: '75%', // 左から75%の位置に配置
 };
 
+// Propsの型定義
+interface HeaderProps {
+  userName: string;
+  showButtonFlag: boolean;
+}
+
 // <引数>
 //  useName:ユーザー名
 //  showButtonFlag:マイページのボタンコンポーネント表示フラグ(TRUE：表示，FALSE：非表示)
-function Header({userName, showButtonFlag}) {
+const Header: FC<HeaderProps> = ({ userName, showButtonFlag }) => {
   return (
     <div style={containerStyle}>
       <Flex>
@@ -43,9 +48,9 @@ function Header({userName, showButtonFlag}) {
         <div>
           <div style={userNameStyle}>{userName}</div>
           <div style={buttonStyle}>
-            <Button>HOME</Button>
-            <Button margin="15px">マイページ</Button>
-            <Button>ログアウト</Button>
+            <Button colorScheme="blue">HOME</Button>
+            <Button margin="15px" colorScheme="blue">マイページ</Button>
+            <Button colorScheme="blue">ログアウト</Button>
           </div>
         </div>
       )}
@@ -54,5 +59,3 @@ function Header({userName, showButtonFlag}) {
 }
 
 export default Header;
-
-
