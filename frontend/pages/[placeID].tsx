@@ -8,7 +8,9 @@ import { GoogleMap, Marker } from '@react-google-maps/api';
 import Head from 'next/head';
 import Header from '../components/layouts/Header';
 import Image from 'next/image';
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
+import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+
 
 const AirportTop: FC = () => {
 	
@@ -23,8 +25,18 @@ const AirportTop: FC = () => {
   const router = useRouter();
 	const { placeID } = router.query;
 	const { selectedPlaceInfo } = useMap();
-	const handleBackButtonClick = () => { router.push('/home'); };	// home画面に遷移する
+	const { updateSelectedPlaceInfo } = useMap();
+	const handleBackButtonClick = useCallback(() => {
+    // const initializedState = {
+    //   center: { lat: 38.0, lng: 137.0 },
+    //   zoom: 5,
+    //   markerPosition: null,
+    //   selectedPlace: null,
+    // };
 
+    updateSelectedPlaceInfo(initializedSelectedPlaceInfo); // ここでマップの状態を更新
+    router.push('/home'); // 初期化後にホーム画面に遷移
+  }, [updateSelectedPlaceInfo, router]);
 	// 選択地なしの場合は何も表示しない
 	if (!selectedPlaceInfo.markerPosition || !selectedPlaceInfo.selectedPlace) {
     return <div>Error: No selected place.</div>;
