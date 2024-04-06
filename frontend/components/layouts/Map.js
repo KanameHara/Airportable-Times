@@ -46,34 +46,39 @@ function Map() {
 
   // 検索結果でマップの表示情報を更新する関数
   const onPlaceSelected = (place) => { 
-    // 選択地が空港か
-    if (place && place.geometry && place.types && place.types.includes("airport"))
-    {
-      // 日本国内であるか
-      const isJapan = place.address_components.some(component =>
-        component.types.includes("country") && component.short_name === "JP"
-      );
 
-      // 選択地が日本国内の空港であれば選択地の情報を保持
-      if (isJapan)
-      {
-        // 選択地情報をコンテキストに設定
-        const newSelectedPlaceInfo = {
-          center: place.geometry.location,
-          zoom: 14,
-          markerPosition: place.geometry.location,
-          selectedPlace: place,
-        };
-        updateSelectedPlaceInfo(newSelectedPlaceInfo);
-      }
-      else  // 選択地が日本国内でない場合
-      {
-        alert("日本国内の空港を選択してください。");
-      }
-    }
-    else  // 選択地が空港でない場合
+    // 場所を選択しているか
+    if (place)
     {
-      alert("選択された場所は空港ではありません。");
+      // 選択地が空港か
+      if (place.geometry && place.types && place.types.includes("airport"))
+      {
+        // 日本国内であるか
+        const isJapan = place.address_components.some(component =>
+          component.types.includes("country") && component.short_name === "JP"
+        );
+
+        // 選択地が日本国内の空港であれば選択地の情報を保持
+        if (isJapan)
+        {
+          // 選択地情報をコンテキストに設定
+          const newSelectedPlaceInfo = {
+            center: place.geometry.location,
+            zoom: 14,
+            markerPosition: place.geometry.location,
+            selectedPlace: place,
+          };
+          updateSelectedPlaceInfo(newSelectedPlaceInfo);
+        }
+        else  // 選択地が日本国内でない場合
+        {
+          alert("日本国内の空港を選択してください。");
+        }
+      }
+      else  // 選択地が空港でない場合
+      {
+        alert("選択された場所は空港ではありません。");
+      }
     }
   };  
 
