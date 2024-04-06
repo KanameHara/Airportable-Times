@@ -2,11 +2,18 @@
 // 入力フォームコンポーネント
 //----------------------------------------------------------------
 import { Input } from '@chakra-ui/react';
+import { FC } from 'react';
+
+// Propsの型定義
+interface InputFormProps {
+  text: string;
+  placeholder: string;
+}
 
 // <引数>
 //  text:入力フォームの説明文
 //  placeholder:入力フォームのプレースホルダ
-function InputForm({text, placeholder}) {
+const InputForm: FC<InputFormProps> = ({ text, placeholder }) => {
   return (
     <div>
       <p style={{marginBottom: '10px'}}>{text}</p>
@@ -14,4 +21,5 @@ function InputForm({text, placeholder}) {
     </div>
   );
 }
+
 export default InputForm;
