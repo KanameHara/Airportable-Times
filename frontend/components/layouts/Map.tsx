@@ -96,7 +96,7 @@ const Map: FC = () => {
         {selectedPlaceInfo.markerPosition && <Marker position={selectedPlaceInfo.markerPosition} />}
         {selectedPlaceInfo.selectedPlace && (
           <InfoWindow
-            position={selectedPlaceInfo.markerPosition}
+            position={selectedPlaceInfo.markerPosition || undefined}
             onCloseClick={() => updateSelectedPlaceInfo(initializedSelectedPlaceInfo)}>
             <div>
               <h3>{selectedPlaceInfo.selectedPlace.name}</h3>
