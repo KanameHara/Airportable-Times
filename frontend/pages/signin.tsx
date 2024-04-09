@@ -4,14 +4,14 @@ import React, { FC } from 'react';
 import { Flex, Button, Text, Input } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
-const Login: FC = () => {
+const Signin: FC = () => {
 
 	// ページ切り替えのためのrouter
   const router = useRouter();
 
 	// 「新規登録はこちら」ボタンのハンドラ
 	const handleRegisterButtonClick = () => {
-		router.push('/createAccount');
+		router.push('/signup');
 	};
 
 	return (
@@ -40,4 +40,4 @@ const Login: FC = () => {
 	);
 }
 
-export default Login;
+export default Signin;
