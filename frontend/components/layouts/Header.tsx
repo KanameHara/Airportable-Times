@@ -4,6 +4,8 @@
 import { Box, Flex, Button } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { FC } from 'react';
+import { logout } from '@/lib/firebase/api/auth';
+import { useRouter } from 'next/router';
 
 // スタイルの定義
 const containerStyle: React.CSSProperties = {
@@ -34,6 +36,21 @@ interface HeaderProps {
 //  useName:ユーザー名
 //  showButtonFlag:マイページのボタンコンポーネント表示フラグ(TRUE：表示，FALSE：非表示)
 const Header: FC<HeaderProps> = ({ userName, showButtonFlag }) => {
+
+  const router = useRouter();
+
+  // ログアウトボタンのハンドラ
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result) {
+      console.log('ログアウト成功');
+      router.push('/signin'); // ログインページにリダイレクト
+    } else {
+      console.error('ログアウト失敗');
+      alert('ログアウトに失敗しました');
+    }
+  };
+
   return (
     <div style={containerStyle}>
       <Flex>
@@ -50,7 +67,7 @@ const Header: FC<HeaderProps> = ({ userName, showButtonFlag }) => {
           <div style={buttonStyle}>
             <Button colorScheme="blue">HOME</Button>
             <Button margin="15px" colorScheme="blue">マイページ</Button>
-            <Button colorScheme="blue">ログアウト</Button>
+            <Button colorScheme="blue" onClick={handleLogout}>ログアウト</Button>
           </div>
         </div>
       )}
