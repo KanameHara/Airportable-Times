@@ -37,11 +37,19 @@ type formInputs = {
  */
 export default function SignUpScreen() {
 
-  const { handleSubmit, register } = useForm<formInputs>()
-  const [password, setPassword] = useState(false)
+	// 入力フォームのデータ管理　
+	const { handleSubmit, register } = useForm<formInputs>()	// registerで要入力のフォームを登録
+	
+	// パスワードの表示/非表示管理
+	const [password, setPassword] = useState(false)
+	
+	// パスワード(確認用)の表示/非表示管理
 	const [confirm, setConfirm] = useState(false)
 	const router = useRouter();
 
+	// 新規登録ボタンハンドラ
+	// signUpWithEmailはfirebaseの応答を待つためhandleSubmitは非同期処理となっている
+	// thenメソッドでログイン成功/失敗時の結果をresに格納
 	const onSubmit = handleSubmit(async (data) => {
 		signUpWithEmail({ email: data.email, password: data.password }).then(
       (res: boolean) => {
@@ -56,6 +64,7 @@ export default function SignUpScreen() {
     )
 	})
 
+	// パスワード表示/非表示ボタンハンドラ
   const passwordClick = () => setPassword(!password)
   const confirmClick = () => setConfirm(!confirm)
 
