@@ -72,7 +72,7 @@ export default function SignInScreen() {
 			<Head>
 				<title>ログイン</title>
 			</Head>
-			<Header userName="userName" showButtonFlag={false} />
+			<Header showButtonFlag={false} />
 			<Flex
         flexDirection='column'
         width='100%'

@@ -123,7 +123,7 @@ export default function SignUpScreen() {
 			<Head>
 				<title>新規登録</title>
 			</Head>
-			<Header userName="userName" showButtonFlag={false} />
+			<Header showButtonFlag={false} />
 			<Flex height='100vh' justifyContent='center' alignItems='center'>
         <VStack spacing='10'>
           <Heading>Airportable Timesにようこそ！</Heading>

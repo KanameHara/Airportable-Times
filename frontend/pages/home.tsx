@@ -44,7 +44,7 @@ export default function Home() {
       <Head>
         <title>空港検索</title>
       </Head>
-      <Header userName="userName" showButtonFlag={true} />
+      <Header showButtonFlag={true} />
       <div style={{ marginTop: '80px', marginBottom: '40px', marginLeft: '100px' }}>日本各地の空港を検索できます。</div>
       <Flex>
         <div style={{ marginLeft: '100px', marginBottom: '50px' }}><Map /></div>

@@ -47,7 +47,7 @@ const AirportTop: FC = () => {
 			<Head>
 				<title>{selectedPlaceInfo.selectedPlace.name}</title>
 			</Head>
-			<Header userName="userName" showButtonFlag={true} />
+			<Header showButtonFlag={true} />
 			<h1 style={{ fontSize: '25px', marginTop: '20px', marginBottom: '20px', marginLeft: '20px' }}>
 				【{selectedPlaceInfo.selectedPlace.name}】
 			</h1>

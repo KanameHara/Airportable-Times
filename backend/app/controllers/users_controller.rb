@@ -19,4 +19,17 @@ class UsersController < ApplicationController
       render json: { success: false, message: user.errors.full_messages.join(", ") }
     end
   end
+
+  # mailアドレスからユーザー情報を取得
+  def show_by_email
+    # 動作確認用のため残す Rails.logger.debug "Requested email: #{params[:email]}"
+    user = User.find_by(email: params[:email])
+    if user
+      # 動作確認用のため残す Rails.logger.debug "User found: #{user.inspect}"
+      render json: { id: user.id, email: user.email, userName: user.name }
+    else
+      # 動作確認用のため残す Rails.logger.debug "User not found for email: #{params[:email]}"
+      render json: { error: 'User not found' }, status: :not_found
+    end
+  end
 end
