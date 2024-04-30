@@ -5,6 +5,7 @@
 import NextLink from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import axios from 'axios';
 
 import {
   Button,
@@ -56,24 +57,52 @@ export default function SignUpScreen() {
 
 	const router = useRouter();
 
-	const toast = useToast();
+  const toast = useToast();
 
 	// 新規登録ボタンハンドラ
 	// signUpWithEmailはfirebaseの応答を待つためhandleSubmitは非同期処理となっている
 	// thenメソッドでログイン成功/失敗時の結果をresに格納
-	const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
+
 		await signUpWithEmail({
 			email: data.email,
 			password: data.password,
 		}).then((res: FirebaseResult) => {
 			if (res.isSuccess) {
-				toast({
-					title: res.message,
-					status: 'success',
-					duration: 2000,
-					isClosable: true,
-				})
-				router.push('/home'); // 新規登録後にホーム画面に遷移
+
+        // DBに登録するユーザー情報
+        const userData = {
+          email: data.email,
+          name: data.username,
+          password: data.password,
+        };
+        
+        // ユーザー情報をDBに登録する
+        // axios.post('http://localhost:3000/users', userData)
+        axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users`, userData)
+        .then((response) => {
+          // 登録成功時
+          toast({
+            title: '登録成功',
+            description: 'ユーザーの新規登録が完了しました。',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+          // 新規登録成功したのでホーム画面に遷移
+          router.push('/home');
+        })
+        .catch((error) => {
+          // エラーが発生した場合の処理
+          toast({
+            title: '登録失敗',
+            description: error.response.data.message, // エラーメッセージの表示
+            status: 'error',
+            duration: 2000,
+            isClosable: true,
+          });
+        });
+
 			} else {
 					toast({
 						title: res.message, 
@@ -250,3 +279,55 @@ export default function SignUpScreen() {
 		</div>
   )
 }
+
+/*
+// 新規登録ボタンハンドラ
+	// signUpWithEmailはfirebaseの応答を待つためhandleSubmitは非同期処理となっている
+	// thenメソッドでログイン成功/失敗時の結果をresに格納
+  const onSubmit = handleSubmit(async (data) => {
+
+    // DBに登録するユーザー情報
+    const userData = {
+      email: data.email,
+      name: data.username,
+      password: data.password,
+    };
+
+    await fetch('/api/users', {
+      // '/api/users'はユーザ情報を受け取るエンドポイント
+      method: 'POST', // 指定のURL(/api/users)にデータを送信するメソッド
+                      // Post→routes.rb→Userモデルのコントローラーファイルの流れでDBにデータを保存
+      // リクエストヘッダー：リクエストに関する追加情報をサーバーに伝えるためのキーと値のペアの集合
+      //  下記の場合は、送信するデータがJSON形式であることをサーバーに伝えている
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData), // 送信するデータをJSON形式に変換
+    }).then((response) => {
+      // レスポンスを処理　ここ何を処理すればいいんだろう？hara
+    });
+
+		await signUpWithEmail({
+			email: data.email,
+			password: data.password,
+		}).then((res: FirebaseResult) => {
+			if (res.isSuccess) {
+				toast({
+					title: res.message,
+					status: 'success',
+					duration: 2000,
+					isClosable: true,
+        })
+        // ここにユーザー情報のDBへの登録処理を配置する
+				router.push('/home'); // 新規登録後にホーム画面に遷移
+			} else {
+					toast({
+						title: res.message, 
+						status: 'error',
+						duration: 2000,
+						isClosable: true,
+					})
+			}
+		})
+	})
+*/
