@@ -27,9 +27,16 @@ export default function Home() {
 
   // 空港選択後のOKボタンのハンドラ
   const handleOkButtonClick = () => {
-    // 選択地のPlaceIDを取得
-    const placeID = selectedPlaceInfo.selectedPlace.place_id;
-    router.push(`/${placeID}`);
+    // placeIDを取得
+    const placeID = selectedPlaceInfo.selectedPlace?.place_id;
+    if (placeID) {
+      // 取得できたら各空港TOP画面に遷移
+      router.push(`/${placeID}`);
+    }
+    else
+    {
+      // 取得できないなら何もしない
+    }
   };
 
   return (
@@ -37,7 +44,7 @@ export default function Home() {
       <Head>
         <title>空港検索</title>
       </Head>
-      <Header userName="userName" showButtonFlag={true} />
+      <Header showButtonFlag={true} />
       <div style={{ marginTop: '80px', marginBottom: '40px', marginLeft: '100px' }}>日本各地の空港を検索できます。</div>
       <Flex>
         <div style={{ marginLeft: '100px', marginBottom: '50px' }}><Map /></div>
