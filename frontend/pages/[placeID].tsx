@@ -42,6 +42,13 @@ const AirportTop: FC = () => {
     return <div>Error: No selected place.</div>;
   }
 
+	// 投稿一覧ボタンクリック時のハンドラ
+	const handlePostListButtonClick = () => {
+		// 投稿一覧画面に遷移
+		const currentPath = router.asPath;
+		router.push(`${currentPath}/postlist`);
+	}
+
 	return (
 		<div>
 			<Head>
@@ -83,7 +90,7 @@ const AirportTop: FC = () => {
 							<Text fontSize="xl" fontWeight="bold">
                 確認することができます
               </Text>
-              <Button colorScheme="blue" mt={3}>
+							<Button colorScheme="blue" mt={3} onClick={handlePostListButtonClick}>
                 投稿一覧
               </Button>
             </Box>
