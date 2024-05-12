@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // 各空港投稿作成画面
 //----------------------------------------------------------------
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head"; 
 import Header from "../../components/layouts/Header";
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import ImageUploadForm from "@/components/layouts/ImageUploadForm";
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useMap } from '../../components/contexts/MapContext';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 import {
 	Text,
 	Flex,
@@ -38,11 +39,18 @@ export default function CreatePost() {
 	// 画像未選択時のエラーメッセージ
 	const [errMsgforImg, setErrMsgforImg] = useState<string | null>();	
 
-	// 投稿種別の初期化
-	const [selectedCategory, setSelectedCategory] = useState('航空機・風景');
+	// 投稿種別データの初期化
+	interface Category {
+		id: number;
+		name: string;
+	}
+	const [categories, setCategories] = useState<Category[]>([]);
+
+	// 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
+	const [selectedCategory, setSelectedCategory] = useState(1);
 	// 投稿種別選択時のハンドラ
-  const handleSelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleSelect = (categoryId: number) => {
+    setSelectedCategory(categoryId);
 	}
 
 	// 入力フォームのバリデーション
@@ -53,6 +61,21 @@ export default function CreatePost() {
 		[key: number]: string | null;
 	};
 	const [imageList, setImageList] = useState<ImageListType>({});
+
+	// 投稿種別データを取得
+	useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
 
 	// 画像選択時のハンドラ
 	const handleImageChange = (id: number, url: string | null) => {
@@ -110,13 +133,14 @@ export default function CreatePost() {
 				<Flex>
 					<Menu>
 						<MenuButton as={Button} mt={5} ml={70} rightIcon={<ChevronDownIcon />}>
-							{`${selectedCategory}`}
+							{categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'}
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => handleSelect('航空機・風景')}>航空機・風景</MenuItem>
-              <MenuItem onClick={() => handleSelect('グルメ・お土産')}>グルメ・お土産</MenuItem>
-              <MenuItem onClick={() => handleSelect('アクティビティ・イベント')}>アクティビティ・イベント</MenuItem>
-              <MenuItem onClick={() => handleSelect('その他')}>その他</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category.id} onClick={() => handleSelect(category.id)}>
+                  {category.name}
+                </MenuItem>
+              ))}
             </MenuList>
 					</Menu>
 				</Flex>

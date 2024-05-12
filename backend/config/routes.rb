@@ -8,6 +8,6 @@ Rails.application.routes.draw do
   end
 
   # Category（投稿種別）関連のエンドポイントを設定
-  resources :categories, only: [:show]
+  resources :categories, only: [:show, :index]
 
 end

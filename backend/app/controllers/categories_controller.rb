@@ -10,4 +10,10 @@ class CategoriesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Category not found" }, status: :not_found
   end
+
+  # カテゴリテーブルの全データを返す
+  def index
+    categories = Category.all
+    render json: categories
+  end
 end
