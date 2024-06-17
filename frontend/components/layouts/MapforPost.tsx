@@ -28,7 +28,12 @@ const inputStyle: React.CSSProperties = {
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定
 };
 
-const MapforPost: FC = () => {
+// propsの型定義
+interface MapforPostProps {
+  onSelectedPhotoPosition: (longitude: number, latitude: number) => void;
+}
+
+const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition }) => {
 
   // autocomplete オブジェクトを保持するためのref
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -36,39 +41,55 @@ const MapforPost: FC = () => {
   // 空港位置情報を取得
 	const { selectedPlaceInfo } = useMap();
 	
-	// 撮影位置情報の初期化
+	// 撮影位置情報の初期化(最初の画面表示時はユーザー選択中の空港の位置としておく)
   const [postPlaceInfo, setPostPlaceInfo] = useState(initializedSelectedPlaceInfo);
+
   // selectedPlaceInfo が変更されたときだけ postPlaceInfo を更新する
   useEffect(() => {
-    // 最初の画面表示時はユーザー選択中の空港の位置としておく
+
+    // ステートを更新
     setPostPlaceInfo(selectedPlaceInfo);
+
+    // 撮影位置情報を更新
+    onSelectedPhotoPosition(selectedPlaceInfo.center.lat, selectedPlaceInfo.center.lng);
   }, [selectedPlaceInfo]);
 
   // 撮影位置情報を更新する関数
   const onPlaceSelected = (place: google.maps.places.PlaceResult | null) => {
 
-		if (place?.geometry?.location) {
+    if (place?.geometry?.location)
+    {
 			const newPostPlaceInfo: SelectedPlaceInfoType = {
 				center: place.geometry.location.toJSON(), // toJSON()で経度緯度情報をJSON形式に変換
 				zoom: 14,
 				markerPosition: place.geometry.location.toJSON(),
 				selectedPlace: place,
-			};
-			setPostPlaceInfo(newPostPlaceInfo);
+      };
+      
+      // ステートを更新
+      setPostPlaceInfo(newPostPlaceInfo);
+
+      // 撮影位置情報を更新
+      onSelectedPhotoPosition(place.geometry.location.toJSON().lat, place.geometry.location.toJSON().lng);
 		}
   };
 
   // マップのクリック(撮影位置選択)時ハンドラ
   const handleMapClick = (event: google.maps.MapMouseEvent | null) => {
-    if (event) {
+
+    if (event)
+    {
       const lat = event.latLng?.lat();
       const lng = event.latLng?.lng();
-      if (lat && lng) {
+
+      if (lat && lng)
+      {
         const newPostPlaceInfo: SelectedPlaceInfoType = {
           ...postPlaceInfo,
           center: { lat, lng },
           markerPosition: { lat, lng }
         };
+        
         setPostPlaceInfo(newPostPlaceInfo);
       }
     }

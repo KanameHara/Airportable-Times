@@ -53,6 +53,8 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
+  # 環境変数からasset_hostを設定(画像ファイル保存用)
+  config.asset_host = ENV['NEXT_PUBLIC_RAILS_SERVER_URL_DEV']
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

@@ -3,6 +3,9 @@
 #   投稿種別データを管理するcategoryモデルを定義する
 # ----------------------------------------------------------------
 class Category < ApplicationRecord
+	# 関係を設定→「一つのカテゴリ：複数の投稿」
+	has_many :posts
+	
 	# バリデーション(DBに正しい値が保存されるための検証)の設定
   validates :name, presence: true
 end

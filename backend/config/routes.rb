@@ -10,4 +10,7 @@ Rails.application.routes.draw do
   # Category（投稿種別）関連のエンドポイントを設定
   resources :categories, only: [:show, :index]
 
+  # Post（投稿）関連のエンドポイントを設定
+  post 'posts', to: 'posts#create'
+
 end
