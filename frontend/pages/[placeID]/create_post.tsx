@@ -133,7 +133,7 @@ export default function CreatePost() {
 	const handleCancelButtonClick = () => {
 
 		// 各空港投稿一覧に戻る
-		router.push(`/${placeID}/postlist`);
+		router.push(`/${placeID}/post_list`);
 	}
 
 	// マップで撮影位置選択時のハンドラ
@@ -201,7 +201,7 @@ export default function CreatePost() {
 			console.log('投稿された画像の完全なURL:', fullImageUrls);
 			
 			// 登録成功なら各空港投稿一覧に戻る
-			router.push(`/${placeID}/postlist`);
+			router.push(`/${placeID}/post_list`);
 
 		} catch (error) {
 			console.error('axios.postのエラー内容', error);

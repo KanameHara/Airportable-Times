@@ -46,7 +46,7 @@ const AirportTop: FC = () => {
 	const handlePostListButtonClick = () => {
 		// 投稿一覧画面に遷移
 		const currentPath = router.asPath;
-		router.push(`${currentPath}/postlist`);
+		router.push(`${currentPath}/post_list`);
 	}
 
 	return (
