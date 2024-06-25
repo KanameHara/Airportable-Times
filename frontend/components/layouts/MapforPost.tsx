@@ -24,7 +24,7 @@ const inputStyle: React.CSSProperties = {
   fontSize: '14px',
   outline: 'none',
   textOverflow: 'ellipsis',
-  marginLeft: '70px',
+  marginLeft: '10px',
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定
 };
 
@@ -110,7 +110,7 @@ const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition }) => {
       >
         <input type="text" style={inputStyle} />
       </Autocomplete>
-      <div style={{ marginTop: '15px', marginLeft: '70px', marginBottom: '50px' }}>
+      <div style={{ marginTop: '15px', marginLeft: '10px', marginBottom: '50px' }}>
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={postPlaceInfo.center}
