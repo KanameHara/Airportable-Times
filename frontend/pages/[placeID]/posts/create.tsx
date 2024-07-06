@@ -3,12 +3,12 @@
 //----------------------------------------------------------------
 import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head"; 
-import Header from "../../components/layouts/Header";
+import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
 import MapforPost from "@/components/layouts/MapforPost";
 import ImageUploadForm from "@/components/layouts/ImageUploadForm";
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { useMap } from '../../components/contexts/MapContext';
+import { useMap } from "@/components/contexts/MapContext";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useAuth } from "@/components/contexts/AuthContext";
@@ -31,7 +31,7 @@ import {
   MenuItem,
 } from '@chakra-ui/react';
 
-export default function CreatePost() { 
+export default function AirportPostCreate() { 
 
   // URLからplaceIDを取得
   const router = useRouter();
@@ -109,6 +109,7 @@ export default function CreatePost() {
   
   useEffect(() => {
     const getUserInfo = async () => {
+
       // メールアドレスからIDを検索する
       const info = await fetchUserInfoByEmail(currentUser?.email);
       setUserInfo(info);
@@ -121,6 +122,7 @@ export default function CreatePost() {
 
   // 画像選択時のハンドラ
   const handleImageChange = useCallback((id: number, url: string | null, file: File | null) => {
+
     // プレビュー画像を設定
     setPreviewImageList(prev => ({ ...prev, [id]: url }));
 
@@ -130,8 +132,9 @@ export default function CreatePost() {
   
   // 投稿作成キャンセルボタン押下時のハンドラ
   const handleCancelButtonClick = () => {
+
     // 各空港投稿一覧に戻る
-    router.push(`/${placeID}/post_list`);
+    router.push(`/${placeID}/posts`);
   }
 
   // マップで撮影位置選択時のハンドラ
@@ -141,6 +144,7 @@ export default function CreatePost() {
 
   // 投稿ボタン押下時のハンドラ
   const onSubmit = async (data: FormValues) => { 
+    
     // 投稿写真の選択状態を取得
     let isImagesSelected = false;
     for (let i = 1; i <= 5; i++) { 
@@ -192,7 +196,7 @@ export default function CreatePost() {
       console.log('投稿された画像の完全なURL:', fullImageUrls);
       
       // 登録成功なら各空港投稿一覧に戻る
-      router.push(`/${placeID}/post_list`);
+      router.push(`/${placeID}/posts`);
 
     } catch (error) {
       console.error('axios.postのエラー内容', error);

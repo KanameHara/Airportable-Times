@@ -23,11 +23,18 @@ const AirportTop: FC = () => {
 
   const router = useRouter();
 	const { placeID } = router.query;
-	const { selectedPlaceInfo } = useMap();
-	const { updateSelectedPlaceInfo } = useMap();
+
+	// マップの選択地情報を取得
+	const { selectedPlaceInfo, updateSelectedPlaceInfo } = useMap();
+
+	// 戻るボタンクリック時のハンドラ
 	const handleBackButtonClick = useCallback(() => {
-    updateSelectedPlaceInfo(initializedSelectedPlaceInfo); // ここでマップの状態を更新
-    router.push('/home'); // 初期化後にホーム画面に遷移
+
+		// ここでマップの選択状態を初期化
+    updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
+    
+		// 初期化後にホーム画面に遷移
+		router.push('/home');
   }, [updateSelectedPlaceInfo, router]);
   
 	// 選択地なしの場合は何も表示しない
@@ -37,9 +44,10 @@ const AirportTop: FC = () => {
 
 	// 投稿一覧ボタンクリック時のハンドラ
 	const handlePostListButtonClick = () => {
+
 		// 投稿一覧画面に遷移
 		const currentPath = router.asPath;
-		router.push(`${currentPath}/post_list`);
+		router.push(`${currentPath}/posts`);
 	}
 
 	return (
