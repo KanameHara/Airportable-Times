@@ -56,6 +56,20 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
     }
   }, [currentUser?.email]);  // currentUser.email が変更されたときに再実行
 
+  // HOMEボタンのハンドラ
+  const handleHomeButtonClick = () => {
+    
+    // HOME画面に遷移
+    router.push('/home');
+  };
+
+  // マイページボタンのハンドラ
+  const handleMyPageButtonClick = () => {
+
+    // マイページ投稿一覧画面に遷移
+    router.push('/mypage/posts');
+  };
+
   // ログアウトボタンのハンドラ
   const handleLogout = async () => {
     const result = await logout();
@@ -82,8 +96,8 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
         <div>
           <div style={userNameStyle}>{userInfo?.userName}さん</div>
           <div style={buttonStyle}>
-            <Button colorScheme="blue">HOME</Button>
-            <Button margin="15px" colorScheme="blue">マイページ</Button>
+            <Button colorScheme="blue" onClick={handleHomeButtonClick}>HOME</Button>
+            <Button margin="15px" colorScheme="blue" onClick={handleMyPageButtonClick}>マイページ</Button>
             <Button colorScheme="blue" onClick={handleLogout}>ログアウト</Button>
           </div>
         </div>
