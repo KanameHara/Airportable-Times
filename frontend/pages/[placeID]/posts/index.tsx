@@ -87,10 +87,12 @@ const AirportPostIndex: FC = () => {
   }, []);
   const imageUrl = "/images/sample/Boeing747.jpg";
 
-  // 未実装のためコメントアウト
+  // 未実装のためコメントアウト -->
   // useEffect(() => {
     // const fetchPosts = async () => {
-      // try {
+    // try {
+  
+        // // 指定したカテゴリの投稿データを取得
         // const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts?category=${selectedCategory}`);
         // setPosts(response.data);
       // }
@@ -103,6 +105,7 @@ const AirportPostIndex: FC = () => {
       // fetchPosts();
     // }
   // }, [selectedCategory]);
+  // 未実装のためコメントアウト <--
 
   // ページネーションのための設定
   const [currentPage, setCurrentPage] = useState(1);

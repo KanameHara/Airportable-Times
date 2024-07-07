@@ -33,6 +33,20 @@ class PostsController < ApplicationController
     render json: { errors: e.message }, status: :unprocessable_entity
   end
 
+  # GET /posts
+  # GET /posts?category=:category_id
+  def index
+
+    # 投稿カテゴリの指定がある場合はその投稿のみを取得
+    if params[:category]
+      @posts = Post.where(category_id: params[:category])
+    else
+      @posts = Post.all
+    end
+
+    render json: @posts
+  end
+
   private
 
   def post_params
