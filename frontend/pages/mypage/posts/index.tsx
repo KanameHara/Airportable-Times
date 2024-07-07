@@ -9,6 +9,7 @@ import Header from '../../../components/layouts/Header';
 import { UserInfoType } from '@/types/UserInfoType';
 import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
 import { Button, Flex, Box, Text, Image, SimpleGrid} from '@chakra-ui/react'
+import { PostInfoType } from '@/types/PostInfoType';
 
 import { useMap } from '../../../components/contexts/MapContext';
 import { GoogleMap, Marker } from '@react-google-maps/api';
@@ -34,23 +35,12 @@ const MyPagePostIndex: FC = () => {
 	}, [currentUser?.email]);
 	
 	// ユーザーの投稿データを取得
-  interface Post {
-    id: bigint;
-		airport_id: string;
-    category_id: bigint;
-    title: string;
-		taking_at: string;
-    location: string;
-    taking_position_latitude: number;
-    taking_position_longitude: number;
-    comment: string;
-  }
-	const [posts, setPosts] = useState<Post[]>([]);
+	const [posts, setPosts] = useState<PostInfoType[]>([]);
 
 	// 表示テストのため投稿データを仮で作成
   useEffect(() => {
-    const createSamplePosts = (): Post[] => {
-      const samplePost: Post = {
+    const createSamplePosts = (): PostInfoType[] => {
+      const samplePost: PostInfoType = {
         id: BigInt(1),
         airport_id: "AAA",
         category_id: BigInt(1),

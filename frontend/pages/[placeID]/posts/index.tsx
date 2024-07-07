@@ -8,6 +8,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { useMap } from '../../../components/contexts/MapContext';
 import axios from 'axios';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { PostInfoType } from "@/types/PostInfoType";
 import {
   Text,
   Flex,
@@ -64,23 +65,12 @@ const AirportPostIndex: FC = () => {
   }, []);
 
   // 選択中のカテゴリに従って投稿データを取得
-  interface Post {
-    id: bigint;
-    airport_id: string;
-    category_id: bigint;
-    title: string;
-    taking_at: string;
-    location: string;
-    taking_position_latitude: number;
-    taking_position_longitude: number;
-    comment: string;
-  }
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostInfoType[]>([]);
 
   // 表示テストのため投稿データを仮で作成
   useEffect(() => {
-    const createSamplePosts = (): Post[] => {
-      const samplePost: Post = {
+    const createSamplePosts = (): PostInfoType[] => {
+      const samplePost: PostInfoType = {
         id: BigInt(1),
         airport_id: "AAA",
         category_id: BigInt(1),
