@@ -13,5 +13,6 @@ Rails.application.routes.draw do
   # Post（投稿）関連のエンドポイントを設定
   post 'posts', to: 'posts#create'
   get 'posts', to: 'posts#index' 
+  get 'posts/:id', to: 'posts#show'
 
 end
