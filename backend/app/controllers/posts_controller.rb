@@ -46,13 +46,23 @@ class PostsController < ApplicationController
 
     render json: @posts
   end
+  
+  # GET /posts
+  # GET /posts?category=:category_id&user_id=:user_id
+  def index
+    @posts = Post.all
 
-  # GET /posts/:id
-  def show
-    @post = Post.find(params[:id])
-    render json: @post
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: 'Post not found' }, status: :not_found
+    # ユーザーIDでフィルタリング
+    if params[:user_id]
+      @posts = @posts.where(user_id: params[:user_id])
+    end
+
+    # カテゴリIDでフィルタリング
+    if params[:category]
+      @posts = @posts.where(category_id: params[:category])
+    end
+
+    render json: @posts
   end
 
   private

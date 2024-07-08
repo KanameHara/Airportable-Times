@@ -8,12 +8,21 @@ import Head from 'next/head';
 import Header from '../../../components/layouts/Header';
 import { UserInfoType } from '@/types/UserInfoType';
 import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
-import { Button, Flex, Box, Text, Image, SimpleGrid} from '@chakra-ui/react'
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { PostInfoType } from '@/types/PostInfoType';
-
-import { useMap } from '../../../components/contexts/MapContext';
-import { GoogleMap, Marker } from '@react-google-maps/api';
-import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import axios from 'axios';
+import {
+  Button,
+  Flex,
+  Box,
+  Text,
+  Image,
+  SimpleGrid,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
+} from '@chakra-ui/react'
 
 const MyPagePostIndex: FC = () => {
 	
@@ -32,7 +41,40 @@ const MyPagePostIndex: FC = () => {
     if (currentUser?.email) {
       getUserInfo();
     }
-	}, [currentUser?.email]);
+  }, [currentUser?.email]);
+  
+  // 投稿種別データの初期化
+  interface Category {
+    id: bigint;
+    name: string;
+  }
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
+  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
+
+  // 投稿種別選択時のハンドラ
+  const handleSelect = (categoryId: bigint) => {
+    setSelectedCategory(categoryId);
+  }
+
+  // 投稿種別データを取得
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
+        setCategories(response.data);
+        
+        // カテゴリのデータ取得後に初期選択状態を設定
+        setSelectedCategory(response.data[0].id);
+      }
+      catch (error){
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 	
 	// ユーザーの投稿データを取得
 	const [posts, setPosts] = useState<PostInfoType[]>([]);
@@ -57,22 +99,29 @@ const MyPagePostIndex: FC = () => {
   }, []);
   const imageUrl = "/images/sample/Boeing747.jpg";
 
-	// 未実装のためコメントアウト
-	// useEffect(() => {
-    // const fetchPosts = async () => {
-      // try {
-        // const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts?category=${selectedCategory}`);
-        // setPosts(response.data);
-      // }
-      // catch (error){
-        // console.error('Error fetching posts:', error);
-      // }
-    // };
-// 
-    // if (selectedCategory) {
-      // fetchPosts();
-    // }
-  // }, [selectedCategory]);
+	// 未実装のためコメントアウト -->
+	// ユーザー投稿データのうち選択中のカテゴリーのものを取得
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+  //         params: {
+  //           category: selectedCategory,
+  //           user_id: userInfo?.id,
+  //         },
+  //       });
+  //       setPosts(response.data);
+  //     }
+  //     catch (error){
+  //       console.error('Error fetching posts:', error);
+  //     }
+  //   };
+
+  //   if (selectedCategory && userInfo?.id) {
+  //     fetchPosts();
+  //   }
+  // }, [selectedCategory, userInfo?.id]);
+  // 未実装のためコメントアウト <--
 
   // ページネーションのための設定
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,6 +158,23 @@ const MyPagePostIndex: FC = () => {
         </Flex>
         <Flex>
           <Text mt={5} ml={12} fontWeight="bold">過去の投稿一覧：</Text>
+        </Flex>
+        <Text mt={5} ml={16} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
+        <Flex>
+          <Menu>
+            <MenuButton as={Button} mt={5} ml={70} rightIcon={<ChevronDownIcon />}>
+              {categories.length > 0 
+                ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
+                : 'カテゴリを選択'}
+            </MenuButton>
+            <MenuList>
+              {categories.map((category) => (
+                <MenuItem key={category.id} onClick={() => handleSelect(category.id)}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
         </Flex>
         <SimpleGrid columns={3} spacing={2} m={10}>
           {currentPosts.map((post) => (
