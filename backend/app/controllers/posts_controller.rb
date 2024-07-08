@@ -65,6 +65,19 @@ class PostsController < ApplicationController
     render json: @posts
   end
 
+  # DELETE /posts/:id
+  def destroy
+    @post = Post.find(params[:id])
+
+    @post.destroy!
+
+    render json: { message: 'Post deleted successfully' }, status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { errors: e.message }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :unprocessable_entity
+  end
+
   private
 
   def post_params

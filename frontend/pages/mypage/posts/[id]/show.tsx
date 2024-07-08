@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import React, { FC, useState } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { PostInfoType } from "@/types/PostInfoType";
+import axios from 'axios';
 import {
   Text,
   Flex,
@@ -116,15 +117,23 @@ const MyPagePostShow: FC = () => {
   };
 
   // モーダルで削除確認後、削除ボタン押下時のハンドラ
-  const handleConfirmDelete = () => {
-    
-    // ここでDBの削除処理を行う
+  const handleConfirmDelete = async () => {
+    try {
 
-    // モーダルを閉じる
-    onClose();
+      // 未実装のためコメントアウト -->
+      // DBから投稿データを削除する
+      // const response = await axios.delete(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
+      // console.log('Post deleted successfully', response);
+      // 未実装のためコメントアウト <--
 
-    // マイページの投稿一覧画面に遷移
-    router.push(`/mypage/posts`);
+      // モーダルを閉じる
+      onClose();
+
+      // マイページの投稿一覧画面に遷移
+      router.push(`/mypage/posts`);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
   };
 
   // 戻るボタン押下時のハンドラ
@@ -137,7 +146,6 @@ const MyPagePostShow: FC = () => {
   return (
     <div>
       <Head>
-        {/* <title>投稿{postID}詳細</title> エラー回避のため一旦コメントアウト*/}
         <title>投稿詳細</title>
       </Head>
       <Header showButtonFlag={true} />
