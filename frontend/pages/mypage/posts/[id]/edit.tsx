@@ -15,6 +15,7 @@ import { useAuth } from "@/components/contexts/AuthContext";
 import { UserInfoType } from "@/types/UserInfoType";
 import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
+import { PostInfoType } from "@/types/PostInfoType";
 import {
   Text,
   Flex,
@@ -36,6 +37,10 @@ export default function MyPagePostEdit() {
   // routerの初期化
   const router = useRouter();
 
+  // URLから投稿IDを取得
+  // const { postID } = router.query; // 一旦コメントアウトで仮に1を設定
+  const postID: bigint = BigInt(1);
+
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
 
@@ -56,6 +61,44 @@ export default function MyPagePostEdit() {
   const handleSelect = (categoryId: bigint) => {
     setSelectedCategory(categoryId);
   }
+  
+  // 投稿データを取得
+  const [post, setPost] = useState<PostInfoType | null>(null);
+  useEffect(() => {
+    const tmpPost: PostInfoType = {
+      id: postID,
+      airport_id: 'ChIJ-61QtY01QDUR4a_NVrCN6dw',
+      category_id: BigInt(1),
+      title: 'B747(仮のタイトル)',
+      taking_at: '2024-07-01',
+      location: '北側展望台',
+      taking_position_latitude: 35.6895,
+      taking_position_longitude: 139.6917,
+      comment: '渾身の一枚です。'
+    };
+    setPost(tmpPost);
+  }, [postID]);
+
+  // 未実装のためコメントアウト -->
+  // postIDに紐づく投稿情報を取得
+  // const fetchPost = async () => {
+  //   try {
+
+  //     // 指定したpostIDの投稿データを取得
+  //     const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
+  //     setPost(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching post:', error);
+  //   }
+  // };
+
+  // // 初回読み込み時にpostIDにもとづく投稿情報を取得
+  // useEffect(() => {
+  //   if (postID) {
+  //     fetchPost();
+    
+  // }, [postID]);
+  // 未実装のためコメントアウト <--
 
   // 入力フォームのバリデーション
   interface FormValues {
@@ -64,38 +107,18 @@ export default function MyPagePostEdit() {
     location: string;
     comment?: string;  // コメントはオプショナル
   }
-  
-  // ユーザー入力フォームデータの初期値を設定するための状態
-  const [initialFormValues, setInitialFormValues] = useState<FormValues>({
-    title: '',
-    date: '',
-    location: '',
-    comment: '',
-  });
 
-  // これ以降は投稿データ表示のための処理-->
-  // フォームデータに初期値（initialformvalue）を追加
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormValues>({
+  // 既存の投稿データを入力フォームに反映
+  const initialFormValues: FormValues = {
+    title: post?.title || '',
+    date: post?.taking_at || '',
+    location: post?.location || '',
+    comment: post?.comment || '',
+  };
+
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     defaultValues: initialFormValues,
   });
-
-  // 初期値を設定して投稿データを画面に反映する
-  useEffect(() => {
-    // 初期値を設定（例として一旦固定値を使用）
-    setInitialFormValues({
-      title: '初期タイトル',
-      date: '2024-07-01',
-      location: '初期撮影場所',
-      comment: '初期コメント',
-    });
-  
-    // フォームフィールドに初期値を設定
-    setValue('title', '初期タイトル');
-    setValue('date', '2024-07-01');
-    setValue('location', '初期撮影場所');
-    setValue('comment', '初期コメント');
-  }, [setValue]);  
-  // ここまで<--
 
   // ImageUploadForm（1~5番目すべて）のプレビュー画像のURLリスト
   type previewImageListType = {
@@ -213,7 +236,7 @@ export default function MyPagePostEdit() {
 
     // //投稿情報をDBに登録
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, formData);
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
 
       // レスポンスから画像のURLを取得してコンソールに表示
       const imageUrls = response.data.image_urls;

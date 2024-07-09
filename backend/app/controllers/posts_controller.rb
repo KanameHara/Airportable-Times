@@ -33,6 +33,35 @@ class PostsController < ApplicationController
     render json: { errors: e.message }, status: :unprocessable_entity
   end
 
+  # PUT /posts/:id
+  def update
+    @post = Post.find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      @post.update!(post_params)
+
+      # 画像の更新処理は仮で実装しておく
+      if params[:images].present?
+        @post.post_images.destroy_all  # 既存の画像を削除
+        params[:images].each do |index, image|
+          post_image = @post.post_images.new
+          post_image.path = image # ここで CarrierWave にアップロードファイルを渡す
+          post_image.save!
+        end
+      end
+
+      render json: {
+        message: 'Post and image successfully updated',
+        image_urls: @post.post_images.map { |img| img.full_path_url } # ここで full_path_url メソッドを使用する
+      }, status: :ok
+    end
+
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { errors: e.message }, status: :not_found
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback => e
+    render json: { errors: e.message }, status: :unprocessable_entity
+  end
+
   # GET /posts
   # GET /posts?category=:category_id
   def index
