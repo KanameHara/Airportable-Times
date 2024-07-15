@@ -1,12 +1,12 @@
 class PostImage < ApplicationRecord
   belongs_to :post
-  mount_uploader :path, ImageUploader
+  has_one_attached :image # Active Storageの設定
 
   validates :post_id, presence: true
-  validates :path, presence: true
+  validates :image, presence: true
 
-  # 画像ファイル保存用
-  def full_path_url
-    "#{Rails.application.config.asset_host}/#{path.store_dir}/#{path.file.filename}"
+  # 画像のURLを取得するメソッド
+  def image_url
+    Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true)
   end
 end
