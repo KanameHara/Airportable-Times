@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_14_062804) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_16_112441) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,15 +45,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_14_062804) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "post_images", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "post_id", null: false
-    t.string "path", null: false
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "fk_rails_3ee54b46c4"
-  end
-
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "airport_id", null: false
@@ -81,7 +72,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_14_062804) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "post_images", "posts"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "users"
 end

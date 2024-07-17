@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   belongs_to :user
   belongs_to :category
   has_many :post_images, class_name: 'PostImage', dependent: :destroy
+  has_many_attached :images
 
   validates :user_id, presence: true
   validates :airport_id, presence: true

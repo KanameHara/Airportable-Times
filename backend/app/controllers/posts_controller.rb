@@ -17,14 +17,13 @@ class PostsController < ApplicationController
       if params[:images].present?
         params[:images].each do |index, image|
           Rails.logger.debug "Image: #{image.inspect}"
-          post_image = @post.post_images.create!(image: image)
-          Rails.logger.debug "PostImage: #{post_image.inspect}"
+          @post.images.attach(image)
         end
       end
       
       render json: { 
         message: 'Post and image successfully created', 
-        image_urls: @post.post_images.map { |img| url_for(img.image) } # ここでActiveStorageのurl_forを使用する
+        image_urls: @post.images.map { |img| url_for(img) }
       }, status: :created
     end
 
