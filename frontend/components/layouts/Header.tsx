@@ -3,12 +3,14 @@
 //----------------------------------------------------------------
 import { Box, Flex, Button } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 import { logout } from '@/lib/firebase/api/auth';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
 import { UserInfoType } from '@/types/UserInfoType';
+import { useMap } from '../contexts/MapContext';
+import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
 
 // スタイルの定義
 const containerStyle: React.CSSProperties = {
@@ -56,12 +58,18 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
     }
   }, [currentUser?.email]);  // currentUser.email が変更されたときに再実行
 
-  // HOMEボタンのハンドラ
-  const handleHomeButtonClick = () => {
+  // マップ選択地情報の変更関数を取得
+  const { updateSelectedPlaceInfo } = useMap();
+
+  // 戻るボタンクリック時のハンドラ
+	const handleHomeButtonClick = useCallback(() => {
+
+		// ここでマップの選択状態を初期化
+    updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
     
-    // HOME画面に遷移
-    router.push('/home');
-  };
+		// 初期化後にホーム画面に遷移
+		router.push('/home');
+  }, [updateSelectedPlaceInfo, router]);
 
   // マイページボタンのハンドラ
   const handleMyPageButtonClick = () => {
