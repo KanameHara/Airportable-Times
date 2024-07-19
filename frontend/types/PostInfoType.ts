@@ -9,4 +9,5 @@ export interface PostInfoType {
 	taking_position_latitude: number;
 	taking_position_longitude: number;
 	comment: string;
+	image_urls: string[];
 }

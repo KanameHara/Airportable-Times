@@ -15,10 +15,7 @@ class PostsController < ApplicationController
       @post.save!
 
       if params[:images].present?
-        params[:images].each do |index, image|
-          Rails.logger.debug "Image: #{image.inspect}"
-          @post.images.attach(image)
-        end
+        @post.images.attach(params[:images].values)
       end
       
       render json: { 
@@ -59,21 +56,27 @@ class PostsController < ApplicationController
   end
   
   # GET /posts
-  # GET /posts?category=:category_id&user_id=:user_id
+  # GET /posts?category=:category_id&user_id=:user_id&airport_id=:airport_id
   def index
     @posts = Post.all
 
     # ユーザーIDでフィルタリング
-    if params[:user_id]
-      @posts = @posts.where(user_id: params[:user_id])
-    end
+    @posts = @posts.where(user_id: params[:user_id]) if params[:user_id]
 
     # カテゴリIDでフィルタリング
-    if params[:category]
-      @posts = @posts.where(category_id: params[:category])
+    @posts = @posts.where(category_id: params[:category]) if params[:category]
+
+    # 空港IDでフィルタリング
+    @posts = @posts.where(airport_id: params[:airport_id]) if params[:airport_id]
+
+    # 各投稿に紐づく画像のURLを含めてJSONレスポンスを構築
+    posts_with_images = @posts.map do |post|
+      post.as_json.merge({
+        image_urls: post.images.map { |img| url_for(img) }
+      })
     end
 
-    render json: @posts
+    render json: posts_with_images
   end
 
   # DELETE /posts/:id
