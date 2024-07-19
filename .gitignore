@@ -1,3 +1,7 @@
 #common
 .env
 .DS_Store
+
+# google cloud starage key file
+# ここでignoreしてるので動かす際はgcs.keyfileが必要
+/backend/config/secrets/gcs.keyfile
