@@ -56,7 +56,7 @@ class PostsController < ApplicationController
   end
   
   # GET /posts
-  # GET /posts?category=:category_id&user_id=:user_id&airport_id=:airport_id
+  # GET /posts?category=:category_id&user_id=:user_id&airport_id=:airport_id&id=:id
   def index
     @posts = Post.all
 
@@ -68,6 +68,9 @@ class PostsController < ApplicationController
 
     # 空港IDでフィルタリング
     @posts = @posts.where(airport_id: params[:airport_id]) if params[:airport_id]
+
+    # 投稿IDでフィルタリング
+    @posts = @posts.where(id: params[:id]) if params[:id]
 
     # 各投稿に紐づく画像のURLを含めてJSONレスポンスを構築
     posts_with_images = @posts.map do |post|

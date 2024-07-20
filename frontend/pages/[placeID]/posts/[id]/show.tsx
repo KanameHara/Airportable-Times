@@ -29,28 +29,36 @@ const AirportPostShow: FC = () => {
   // URLからplaceIDとpostIDを取得
   const router = useRouter();
   const { placeID, id: postID } = router.query;
+  
+  // 初回読み込み時にpostIDにもとづく投稿情報を取得
+  const [post, setPost] = useState<PostInfoType | null>(null);
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+          params: {
+            id: postID
+          }
+        });
 
-  // 未実装のためコメントアウト -->
-  // postIDに紐づく投稿情報を取得
-  // const [post, setPost] = useState<PostInfoType | null>(null);
-  // const fetchPost = async () => {
-  //   try {
+        // 画面に表示したい投稿データは配列の[0]番目に格納されている
+        const postData = response.data[0];
 
-  //     // 指定したpostIDの投稿データを取得
-  //     const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
-  //     setPost(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching post:', error);
-  //   }
-  // };
+        // 緯度経度がstring型で取得されるので数値に変換
+        postData.taking_position_latitude = parseFloat(postData.taking_position_latitude);
+        postData.taking_position_longitude = parseFloat(postData.taking_position_longitude);
 
-  // // 初回読み込み時にpostIDにもとづく投稿情報を取得
-  // useEffect(() => {
-  //   if (postID) {
-  //     fetchPost();
-  //   
-  // }, [postID]);
-  // 未実装のためコメントアウト <--
+        // 投稿データを設定
+        setPost(postData);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+    };
+    
+    if (postID) {
+      fetchPost();
+    }
+  }, [postID]);
   
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
@@ -62,42 +70,35 @@ const AirportPostShow: FC = () => {
     router.push(`/${placeID}/posts`);
   }
 
-  //投稿情報のサンプルなので後で削除(経度と緯度が逆になっているかも？なぜかマップ上にマーカーが表示されない)
-  const post = {
-    userID: 1,
-    airport_id: "ChIJ-61QtY01QDUR4a_NVrCN6dw",
-    category_id: 1,
-    title: "テスト投稿",
-    taking_at: "2021-08-01",
-    location: "東京タワー",  // 任意の位置名
-    taking_position_latitude: 35.6895,  // 任意の緯度
-    taking_position_longitude: 139.6917,  // 任意の経度
-    comment: "テストコメント",
-    images: [
-      "/images/sample/Boeing747.jpg",
-      "/images/sample/Boeing777.jpg",
-      "/images/sample/Boeing747.jpg",
-      "/images/sample/Boeing777.jpg",
-      "/images/sample/Boeing747.jpg",
-    ]
-  }
-
   // 現在の写真インデックスの状態管理
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // 前の写真に移動
   const handlePreviousClick = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === 0 ? post.images.length - 1 : prevIndex - 1
-    );
+    if (post && post.image_urls.length > 0) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === 0 ? post.image_urls.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   // 次の写真に移動
   const handleNextClick = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === post.images.length - 1 ? 0 : prevIndex + 1
-    );
+    if (post && post.image_urls.length > 0) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === post.image_urls.length - 1 ? 0 : prevIndex + 1
+      );
+    }
   };
+
+  // 投稿データが読み込めなければ何も表示しない
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+  
+  if (!post.image_urls || post.image_urls.length === 0) {
+    return <div>画像がありません</div>;
+  }
 
   return (
     <div>
@@ -109,7 +110,7 @@ const AirportPostShow: FC = () => {
         <Text mt={5} ml={10} fontWeight="bold">{post.title}</Text>
         <Box mt={5} ml={10} display="flex" alignItems="center">
           <Button onClick={handlePreviousClick}>&lt;</Button>
-          <Image src={post.images[currentImageIndex]}
+          <Image src={post.image_urls[currentImageIndex]}
             alt={`Image ${currentImageIndex + 1}`}
             width="500px" 
             height="500px" 
