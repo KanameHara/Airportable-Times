@@ -121,12 +121,9 @@ const MyPagePostShow: FC = () => {
   const handleConfirmDelete = async () => {
     try {
 
-      // 未実装のためコメントアウト -->
       // DBから投稿データを削除する
-      // const response = await axios.delete(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
-      // console.log('Post deleted successfully', response);
-      // 未実装のためコメントアウト <--
-
+      await axios.delete(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
+      
       // モーダルを閉じる
       onClose();
 
