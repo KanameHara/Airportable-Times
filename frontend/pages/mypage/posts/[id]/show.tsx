@@ -4,7 +4,7 @@
 import Head from "next/head";
 import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { PostInfoType } from "@/types/PostInfoType";
 import axios from 'axios';
@@ -37,66 +37,67 @@ const MyPagePostShow: FC = () => {
   const router = useRouter();
 
   // URLから投稿IDを取得
-  // const { postID } = router.query; // 一旦コメントアウトで仮に1を設定
-  const postID: bigint = BigInt(1);
+  const { id: postID } = router.query;
 
-  //投稿情報のサンプルなので後で削除(経度と緯度が逆になっているかも？なぜかマップ上にマーカーが表示されない)
-  const post = {
-    userID: 1,
-    airport_id: "ChIJ-61QtY01QDUR4a_NVrCN6dw",
-    category_id: 1,
-    title: "テスト投稿",
-    taking_at: "2021-08-01",
-    location: "東京タワー",  // 任意の位置名
-    taking_position_latitude: 35.6895,  // 任意の緯度
-    taking_position_longitude: 139.6917,  // 任意の経度
-    comment: "テストコメント",
-    images: [
-      "/images/sample/Boeing747.jpg",
-      "/images/sample/Boeing777.jpg",
-      "/images/sample/Boeing747.jpg",
-      "/images/sample/Boeing777.jpg",
-      "/images/sample/Boeing747.jpg",
-    ]
-  }
-  
-  // 未実装のためコメントアウト -->
-  // postIDに紐づく投稿情報を取得
-  // const [post, setPost] = useState<PostInfoType | null>(null);
-  // const fetchPost = async () => {
-  //   try {
+  // 初回読み込み時にpostIDにもとづく投稿情報を取得
+  const [post, setPost] = useState<PostInfoType | null>(null);
+  const [airportName, setAirportName] = useState<string>('');
 
-  //     // 指定したpostIDの投稿データを取得
-  //     const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
-  //     setPost(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching post:', error);
-  //   }
-  // };
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+          params: {
+            id: postID
+          }
+        });
 
-  // // 初回読み込み時にpostIDにもとづく投稿情報を取得
-  // useEffect(() => {
-  //   if (postID) {
-  //     fetchPost();
-  //   
-  // }, [postID]);
-  // 未実装のためコメントアウト <--
+        // 画面に表示したい投稿データは配列の[0]番目に格納されている
+        const postData = response.data[0];
+
+        // 緯度経度がstring型で取得されるので数値に変換
+        postData.taking_position_latitude = parseFloat(postData.taking_position_latitude);
+        postData.taking_position_longitude = parseFloat(postData.taking_position_longitude);
+
+        // 投稿データを設定
+        setPost(postData);
+
+        // バックエンドのエンドポイント経由でGoogle Places APIで空港名を取得
+        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/places/show`, {
+          params: {
+            place_id: postData.airport_id
+          }
+        });
+        setAirportName(placesResponse.data.result.name);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+    };
+    
+    if (postID) {
+      fetchPost();
+    }
+  }, [postID]);
 
   // 現在の写真インデックスの状態管理
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // 前の写真に移動
   const handlePreviousClick = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === 0 ? post.images.length - 1 : prevIndex - 1
-    );
+    if (post && post.image_urls.length > 0) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === 0 ? post.image_urls.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   // 次の写真に移動
   const handleNextClick = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === post.images.length - 1 ? 0 : prevIndex + 1
-    );
+    if (post && post.image_urls.length > 0) {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === post.image_urls.length - 1 ? 0 : prevIndex + 1
+      );
+    }
   };
 
   // useDisclosureフックを使用してモーダルの状態を管理
@@ -143,6 +144,15 @@ const MyPagePostShow: FC = () => {
     router.push(`/mypage/posts`);
   }
 
+  // 投稿データが読み込めなければ何も表示しない
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+  
+  if (!post.image_urls || post.image_urls.length === 0) {
+    return <div>画像がありません</div>;
+  }
+
   return (
     <div>
       <Head>
@@ -153,7 +163,7 @@ const MyPagePostShow: FC = () => {
         <Text mt={5} ml={10} fontWeight="bold">{post.title}</Text>
         <Box mt={5} ml={10} display="flex" alignItems="center">
           <Button onClick={handlePreviousClick}>&lt;</Button>
-          <Image src={post.images[currentImageIndex]}
+          <Image src={post.image_urls[currentImageIndex]}
             alt={`Image ${currentImageIndex + 1}`}
             width="500px" 
             height="500px" 
@@ -169,11 +179,11 @@ const MyPagePostShow: FC = () => {
         </Flex>
         <Flex>
           <Text mt={5} ml={12} fontWeight="bold">空港名：</Text>
-          <Text mt={5} ml={5} fontWeight="bold">羽田空港</Text>
+          <Text mt={5} ml={5} fontWeight="bold">{airportName}</Text>
         </Flex>
         <Flex>
           <Text mt={5} ml={12} fontWeight="bold">撮影場所名：</Text>
-          <Text mt={5} ml={5} fontWeight="bold">北側展望台</Text>
+          <Text mt={5} ml={5} fontWeight="bold">{post.location}</Text>
         </Flex>
         <div style={{ marginTop: '15px', marginBottom: '50px' }}>
           <GoogleMap
@@ -195,7 +205,7 @@ const MyPagePostShow: FC = () => {
           <Text mt={2} ml={20} fontWeight="bold">{post.comment}</Text>
         </Flex>
         <Button mt={10} mb={50} ml={260} mr={2} colorScheme="blue" alignSelf="center"
-          onClick={() => handleEditButtonClick(postID)}
+          onClick={() => handleEditButtonClick(post.id)}
         >
           投稿を編集
         </Button>

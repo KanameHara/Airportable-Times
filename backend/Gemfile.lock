@@ -243,7 +243,6 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
-  dotenv
   dotenv-rails
   google-cloud-env
   google-cloud-storage

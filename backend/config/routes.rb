@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   put 'posts/:id', to: 'posts#update'
   delete 'posts/:id', to: 'posts#destroy' 
 
+  # Googleマップ関連のエンドポイントを設定
+  get 'places/show', to: 'places#show'
 end
