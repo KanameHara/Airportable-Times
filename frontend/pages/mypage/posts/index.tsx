@@ -76,52 +76,28 @@ const MyPagePostIndex: FC = () => {
     fetchCategories();
   }, []);
 	
-	// ユーザーの投稿データを取得
-	const [posts, setPosts] = useState<PostInfoType[]>([]);
-
-	// 表示テストのため投稿データを仮で作成
-  useEffect(() => {
-    const createSamplePosts = (): PostInfoType[] => {
-      const samplePost: PostInfoType = {
-        id: BigInt(1),
-        airport_id: "AAA",
-        category_id: BigInt(1),
-        title: 'テスト投稿',
-        taking_at: '2021-01-01 00:00:00',
-        location: "テスト場所",
-        taking_position_latitude: 135,
-        taking_position_longitude: 35,
-        comment: 'テスト投稿コメント',
-      };
-      return Array.from({ length: 25 }, (_, i) => ({ ...samplePost, id: BigInt(i + 1), title: `テスト投稿${i + 1}`}));
-    };
-    setPosts(createSamplePosts());
-  }, []);
-  const imageUrl = "/images/sample/Boeing747.jpg";
-
-	// 未実装のためコメントアウト -->
 	// ユーザー投稿データのうち選択中のカテゴリーのものを取得
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
-  //         params: {
-  //           category: selectedCategory,
-  //           user_id: userInfo?.id,
-  //         },
-  //       });
-  //       setPosts(response.data);
-  //     }
-  //     catch (error){
-  //       console.error('Error fetching posts:', error);
-  //     }
-  //   };
+  const [posts, setPosts] = useState<PostInfoType[]>([]);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+          params: {
+            category: selectedCategory,
+            user_id: userInfo?.id,
+          },
+        });
+        setPosts(response.data);
+      }
+      catch (error){
+        console.error('Error fetching posts:', error);
+      }
+    };
 
-  //   if (selectedCategory && userInfo?.id) {
-  //     fetchPosts();
-  //   }
-  // }, [selectedCategory, userInfo?.id]);
-  // 未実装のためコメントアウト <--
+    if (selectedCategory && userInfo?.id) {
+      fetchPosts();
+    }
+  }, [selectedCategory, userInfo?.id]);
 
   // ページネーションのための設定
   const [currentPage, setCurrentPage] = useState(1);
@@ -182,7 +158,13 @@ const MyPagePostIndex: FC = () => {
               onClick={() => handlePostClick(post.id)}
               cursor="pointer" // ポインタカーソルを追加してクリック可能に見せる
             >
-              <Image src={imageUrl} alt={post.title} objectFit="cover" height="200px"/>
+              {post.image_urls && post.image_urls.length > 0 ? (
+                <Image src={post.image_urls[0]} alt={post.title} objectFit="cover" height="200px" />
+              ) : (
+                <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.200">
+                  <Text>No Image</Text>
+                </Box>
+              )}
               <Box p="6">
                 <Box display="flex" alignItems="baseline">
                   <Text fontWeight="bold" as="h4" lineHeight="tight" isTruncated>
