@@ -191,8 +191,8 @@ export default function MyPagePostEdit() {
   }
 
   // マップで撮影位置選択時のハンドラ
-  const handleSelectedPhotoPosition = (longitude: number, latitude: number) => {
-    setSelectedPosition({ longitude, latitude });
+  const handleSelectedPhotoPosition = (latitude: number, longitude: number) => {
+    setSelectedPosition({ latitude, longitude });
   };
 
   // 編集完了ボタン押下時のハンドラ

@@ -138,8 +138,8 @@ export default function AirportPostCreate() {
   }
 
   // マップで撮影位置選択時のハンドラ
-  const handleSelectedPhotoPosition = (longitude: number, latitude: number) => {
-    setSelectedPosition({ longitude, latitude });
+  const handleSelectedPhotoPosition = (latitude: number, longitude: number) => {
+    setSelectedPosition({ latitude, longitude });
   };
 
   // 投稿ボタン押下時のハンドラ

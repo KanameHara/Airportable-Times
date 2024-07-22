@@ -30,7 +30,7 @@ const inputStyle: React.CSSProperties = {
 
 // propsの型定義
 interface MapforPostProps {
-  onSelectedPhotoPosition: (longitude: number, latitude: number) => void;
+  onSelectedPhotoPosition: (latitude: number, longitude: number) => void;
 }
 
 const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition }) => {
