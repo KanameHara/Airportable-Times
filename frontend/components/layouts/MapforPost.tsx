@@ -6,6 +6,7 @@ import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
 import { useMap } from '../contexts/MapContext';
 import { SelectedPlaceInfoType } from '@/types/SelectedPlaceInfoType';
 import { initializedSelectedPlaceInfo } from '@/constants/InitializedSelectedPlaceInfo';
+import { SelectedPhotoPositionType } from '@/types/SelectePhotoPositionType';
 
 // スタイルの定義
 const containerStyle: React.CSSProperties  = {
@@ -31,9 +32,13 @@ const inputStyle: React.CSSProperties = {
 // propsの型定義
 interface MapforPostProps {
   onSelectedPhotoPosition: (latitude: number, longitude: number) => void;
+  selectedPhotoPosition?: SelectedPhotoPositionType;
 }
 
-const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition }) => {
+// <引数>
+//  onSelectedPhotoPosition:撮影位置情報変更関数
+//  selectedPhotoPosition:選択された撮影位置情報（既存の投稿データ表示時以外はオプショナルなので指定しないこと）
+const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition, selectedPhotoPosition }) => {
 
   // autocomplete オブジェクトを保持するためのref
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -51,7 +56,16 @@ const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition }) => {
     setPostPlaceInfo(selectedPlaceInfo);
 
     // 撮影位置情報を更新
-    onSelectedPhotoPosition(selectedPlaceInfo.center.lat, selectedPlaceInfo.center.lng);
+    if (selectedPhotoPosition?.latitude && selectedPhotoPosition?.longitude) {
+
+      // 引数で場所を指定されている場合は、その場所を撮影位置として設定
+      onSelectedPhotoPosition(selectedPhotoPosition.latitude, selectedPhotoPosition.longitude);
+    }
+    else {
+
+      // 引数で場所を指定されていない場合は、現在選択中の空港位置を撮影場所として設定
+      onSelectedPhotoPosition(selectedPlaceInfo.center.lat, selectedPlaceInfo.center.lng);
+    }
   }, [selectedPlaceInfo]);
 
   // 撮影位置情報を更新する関数

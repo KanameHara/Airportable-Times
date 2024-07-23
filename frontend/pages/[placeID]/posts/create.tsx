@@ -170,8 +170,10 @@ export default function AirportPostCreate() {
     formData.append('post[title]', data.title);
     formData.append('post[taking_at]', data.date);
     formData.append('post[location]', data.location);
-    formData.append('post[taking_position_latitude]', selectedPosition.latitude.toString());
-    formData.append('post[taking_position_longitude]', selectedPosition.longitude.toString());
+    if (selectedPosition.latitude && selectedPosition.longitude) {
+      formData.append('post[taking_position_latitude]', selectedPosition.latitude.toString());
+      formData.append('post[taking_position_longitude]', selectedPosition.longitude.toString());
+    }
     formData.append('post[comment]', data.comment || '');
   
     // post_imagesテーブルに登録する情報
