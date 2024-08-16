@@ -37,16 +37,14 @@ class PostsController < ApplicationController
       @post.update!(post_params)
 
       if params[:images].present?
-        @post.post_images.destroy_all  # 既存の画像を削除
-        params[:images].each do |image|
-          @post.post_images.create!(image: image)
-        end
+        @post.images.purge # 既存の画像を削除
+        @post.images.attach(params[:images].values) # 新しい画像を追加
       end
-
+      
       render json: {
-        message: 'Post and image successfully updated',
-        image_urls: @post.post_images.map { |img| url_for(img.image) } # ここでActiveStorageのurl_forを使用する
-      }, status: :ok
+      message: 'Post and image successfully updated',
+      image_urls: @post.images.map { |img| url_for(img) }
+    }, status: :ok
     end
 
   rescue ActiveRecord::RecordNotFound => e

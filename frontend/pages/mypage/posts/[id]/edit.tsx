@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import MapforPost from "@/components/layouts/MapforPost";
 import ImageUploadForm from "@/components/layouts/ImageUploadForm";
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { useMap } from "@/components/contexts/MapContext";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useAuth } from "@/components/contexts/AuthContext";
@@ -34,121 +33,109 @@ import {
 
 export default function MyPagePostEdit() { 
 
-  // routerの初期化
   const router = useRouter();
-
-  // URLから投稿IDを取得
-  // const { postID } = router.query; // 一旦コメントアウトで仮に1を設定
-  const postID: bigint = BigInt(1);
-
-  // 選択空港の情報を取得
-  const { selectedPlaceInfo } = useMap();
-
-  // 画像未選択時のエラーメッセージ
-  const [errMsgforImg, setErrMsgforImg] = useState<string | null>();
-
-  // 投稿種別データの初期化
+  const { id: postID } = router.query;
+  const [errMsgforImg, setErrMsgforImg] = useState<string | null>(null);
+  
   interface Category {
     id: bigint;
     name: string;
   }
   const [categories, setCategories] = useState<Category[]>([]);
-
-  // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
   const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
-
-  // 投稿種別選択時のハンドラ
-  const handleSelect = (categoryId: bigint) => {
-    setSelectedCategory(categoryId);
-  }
-  
-  // 投稿データを取得
   const [post, setPost] = useState<PostInfoType | null>(null);
-  useEffect(() => {
-    const tmpPost: PostInfoType = {
-      id: postID,
-      airport_id: 'ChIJ-61QtY01QDUR4a_NVrCN6dw',
-      category_id: BigInt(1),
-      title: 'B747(仮のタイトル)',
-      taking_at: '2024-07-01',
-      location: '北側展望台',
-      taking_position_latitude: 35.6895,
-      taking_position_longitude: 139.6917,
-      comment: '渾身の一枚です。'
-    };
-    setPost(tmpPost);
-  }, [postID]);
+  const [airportName, setAirportName] = useState<string>('');
 
-  // 未実装のためコメントアウト -->
-  // postIDに紐づく投稿情報を取得
-  // const fetchPost = async () => {
-  //   try {
+  type previewImageListType = {
+    [key: number]: string | null;
+  };
+  const [previewImageList, setPreviewImageList] = useState<previewImageListType>({});
 
-  //     // 指定したpostIDの投稿データを取得
-  //     const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
-  //     setPost(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching post:', error);
-  //   }
-  // };
-
-  // // 初回読み込み時にpostIDにもとづく投稿情報を取得
-  // useEffect(() => {
-  //   if (postID) {
-  //     fetchPost();
-    
-  // }, [postID]);
-  // 未実装のためコメントアウト <--
-
-  // 入力フォームのバリデーション
   interface FormValues {
     title: string;
     date: string;  // 日付は YYYY-MM-DD 形式の文字列
     location: string;
     comment?: string;  // コメントはオプショナル
   }
-
-  // 既存の投稿データを入力フォームに反映
-  const initialFormValues: FormValues = {
-    title: post?.title || '',
-    date: post?.taking_at || '',
-    location: post?.location || '',
-    comment: post?.comment || '',
-  };
-
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
-    defaultValues: initialFormValues,
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
+    defaultValues: {
+      title: '',
+      date: '',
+      location: '',
+      comment: '',
+    }
   });
 
-  // ImageUploadForm（1~5番目すべて）のプレビュー画像のURLリスト
-  type previewImageListType = {
-    [key: number]: string | null;
-  };
-  const [previewImageList, setPreviewImageList] = useState<previewImageListType>({});
-
-  // ImageUploadForm（1~5番目すべて）の画像ファイルリスト
   type selectedImageListType = {
     [key: number]: File | null;
   };
   const [selectedImageList, setSelectedImageList] = useState<selectedImageListType>({});
-
-  // マップで選択する撮影位置情報を初期化(初期値は選択中の空港の位置)
   const [selectedPosition, setSelectedPosition] = useState<SelectedPhotoPositionType>({
-    latitude: selectedPlaceInfo.center.lat,
-    longitude: selectedPlaceInfo.center.lng,
+    latitude: null,
+    longitude: null,
   });
 
-  // 投稿種別データを取得
+  // 初回読み込み時にpostIDにもとづく投稿情報を取得
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!postID) return;
+
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+          params: { id: postID }
+        });
+
+        const postData = response.data[0];
+        postData.taking_position_latitude = parseFloat(postData.taking_position_latitude);
+        postData.taking_position_longitude = parseFloat(postData.taking_position_longitude);
+        setPost(postData);
+
+        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/places/show`, {
+          params: { place_id: postData.airport_id }
+        });
+        setAirportName(placesResponse.data.result.name);
+
+        const imageUrls = postData.image_urls;
+        const previewImages: previewImageListType = {};
+        imageUrls.forEach((url: string, index: number) => {
+          const fullUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}${url}`;
+          previewImages[index + 1] = fullUrl;
+        });
+        
+        setSelectedCategory(postData.category_id);
+        setSelectedPosition({
+          latitude: postData.taking_position_latitude,
+          longitude: postData.taking_position_longitude,
+        });
+
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+    };
+
+    fetchPost();
+  }, [postID]);
+
+  // 入力フォームの文字データを初期化
+  useEffect(() => {
+    if (post) {
+      reset({
+        title: post.title,
+        date: post.taking_at,
+        location: post.location,
+        comment: post.comment,
+      });
+    }
+  }, [post, reset]);
+
+  // カテゴリーデータの取得
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
         setCategories(response.data);
-        
-        // カテゴリのデータ取得後に初期選択状態を設定
         setSelectedCategory(response.data[0].id);
-      }
-      catch (error){
+      } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
@@ -156,14 +143,12 @@ export default function MyPagePostEdit() {
     fetchCategories();
   }, []);
   
-  // ログイン中ユーザーのIDを取得
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfoType>();
   
+  // ユーザー情報の取得
   useEffect(() => {
     const getUserInfo = async () => {
-
-      // メールアドレスからIDを検索する
       const info = await fetchUserInfoByEmail(currentUser?.email);
       setUserInfo(info);
     };
@@ -171,34 +156,26 @@ export default function MyPagePostEdit() {
     if (currentUser?.email) {
       getUserInfo();
     }
-  }, [currentUser?.email]);  // currentUser.email が変更されたときに再実行
+  }, [currentUser?.email]);
 
-  // 画像選択時のハンドラ
   const handleImageChange = useCallback((id: number, url: string | null, file: File | null) => {
-
-    // プレビュー画像を設定
     setPreviewImageList(prev => ({ ...prev, [id]: url }));
-
-    // 画像ファイルを設定
     setSelectedImageList(prev => ({ ...prev, [id]: file }));
   }, []);
-  
-  // 投稿編集キャンセルボタン押下時のハンドラ
-  const handleCancelButtonClick = () => {
 
-    // マイページ投稿一覧画面に戻る
+  const handleSelect = (categoryId: bigint) => {
+    setSelectedCategory(categoryId);
+  }
+
+  const handleCancelButtonClick = () => {
     router.push(`/mypage/posts`);
   }
 
-  // マップで撮影位置選択時のハンドラ
   const handleSelectedPhotoPosition = (latitude: number, longitude: number) => {
     setSelectedPosition({ latitude, longitude });
   };
 
-  // 編集完了ボタン押下時のハンドラ
   const onSubmit = async (data: FormValues) => { 
-
-    // 投稿写真の選択状態を取得
     let isImagesSelected = false;
     for (let i = 1; i <= 5; i++) { 
       if (selectedImageList[i]) {
@@ -207,7 +184,6 @@ export default function MyPagePostEdit() {
       }
     }
 
-    // 画像未選択時にはエラー表示
     if (!isImagesSelected) {
       setErrMsgforImg('少なくとも１つの画像を選択してください。');
       return;
@@ -215,40 +191,23 @@ export default function MyPagePostEdit() {
       setErrMsgforImg(null);
     }
 
-    // postsテーブルに登録する情報
     const formData = new FormData();
     formData.append('post[user_id]', userInfo?.id.toString() || '');
-    formData.append('post[airport_id]', selectedPlaceInfo.selectedPlace?.place_id?.toString() || '');
+    formData.append('post[airport_id]', post?.airport_id.toString() || '');
     formData.append('post[category_id]', selectedCategory.toString());
     formData.append('post[title]', data.title);
     formData.append('post[taking_at]', data.date);
     formData.append('post[location]', data.location);
-    formData.append('post[taking_position_latitude]', selectedPosition.latitude.toString());
-    formData.append('post[taking_position_longitude]', selectedPosition.longitude.toString());
+    if (selectedPosition.latitude && selectedPosition.longitude) {
+      formData.append('post[taking_position_latitude]', selectedPosition.latitude.toString());
+      formData.append('post[taking_position_longitude]', selectedPosition.longitude.toString());
+    }
     formData.append('post[comment]', data.comment || '');
-  
-    // post_imagesテーブルに登録する情報
-    // 具体的にはObject.values()でselectedImageListの値を配列に変換し、
-    // .filter以降の処理でfileがnullでないものだけを抽出している
     Object.values(selectedImageList).filter((file) => file !== null).forEach((file, index) => {
       formData.append(`images[${index}]`, file as Blob);
     });
-
-    // //投稿情報をDBに登録
     try {
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
-
-      // レスポンスから画像のURLを取得してコンソールに表示
-      const imageUrls = response.data.image_urls;
-        
-      // ベースURLを環境変数から取得
-      const baseURL = process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV;
-
-      // 完全なURLに変換
-      const fullImageUrls = imageUrls.map((url: string) => `${baseURL}${url}`);
-      console.log('投稿された画像の完全なURL:', fullImageUrls);
-      
-      // 登録成功ならマイページ投稿一覧に戻る
+      await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
       router.push(`/mypage/posts`);
 
     } catch (error) {
@@ -259,20 +218,25 @@ export default function MyPagePostEdit() {
   return (
     <div>
       <Head>
-        <title>{selectedPlaceInfo.selectedPlace?.name}投稿作成</title>
+        <title>投稿編集</title>
       </Head>
       <Header showButtonFlag={true} />
       <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="55%" mx="auto">
+        <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
+					【{airportName}投稿編集】
+				</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Text mt={50} mb={5} fontWeight="bold">ステップ１&nbsp;&nbsp;投稿する写真を5枚まで選択してください。</Text>
           <Box position="relative" zIndex="0" p={5} bgColor="#E2E8F0" h="550px">
             <Box position="absolute" top="0" left="0" right="0" bottom="10" display="flex" flexDirection="column" justifyContent="space-between" p={4} zIndex="1">
               <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
-              <ImageUploadForm id={1} onImageChange={handleImageChange} />
-              <ImageUploadForm id={2} onImageChange={handleImageChange} />
-              <ImageUploadForm id={3} onImageChange={handleImageChange} />
-              <ImageUploadForm id={4} onImageChange={handleImageChange} />
-              <ImageUploadForm id={5} onImageChange={handleImageChange} />
+              {Array.from({ length: 5 }, (_, index) => (
+                <ImageUploadForm
+                  key={index + 1}
+                  id={index + 1}
+                  onImageChange={handleImageChange}
+                />
+              ))}
             </Box>
           </Box>
   
@@ -349,7 +313,7 @@ export default function MyPagePostEdit() {
             </FormControl>
           </Flex>
           <Text mt={10} mb={5}>撮影場所を地図上でクリックまたは検索してください。</Text>
-          <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} />
+          <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} selectedPhotoPosition={selectedPosition} />
 
           <FormControl isInvalid={Boolean(errors.comment)}>
             <FormLabel htmlFor='comment' mt={5}>

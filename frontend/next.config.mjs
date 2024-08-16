@@ -2,9 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // Googleマップ空取得した画像をImagesコンポーネントで表示するための設定
+  // 画像をImagesコンポーネントで表示するための設定
   images: {
-    domains: ['maps.googleapis.com'],
+
+    // 本番環境ではlocalhostを修正する必要あり
+    domains: ['maps.googleapis.com', 'localhost'],
   },
 
   // 開発環境でのパフォーマンス向上のためのwebpackDevMiddleware設定
