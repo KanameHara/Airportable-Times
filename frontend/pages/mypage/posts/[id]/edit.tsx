@@ -15,6 +15,7 @@ import { UserInfoType } from "@/types/UserInfoType";
 import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
 import { PostInfoType } from "@/types/PostInfoType";
+import { Image } from "@chakra-ui/react";
 import {
   Text,
   Flex,
@@ -50,6 +51,7 @@ export default function MyPagePostEdit() {
     [key: number]: string | null;
   };
   const [previewImageList, setPreviewImageList] = useState<previewImageListType>({});
+  const [previousImageList, setPreviousImageList] = useState<previewImageListType>({});
 
   interface FormValues {
     title: string;
@@ -102,6 +104,7 @@ export default function MyPagePostEdit() {
           previewImages[index + 1] = fullUrl;
         });
         
+        setPreviousImageList(previewImages);
         setSelectedCategory(postData.category_id);
         setSelectedPosition({
           latitude: postData.taking_position_latitude,
@@ -221,21 +224,36 @@ export default function MyPagePostEdit() {
         <title>投稿編集</title>
       </Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="55%" mx="auto">
+      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="60%" mx="auto">
         <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
 					【{airportName}投稿編集】
 				</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Text mt={50} mb={5} fontWeight="bold">ステップ１&nbsp;&nbsp;投稿する写真を5枚まで選択してください。</Text>
+          <Text mt={50} mb={5} fontWeight="bold">ステップ１&nbsp;&nbsp;変更する写真を5枚まで選択してください。</Text>
           <Box position="relative" zIndex="0" p={5} bgColor="#E2E8F0" h="550px">
             <Box position="absolute" top="0" left="0" right="0" bottom="10" display="flex" flexDirection="column" justifyContent="space-between" p={4} zIndex="1">
               <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
               {Array.from({ length: 5 }, (_, index) => (
-                <ImageUploadForm
-                  key={index + 1}
-                  id={index + 1}
-                  onImageChange={handleImageChange}
-                />
+                <Flex key={index + 1} alignItems="center">
+                  <ImageUploadForm
+                    id={index + 1}
+                    onImageChange={handleImageChange}
+                  />
+                  <Text mt={9} ml={10}>変更前の画像{index+1}</Text>
+                  {previousImageList[index + 1] ? (
+                    <Image
+                      src={previousImageList[index + 1] || undefined}
+                      alt={`Previous image ${index + 1}`}
+                      width={20}
+                      height={10}
+                      objectFit="cover"
+                      mt={9}
+                      ml={4}
+                    />
+                  ) : (
+                    <Text mt={9} ml={4}>未選択</Text>
+                  )}
+                </Flex>
               ))}
             </Box>
           </Box>
