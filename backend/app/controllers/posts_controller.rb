@@ -32,21 +32,49 @@ class PostsController < ApplicationController
   # PUT /posts/:id
   def update
     @post = Post.find(params[:id])
-
+  
     ActiveRecord::Base.transaction do
       @post.update!(post_params)
+  
+      if params[:previous_images].present? || params[:images].present?
+        previous_images_params = params[:previous_images].to_unsafe_h
+        images_params = params[:images].to_unsafe_h
+        
+        # 削除する画像をまとめる
+        images_to_purge = []
+        previous_images_params.each_with_index do |(index, url), i|
+          image = images_params[index]
+          if @post.images[i].present? && ((image.present? && image.original_filename != 'blob') || url.blank?)
+            images_to_purge << @post.images[i].id
+          end
+        end
 
-      if params[:images].present?
-        @post.images.purge # 既存の画像を削除
-        @post.images.attach(params[:images].values) # 新しい画像を追加
+        # 一括削除
+        if images_to_purge.any?
+          ActiveStorage::Attachment.where(id: images_to_purge).find_each(&:purge)
+          @post.images.reload
+        end
+  
+        # アタッチする画像をまとめる
+        images_to_attach = []
+        images_params.each_with_index do |(index, image), i|
+          if image.present? && image.original_filename != 'blob'
+            images_to_attach << image
+          end
+        end
+
+        # 一括アタッチ
+        if images_to_attach.any?
+          @post.images.attach(images_to_attach)
+        end
       end
       
       render json: {
-      message: 'Post and image successfully updated',
-      image_urls: @post.images.map { |img| url_for(img) }
-    }, status: :ok
+        message: 'Post and image successfully updated',
+        image_urls: @post.images.map { |img| url_for(img) }
+      }, status: :ok
     end
-
+  
   rescue ActiveRecord::RecordNotFound => e
     render json: { errors: e.message }, status: :not_found
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback => e

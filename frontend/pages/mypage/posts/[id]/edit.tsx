@@ -51,7 +51,15 @@ export default function MyPagePostEdit() {
     [key: number]: string | null;
   };
   const [previewImageList, setPreviewImageList] = useState<previewImageListType>({});
-  const [previousImageList, setPreviousImageList] = useState<previewImageListType>({});
+
+  const initialImageListState = {
+    1: null,
+    2: null,
+    3: null,
+    4: null,
+    5: null,
+  };
+  const [previousImageList, setPreviousImageList] = useState<previewImageListType>(initialImageListState);
 
   interface FormValues {
     title: string;
@@ -98,7 +106,8 @@ export default function MyPagePostEdit() {
         setAirportName(placesResponse.data.result.name);
 
         const imageUrls = postData.image_urls;
-        const previewImages: previewImageListType = {};
+        const previewImages: previewImageListType = { ...initialImageListState };
+
         imageUrls.forEach((url: string, index: number) => {
           const fullUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}${url}`;
           previewImages[index + 1] = fullUrl;
@@ -178,17 +187,31 @@ export default function MyPagePostEdit() {
     setSelectedPosition({ latitude, longitude });
   };
 
+  const handleDeletePreviousImage = (index: number) => {
+    setPreviousImageList(prev => ({ ...prev, [index]: null }));
+  }
+
   const onSubmit = async (data: FormValues) => { 
-    let isImagesSelected = false;
-    for (let i = 1; i <= 5; i++) { 
-      if (selectedImageList[i]) {
-        isImagesSelected = true;
-        break;
+    let isImagesSelected = true;
+    let errorImageIndex = -1;
+
+    if (!selectedImageList[1] && !previousImageList[1]) {
+      isImagesSelected = false;
+      errorImageIndex = 1;
+    } else {
+      for (let i = 3; i <= 5; i++) { 
+        if (((selectedImageList[i]) && (!selectedImageList[i - 1] && !previousImageList[i - 1])) ||
+            ((previousImageList[i]) && (!selectedImageList[i - 1] && !previousImageList[i - 1])))
+        {
+          isImagesSelected = false;
+          errorImageIndex = i-1;
+          break;
+        }
       }
     }
 
     if (!isImagesSelected) {
-      setErrMsgforImg('少なくとも１つの画像を選択してください。');
+      setErrMsgforImg(`${errorImageIndex}番目以前の画像を選択しているか確認してください。`);
       return;
     } else {
       setErrMsgforImg(null);
@@ -206,9 +229,17 @@ export default function MyPagePostEdit() {
       formData.append('post[taking_position_longitude]', selectedPosition.longitude.toString());
     }
     formData.append('post[comment]', data.comment || '');
-    Object.values(selectedImageList).filter((file) => file !== null).forEach((file, index) => {
-      formData.append(`images[${index}]`, file as Blob);
+    Object.entries(selectedImageList).forEach(([key, file], index) => {
+      if (file !== null) {
+        formData.append(`images[${index}]`, file as Blob);
+      } else {
+        formData.append(`images[${index}]`, new Blob([]));
+      }
     });
+    Object.entries(previousImageList).forEach(([key, url], index) => {
+      formData.append(`previous_images[${index}]`, url !== null ? url : "");
+    });
+    
     try {
       await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
       router.push(`/mypage/posts`);
@@ -224,7 +255,7 @@ export default function MyPagePostEdit() {
         <title>投稿編集</title>
       </Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="60%" mx="auto">
+      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="63%" mx="auto">
         <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
 					【{airportName}投稿編集】
 				</h1>
@@ -253,6 +284,9 @@ export default function MyPagePostEdit() {
                   ) : (
                     <Text mt={9} ml={4}>未選択</Text>
                   )}
+                  <Button h={7} mt={10} ml={2} onClick={() => handleDeletePreviousImage(index+1)}>
+                    削除
+                  </Button>
                 </Flex>
               ))}
             </Box>
