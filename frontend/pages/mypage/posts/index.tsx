@@ -11,6 +11,7 @@ import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
+import PostCard from '@/components/layouts/PostCard';
 import {
   Button,
   Flex,
@@ -154,25 +155,7 @@ const MyPagePostIndex: FC = () => {
         </Flex>
         <SimpleGrid columns={3} spacing={2} m={10}>
           {currentPosts.map((post) => (
-            <Box key={post.id} borderWidth="1px" borderRadius="lg" overflow="hidden" width="300px" height="300px"
-              onClick={() => handlePostClick(post.id)}
-              cursor="pointer" // ポインタカーソルを追加してクリック可能に見せる
-            >
-              {post.image_urls && post.image_urls.length > 0 ? (
-                <Image src={post.image_urls[0]} alt={post.title} objectFit="cover" height="200px" />
-              ) : (
-                <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.200">
-                  <Text>No Image</Text>
-                </Box>
-              )}
-              <Box p="6">
-                <Box display="flex" alignItems="baseline">
-                  <Text fontWeight="bold" as="h4" lineHeight="tight" isTruncated>
-                    {post.title}
-                  </Text>
-                </Box>
-              </Box>
-            </Box>
+            <PostCard key={post.id} post={post} onClick={handlePostClick} />
           ))}
         </SimpleGrid>
         <Flex justifyContent="center" mb={5}>
