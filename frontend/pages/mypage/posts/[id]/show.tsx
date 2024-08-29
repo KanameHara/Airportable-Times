@@ -1,13 +1,14 @@
 //----------------------------------------------------------------
 // マイページ投稿詳細画面
 //----------------------------------------------------------------
-import Head from "next/head";
-import Header from "@/components/layouts/Header";
-import { useRouter } from 'next/router';
 import React, { FC, useState, useEffect } from 'react';
+import Head from 'next/head';
+import Header from '@/components/layouts/Header';
+import { useRouter } from 'next/router';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
-import { PostInfoType } from "@/types/PostInfoType";
+import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
+import ConfirmModal from '@/components/layouts/ConfirmModal';
 import {
   Text,
   Flex,
@@ -15,13 +16,6 @@ import {
   Image,
   Box,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton
 } from '@chakra-ui/react';
 
 const MyPagePostShow: FC = () => {
@@ -214,24 +208,7 @@ const MyPagePostShow: FC = () => {
         </Button>
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>投稿を削除</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            本当に削除しますか？
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
-              はい
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              いいえ
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDelete} mainText='投稿を削除' confirmText='本当に削除しますか？'/>
     </div>
   );
 };
