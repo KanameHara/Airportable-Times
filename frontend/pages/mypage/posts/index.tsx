@@ -12,6 +12,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
 import PostCard from '@/components/layouts/PostCard';
+import Pagination from '@/components/layouts/Pagination';
 import {
   Button,
   Flex,
@@ -102,11 +103,15 @@ const MyPagePostIndex: FC = () => {
 
   // ページネーションのための設定
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 10;
+  const postsPerPage = 12;
   const indexOfLastPost = currentPage * postsPerPage; // 現在のページで表示する最後の投稿のインデックス
   const indexOfFirstPost = indexOfLastPost - postsPerPage;  // 現在のページで表示する最初の投稿のインデックス
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);  // 現在のページで表示する投稿のリストを抽出
   const totalPages = Math.ceil(posts.length / postsPerPage);  // 総ページ数を計算
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // 各投稿クリック時のハンドラ
   const handlePostClick = (postId: bigint) => {
@@ -158,13 +163,7 @@ const MyPagePostIndex: FC = () => {
             <PostCard key={post.id} post={post} onClick={handlePostClick} />
           ))}
         </SimpleGrid>
-        <Flex justifyContent="center" mb={5}>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <Button key={i} onClick={() => setCurrentPage(i + 1)} disabled={currentPage === i + 1} mx={1}>
-              {i + 1}
-            </Button>
-          ))}
-        </Flex>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </Box>
 		</div>
 	);
