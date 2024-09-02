@@ -7,20 +7,15 @@ import { useRouter } from 'next/router';
 import React, { FC, useState, useEffect } from 'react';
 import { useMap } from '../../../components/contexts/MapContext';
 import axios from 'axios';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import { PostInfoType } from "@/types/PostInfoType";
 import PostCard from "@/components/layouts/PostCard";
 import Pagination from "@/components/layouts/Pagination";
+import CategoryDropdown from "@/components/layouts/CategoryDropdown";
 import {
   Text,
   Flex,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Box,
-  Image,
   SimpleGrid
 } from '@chakra-ui/react';
 
@@ -133,21 +128,12 @@ const AirportPostIndex: FC = () => {
           【{selectedPlaceInfo.selectedPlace?.name}投稿一覧】
         </h1>
         <Text mt={5} ml={10} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex>
-          <Menu>
-            <MenuButton as={Button} mt={5} ml={70} rightIcon={<ChevronDownIcon />}>
-              {categories.length > 0 
-                ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
-                : 'カテゴリを選択'}
-            </MenuButton>
-            <MenuList>
-              {categories.map((category) => (
-                <MenuItem key={category.id} onClick={() => handleSelect(category.id)}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+        <Flex justifyContent="flex-start" mt={5} ml={70}>
+          <CategoryDropdown
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelect={handleSelect}
+          />
         </Flex>
         <SimpleGrid columns={3} spacing={2} m={10}>
           {currentPosts.map((post) => (

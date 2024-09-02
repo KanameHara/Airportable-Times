@@ -8,22 +8,16 @@ import Head from 'next/head';
 import Header from '../../../components/layouts/Header';
 import { UserInfoType } from '@/types/UserInfoType';
 import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
 import PostCard from '@/components/layouts/PostCard';
 import Pagination from '@/components/layouts/Pagination';
+import CategoryDropdown from '@/components/layouts/CategoryDropdown';
 import {
-  Button,
   Flex,
   Box,
   Text,
-  Image,
   SimpleGrid,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem
 } from '@chakra-ui/react'
 
 const MyPagePostIndex: FC = () => {
@@ -142,21 +136,12 @@ const MyPagePostIndex: FC = () => {
           <Text mt={5} ml={12} fontWeight="bold">過去の投稿一覧：</Text>
         </Flex>
         <Text mt={5} ml={16} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex>
-          <Menu>
-            <MenuButton as={Button} mt={5} ml={70} rightIcon={<ChevronDownIcon />}>
-              {categories.length > 0 
-                ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
-                : 'カテゴリを選択'}
-            </MenuButton>
-            <MenuList>
-              {categories.map((category) => (
-                <MenuItem key={category.id} onClick={() => handleSelect(category.id)}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+        <Flex justifyContent="flex-start" mt={5} ml={70}>
+          <CategoryDropdown
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelect={handleSelect}
+          />
         </Flex>
         <SimpleGrid columns={3} spacing={2} m={10}>
           {currentPosts.map((post) => (

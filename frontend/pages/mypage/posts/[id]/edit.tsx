@@ -7,7 +7,6 @@ import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
 import MapforPost from "@/components/layouts/MapforPost";
 import ImageUploadForm from "@/components/layouts/ImageUploadForm";
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useAuth } from "@/components/contexts/AuthContext";
@@ -16,6 +15,7 @@ import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
 import { PostInfoType } from "@/types/PostInfoType";
 import { Image } from "@chakra-ui/react";
+import CategoryDropdown from "@/components/layouts/CategoryDropdown";
 import {
   Text,
   Flex,
@@ -26,10 +26,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
 } from '@chakra-ui/react';
 
 export default function MyPagePostEdit() { 
@@ -293,21 +289,12 @@ export default function MyPagePostEdit() {
           </Box>
   
           <Text mt={20} fontWeight="bold">ステップ２&nbsp;&nbsp;投稿のカテゴリーを選択してください。</Text>
-          <Flex>
-            <Menu>
-              <MenuButton as={Button} mt={5} rightIcon={<ChevronDownIcon />}>
-                {categories.length > 0 
-                  ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
-                  : 'カテゴリを選択'}
-              </MenuButton>
-              <MenuList>
-                {categories.map((category) => (
-                  <MenuItem key={category.id} onClick={() => handleSelect(category.id)}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+          <Flex justifyContent="flex-start" mt={5}>
+            <CategoryDropdown
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onSelect={handleSelect}
+            />
           </Flex>
   
           <Text mt={20} fontWeight="bold">ステップ３&nbsp;&nbsp;投稿する各情報を入力してください。</Text>
