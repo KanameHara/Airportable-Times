@@ -114,4 +114,4 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
   );
 }
 
-export default Header;
+export default React.memo(Header);
