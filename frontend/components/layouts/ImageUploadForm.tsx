@@ -85,4 +85,4 @@ const ImageUploadForm: React.FC<ImageUploadFormPropsType> = ({ id, onImageChange
   );
 }
 
-export default ImageUploadForm;
+export default React.memo(ImageUploadForm);

@@ -49,10 +49,9 @@ export default function AirportPostCreate() {
   // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
   const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
 
-  // 投稿種別選択時のハンドラ
-  const handleSelect = (categoryId: bigint) => {
+  const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
-  }
+  }, []);
 
   // 入力フォームのバリデーション
   interface FormValues {
@@ -133,13 +132,12 @@ export default function AirportPostCreate() {
     router.push(`/${placeID}/posts`);
   }
 
-  // マップで撮影位置選択時のハンドラ
-  const handleSelectedPhotoPosition = (latitude: number, longitude: number) => {
+  const handleSelectedPhotoPosition = useCallback((latitude: number, longitude: number) => {
     setSelectedPosition({ latitude, longitude });
-  };
+  }, []);
 
   // 投稿ボタン押下時のハンドラ
-  const onSubmit = async (data: FormValues) => { 
+  const onSubmit = useCallback(async (data: FormValues) => {
     
     // 投稿写真の選択状態を取得
     let isImagesSelected = false;
@@ -199,7 +197,7 @@ export default function AirportPostCreate() {
     } catch (error) {
       console.error('axios.postのエラー内容', error);
     }
-  }
+  }, [userInfo, selectedPlaceInfo, selectedCategory, selectedImageList, selectedPosition, router, placeID]);
 
   return (
     <div>
@@ -213,11 +211,14 @@ export default function AirportPostCreate() {
           <Box position="relative" zIndex="0" p={5} bgColor="#E2E8F0" h="550px">
             <Box position="absolute" top="0" left="0" right="0" bottom="10" display="flex" flexDirection="column" justifyContent="space-between" p={4} zIndex="1">
               <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
-              <ImageUploadForm id={1} onImageChange={handleImageChange} />
-              <ImageUploadForm id={2} onImageChange={handleImageChange} />
-              <ImageUploadForm id={3} onImageChange={handleImageChange} />
-              <ImageUploadForm id={4} onImageChange={handleImageChange} />
-              <ImageUploadForm id={5} onImageChange={handleImageChange} />
+              {Array.from({ length: 5 }, (_, index) => (
+                <Flex key={index + 1} alignItems="center">
+                  <ImageUploadForm
+                    id={index + 1}
+                    onImageChange={handleImageChange}
+                  />
+                </Flex>
+              ))}
             </Box>
           </Box>
   
