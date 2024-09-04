@@ -41,4 +41,4 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm, mainT
   );
 };
 
-export default ConfirmModal;
+export default React.memo(ConfirmModal);

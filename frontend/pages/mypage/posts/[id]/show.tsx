@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // マイページ投稿詳細画面
 //----------------------------------------------------------------
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layouts/Header';
 import { useRouter } from 'next/router';
@@ -112,7 +112,7 @@ const MyPagePostShow: FC = () => {
   };
 
   // モーダルで削除確認後、削除ボタン押下時のハンドラ
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = useCallback(async () => {
     try {
 
       // DBから投稿データを削除する
@@ -126,7 +126,7 @@ const MyPagePostShow: FC = () => {
     } catch (error) {
       console.error('Error deleting post:', error);
     }
-  };
+  }, [postID, onClose, router]);
 
   // 戻るボタン押下時のハンドラ
   const handleBackButtonClick = () => {
