@@ -171,23 +171,23 @@ export default function MyPagePostEdit() {
     setSelectedImageList(prev => ({ ...prev, [id]: file }));
   }, []);
 
-  const handleSelect = (categoryId: bigint) => {
+  const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
-  }
+  }, []);
 
   const handleCancelButtonClick = () => {
     router.push(`/mypage/posts`);
   }
 
-  const handleSelectedPhotoPosition = (latitude: number, longitude: number) => {
+  const handleSelectedPhotoPosition = useCallback((latitude: number, longitude: number) => {
     setSelectedPosition({ latitude, longitude });
-  };
+  }, []);
 
   const handleDeletePreviousImage = (index: number) => {
     setPreviousImageList(prev => ({ ...prev, [index]: null }));
   }
 
-  const onSubmit = async (data: FormValues) => { 
+  const onSubmit = useCallback(async (data: FormValues) => { 
     let isImagesSelected = true;
     let errorImageIndex = -1;
 
@@ -243,7 +243,7 @@ export default function MyPagePostEdit() {
     } catch (error) {
       console.error('axios.postのエラー内容', error);
     }
-  }
+  }, [selectedImageList, previousImageList, selectedCategory, userInfo, selectedPosition, postID, post, router]);
 
   return (
     <div>
