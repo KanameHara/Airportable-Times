@@ -40,4 +40,4 @@ const PostCard: FC<PostCardProps> = ({ post, onClick }) => {
   );
 };
 
-export default PostCard;
+export default React.memo(PostCard);

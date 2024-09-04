@@ -4,7 +4,7 @@
 import Head from "next/head"; 
 import Header from "../../../components/layouts/Header";
 import { useRouter } from 'next/router';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useMap } from '../../../components/contexts/MapContext';
 import axios from 'axios';
 import { PostInfoType } from "@/types/PostInfoType";
@@ -38,10 +38,9 @@ const AirportPostIndex: FC = () => {
   // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
   const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
 
-  // 投稿種別選択時のハンドラ
-  const handleSelect = (categoryId: bigint) => {
+  const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
-  }
+  }, []);
 
   // 投稿種別データを取得
   useEffect(() => {
@@ -64,6 +63,8 @@ const AirportPostIndex: FC = () => {
   // 選択中の空港とカテゴリに該当する投稿データのみ取得
   const [posts, setPosts] = useState<PostInfoType[]>([]);
   useEffect(() => {
+    if (!selectedCategory || !placeID) return;
+    
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
@@ -78,10 +79,8 @@ const AirportPostIndex: FC = () => {
         console.error('Error fetching posts:', error);
       }
     };
-  
-    if (selectedCategory && placeID) {
-      fetchPosts();
-    }
+    
+    fetchPosts();
   }, [selectedCategory, placeID]);  
 
   // ページネーションのための設定
@@ -89,19 +88,16 @@ const AirportPostIndex: FC = () => {
   const postsPerPage = 12;
   const indexOfLastPost = currentPage * postsPerPage; // 現在のページで表示する最後の投稿のインデックス
   const indexOfFirstPost = indexOfLastPost - postsPerPage;  // 現在のページで表示する最初の投稿のインデックス
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);  // 現在のページで表示する投稿のリストを抽出
-  const totalPages = Math.ceil(posts.length / postsPerPage);  // 総ページ数を計算
+  const currentPosts = useMemo(() => posts.slice(indexOfFirstPost, indexOfLastPost), [posts, indexOfFirstPost, indexOfLastPost]);
+  const totalPages = useMemo(() => Math.ceil(posts.length / postsPerPage), [posts.length, postsPerPage]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  };
+  }, []);
 
-  // 各投稿クリック時のハンドラ
-  const handlePostClick = (postId: bigint) => {
-
-    // 投稿詳細画面に遷移
+  const handlePostClick = useCallback((postId: bigint) => {
     router.push(`/${placeID}/posts/${postId}/show`);
-  }
+  }, [router, placeID]);
 
   // 投稿作成ボタン押下時のハンドラ
   const handleCreatePostButtonClick = () => {
