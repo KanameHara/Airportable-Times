@@ -10,9 +10,9 @@ import { UserInfoType } from '@/types/UserInfoType';
 import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
-import PostCard from '@/components/layouts/PostCard';
-import Pagination from '@/components/layouts/Pagination';
-import CategoryDropdown from '@/components/layouts/CategoryDropdown';
+import PostCard from '@/components/UI/PostCard';
+import Pagination from '@/components/UI/Pagination';
+import CategoryDropdown from '@/components/UI/CategoryDropdown';
 import {
   Flex,
   Box,

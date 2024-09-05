@@ -8,9 +8,9 @@ import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useMap } from '../../../components/contexts/MapContext';
 import axios from 'axios';
 import { PostInfoType } from "@/types/PostInfoType";
-import PostCard from "@/components/layouts/PostCard";
-import Pagination from "@/components/layouts/Pagination";
-import CategoryDropdown from "@/components/layouts/CategoryDropdown";
+import PostCard from "@/components/UI/PostCard";
+import Pagination from "@/components/UI/Pagination";
+import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import {
   Text,
   Flex,

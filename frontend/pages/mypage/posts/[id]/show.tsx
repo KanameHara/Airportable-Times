@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
-import ConfirmModal from '@/components/layouts/ConfirmModal';
+import ConfirmModal from '@/components/UI/ConfirmModal';
 import {
   Text,
   Flex,

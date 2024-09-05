@@ -3,7 +3,7 @@
 //----------------------------------------------------------------
 import React, { useRef, FC } from 'react';
 import { GoogleMap, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
-import { useMap } from '../contexts/MapContext';
+import { useMap } from '../../contexts/MapContext';
 import { SelectedPlaceInfoType } from '@/types/SelectedPlaceInfoType';
 import { initializedSelectedPlaceInfo } from '@/constants/InitializedSelectedPlaceInfo';
 import { Button } from '@chakra-ui/react';

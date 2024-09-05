@@ -3,7 +3,7 @@
 //----------------------------------------------------------------
 import React, { useRef, FC, useState, useEffect } from 'react';
 import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
-import { useMap } from '../contexts/MapContext';
+import { useMap } from '../../contexts/MapContext';
 import { SelectedPlaceInfoType } from '@/types/SelectedPlaceInfoType';
 import { initializedSelectedPlaceInfo } from '@/constants/InitializedSelectedPlaceInfo';
 import { SelectedPhotoPositionType } from '@/types/SelectePhotoPositionType';

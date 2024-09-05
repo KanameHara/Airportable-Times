@@ -3,7 +3,7 @@
 //----------------------------------------------------------------
 import Head from "next/head"; 
 import Header from "../components/layouts/Header";
-import Map from "../components/layouts/Map";
+import Map from "../components/Features/GoogleMap/Map";
 import { useMap } from '../components/contexts/MapContext';
 import { Flex, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';

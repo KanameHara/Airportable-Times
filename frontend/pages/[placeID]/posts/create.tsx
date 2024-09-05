@@ -5,8 +5,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head"; 
 import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
-import MapforPost from "@/components/layouts/MapforPost";
-import ImageUploadForm from "@/components/layouts/ImageUploadForm";
+import MapforPost from "@/components/Features/GoogleMap/MapforPost";
+import ImageUploadForm from "@/components/UI/ImageUploadForm";
 import { useMap } from "@/components/contexts/MapContext";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -14,7 +14,7 @@ import { useAuth } from "@/components/contexts/AuthContext";
 import { UserInfoType } from "@/types/UserInfoType";
 import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
-import CategoryDropdown from "@/components/layouts/CategoryDropdown";
+import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import {
   Text,
   Flex,
