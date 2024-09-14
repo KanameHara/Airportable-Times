@@ -11,10 +11,13 @@ export const fetchUserInfoByEmail = async (email: string | null | undefined) => 
   }
 
 	try {
-		const response = await axios.get(
-			`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users/find_by_email`,
-			{ params: { email } }
-		);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users/find_by_email`,
+      {
+        params: { email },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error: any) {
     return error.response.data.error;  // エラーメッセージを返す

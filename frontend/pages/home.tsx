@@ -3,9 +3,9 @@
 //----------------------------------------------------------------
 import Head from "next/head"; 
 import Header from "../components/layouts/Header";
-import Map from "../components/layouts/Map";
+import Map from "../components/Features/GoogleMap/Map";
 import { useMap } from '../components/contexts/MapContext';
-import { Flex, Button } from '@chakra-ui/react';
+import { Flex, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
 
@@ -45,19 +45,24 @@ export default function Home() {
         <title>空港検索</title>
       </Head>
       <Header showButtonFlag={true} />
-      <div style={{ marginTop: '80px', marginBottom: '40px', marginLeft: '100px' }}>日本各地の空港を検索できます。</div>
-      <Flex>
-        <div style={{ marginLeft: '100px', marginBottom: '50px' }}><Map /></div>
-        {selectedPlaceInfo.selectedPlace && (
-          <div>
-            <div style={{ marginTop: '50px', marginLeft: '100px', marginBottom: '20px' }}>
-              {selectedPlaceInfo.selectedPlace.name}に決定しますか？
-            </div>
-            <Button ml={90} mt={5} onClick={handleOkButtonClick}>決定</Button>
-            <Button ml={10} mt={5} onClick={handleCancelButtonClick}>キャンセル</Button>
+      <Box
+        p={5}
+        mt={10}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="md"
+        width="78%"
+        mx="auto"
+        maxW="1100px"
+        maxH="800px"
+      >
+        <div style={{ marginBottom: '40px', marginLeft: '135px' }}>日本各地の空港を検索できます。</div>
+        <Flex>
+          <div style={{ marginBottom: '50px', flex: 1 }}>
+            <Map onOkButtonClick={handleOkButtonClick} onCancelButtonClick={handleCancelButtonClick}/>
           </div>
-        )}
-      </Flex>      
+        </Flex>
+      </Box>
     </div>
   );
 }

@@ -53,32 +53,5 @@ services:      # アプリケーションを構成するサービス（コンテ
     depends_on: # 依存関係の設定→dbのサービスが起動してからbackendのサービスを起動するように設定している
       - db
 
-  frontend:
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    image: airapp_frontend_image
-    container_name: airapp_frontend
-    volumes:
-      - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules # node_modulesをボリュームにマウントしホストマシンのnode_modulesをコンテナ内にマウントすることを防ぐ
-                                  # これによりホストのnode_modulesがコンテナのものと衝突することなく、依存関係がコンテナ内で完全に管理される
-    command: "yarn dev" # YarnはjavaScriptの依存関係管理ツールで、プロジェクトのパッケージインストールやスクリプトの実行などを行う
-    ports:
-      - "8000:3000"
-
-  # commons_ui:
-  #   build:
-  #     context: ./commons-ui/
-  #     dockerfile: Dockerfile.dev
-  #   image: yakushiru_commons_ui_image
-  #   container_name: yakushiru_commons_ui
-  #   volumes:
-  #     - ./commons-ui:/usr/src/app
-  #   command: "yarn start"
-  #   ports:
-  #     - "8080:3000"
-  #   tty: true
-
 volumes:
   db-data:

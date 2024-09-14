@@ -5,8 +5,7 @@ FROM ruby:3.2.2 as Builder
 # パッケージリストの更新とNode.jsおよびMySQLクライアントのインストールを実行
 # 特にRuby on RailsアプリケーションでJavaScriptのアセットコンパイルやデータベース操作を行う際に必要な環境を設定するために使用
 #   この時点ではアプリケーションのビルドプロセスに必要な依存関係をインストール（ランタイムステージで再度行うが目的は別）
-# RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client git
-RUN apt-get update -qq && apt-get install -y nodejs npm yarn default-mysql-client git
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libssl-dev
 # タイムゾーンの環境変数を設定
 ENV TZ=Asia/Tokyo
 # RUN mkdir /airapp
@@ -23,7 +22,7 @@ COPY . /airapp
 # slim」バリアントは、基本的なRuby環境に必要な最小限のパッケージのみを含むイメージ
 FROM ruby:3.2.2-slim
 # アプリケーション実行環境の準備のために実行されるコマンド（ビルドステージの時とは目的が異なる）
-RUN apt-get update -qq && apt-get install -y nodejs npm yarn default-mysql-client git
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client build-essential libssl-dev
 ENV TZ=Asia/Tokyo
 RUN mkdir /airapp
 WORKDIR /airapp

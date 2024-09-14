@@ -19,6 +19,7 @@ import {
 	InputRightElement,
 	useToast,
   VStack,
+  Box
 } from '@chakra-ui/react'
 
 import Head from "next/head";
@@ -78,7 +79,6 @@ export default function SignUpScreen() {
         };
         
         // ユーザー情報をDBに登録する
-        // axios.post('http://localhost:3000/users', userData)
         axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users`, userData)
         .then((response) => {
           // 登録成功時
@@ -125,209 +125,159 @@ export default function SignUpScreen() {
 			</Head>
 			<Header showButtonFlag={false} />
 			<Flex height='100vh' justifyContent='center' alignItems='center'>
-        <VStack spacing='10'>
-          <Heading>Airportable Timesにようこそ！</Heading>
-          <form onSubmit={onSubmit}>
-            <VStack alignItems='left'>
-							<FormControl isInvalid={Boolean(errors.email)}>
-                <FormLabel htmlFor='email' textAlign='start'>
-                  メールアドレス
-                </FormLabel>
-                <Input
-                  id='email'
-                  {...register('email', {
-                    required: '必須項目です',
-                    maxLength: {
-                      value: 50,
-                      message: '50文字以内で入力してください',
-                    },
-                    pattern: {
-                      value:
-                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@+[a-zA-Z0-9-]+\.+[a-zA-Z0-9-]+$/,
-                      message: 'メールアドレスの形式が違います',
-                    },
-                  })}
-								/>
-								<FormErrorMessage>
-                  {errors.email && errors.email.message}
-                </FormErrorMessage>
-							</FormControl>
-							
-							<FormControl isInvalid={Boolean(errors.username)}>
-                <FormLabel htmlFor='username'>ユーザー名</FormLabel>
-								<Input id='username' {...register('username', {
-									required: '必須項目です',
-									minLength: {
-										value: 2,
-										message: '2文字以上で入力してください',
-									},
-                  maxLength: {
-                    value: 10,
-                    message: '10文字以内で入力してください',
-									},
-									pattern: {
-										value: /^[a-zA-Z0-9_-]+$/,
-										message: '使用できる文字はアルファベット、数字、ハイフン(-)、アンダースコア(_)のみです',
-									}
-								})} />
-								<FormErrorMessage>
-                  {errors.username && errors.username.message}
-                </FormErrorMessage>
-              </FormControl>
-  
-              <FormControl isInvalid={Boolean(errors.password)}>
-                <FormLabel htmlFor='password'>パスワード</FormLabel>
-								<InputGroup size='md'>
-									<Input
-                    pr='4.5rem'
-                    type={password ? 'text' : 'password'}
-                    {...register('password', {
-                      required: '必須項目です',
-                      minLength: {
-                        value: 8,
-                        message: '8文字以上で入力してください',
-                      },
-                      maxLength: {
-                        value: 50,
-                        message: '50文字以内で入力してください',
-                      },
-                      pattern: {
-                        value: /^(?=.*[A-Z])[0-9a-zA-Z]*$/,
-                        message:
-                          '半角英数字かつ少なくとも1つの大文字を含めてください',
-                      },
-                    })}
-                  />
-                  <InputRightElement width='4.5rem'>
-                    <Button h='1.75rem' size='sm' onClick={passwordClick}>
-                      {password ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
-  
-              <FormControl isInvalid={Boolean(errors.confirm)}>
-                <FormLabel htmlFor='confirm'>パスワード確認</FormLabel>
-                <InputGroup size='md'>
+        <Box p={5} mt={20} shadow="md" borderWidth="1px" flex="1" w="50%" maxW="600px" height="auto">
+          <VStack spacing='10'>
+            <Heading>Airportable Timesにようこそ！</Heading>
+            <form onSubmit={onSubmit}>
+              <VStack alignItems='left'>
+							  <FormControl isInvalid={Boolean(errors.email)}>
+                  <FormLabel htmlFor='email' textAlign='start'>
+                    メールアドレス
+                  </FormLabel>
                   <Input
-                    pr='4.5rem'
-                    type={confirm ? 'text' : 'password'}
-                    {...register('confirm', {
+                    id='email'
+                    {...register('email', {
                       required: '必須項目です',
-                      minLength: {
-                        value: 8,
-                        message: '8文字以上で入力してください',
-                      },
                       maxLength: {
                         value: 50,
                         message: '50文字以内で入力してください',
                       },
                       pattern: {
-                        value: /^(?=.*[A-Z])[0-9a-zA-Z]*$/,
-                        message:
-                          '半角英数字かつ少なくとも1つの大文字を含めてください',
+                        value:
+                          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@+[a-zA-Z0-9-]+\.+[a-zA-Z0-9-]+$/,
+                        message: 'メールアドレスの形式が違います',
                       },
-                      validate: (value) =>
-                        value === getValues('password') ||
-                        'パスワードが一致しません',
                     })}
-                  />
-                  <InputRightElement width='4.5rem'>
-                    <Button h='1.75rem' size='sm' onClick={confirmClick}>
-                      {confirm ? 'Hide' : 'Show'}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <FormErrorMessage>
-                  {errors.confirm && errors.confirm.message}
-                </FormErrorMessage>
-              </FormControl>
+								  />
+								  <FormErrorMessage>
+                    {errors.email && errors.email.message}
+                  </FormErrorMessage>
+							  </FormControl>
+							
+							  <FormControl isInvalid={Boolean(errors.username)}>
+                  <FormLabel htmlFor='username'>ユーザー名</FormLabel>
+								  <Input id='username' {...register('username', {
+									  required: '必須項目です',
+									  minLength: {
+										  value: 2,
+										  message: '2文字以上で入力してください',
+									  },
+                    maxLength: {
+                      value: 10,
+                      message: '10文字以内で入力してください',
+									  },
+									  pattern: {
+										  value: /^[a-zA-Z0-9_-]+$/,
+										  message: '使用できる文字はアルファベット、数字、ハイフン(-)、アンダースコア(_)のみです',
+									  }
+								  })} />
+								  <FormErrorMessage>
+                    {errors.username && errors.username.message}
+                  </FormErrorMessage>
+                </FormControl>
   
-              <Button
-                marginTop='4'
-                color='white'
-                bg='blue.400'
-                isLoading={isSubmitting}
-                type='submit'
-                paddingX='auto'
-                _hover={{
-                  borderColor: 'transparent',
-                  boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
-                }}
-              >
-                新規登録
-              </Button>
-            </VStack>
-          </form>
-          <Button
-            as={NextLink}
-            href='/signin'
-            bg='white'
-            width='100%'
-            _hover={{
-              borderColor: 'transparent',
-              boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
-            }}
-          >
-            ログインはこちらから
-          </Button>
-        </VStack>
+                <FormControl isInvalid={Boolean(errors.password)}>
+                  <FormLabel htmlFor='password'>パスワード</FormLabel>
+								  <InputGroup size='md'>
+									  <Input
+                      pr='4.5rem'
+                      type={password ? 'text' : 'password'}
+                      {...register('password', {
+                        required: '必須項目です',
+                        minLength: {
+                          value: 8,
+                          message: '8文字以上で入力してください',
+                        },
+                        maxLength: {
+                          value: 50,
+                          message: '50文字以内で入力してください',
+                        },
+                        pattern: {
+                          value: /^(?=.*[A-Z])[0-9a-zA-Z]*$/,
+                          message:
+                            '半角英数字かつ少なくとも1つの大文字を含めてください',
+                        },
+                      })}
+                    />
+                    <InputRightElement width='4.5rem'>
+                      <Button h='1.75rem' size='sm' onClick={passwordClick}>
+                        {password ? 'Hide' : 'Show'}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <FormErrorMessage>
+                    {errors.password && errors.password.message}
+                  </FormErrorMessage>
+                </FormControl>
+  
+                <FormControl isInvalid={Boolean(errors.confirm)}>
+                  <FormLabel htmlFor='confirm'>パスワード確認</FormLabel>
+                  <InputGroup size='md'>
+                    <Input
+                      pr='4.5rem'
+                      type={confirm ? 'text' : 'password'}
+                      {...register('confirm', {
+                        required: '必須項目です',
+                        minLength: {
+                          value: 8,
+                          message: '8文字以上で入力してください',
+                        },
+                        maxLength: {
+                          value: 50,
+                          message: '50文字以内で入力してください',
+                        },
+                        pattern: {
+                          value: /^(?=.*[A-Z])[0-9a-zA-Z]*$/,
+                          message:
+                            '半角英数字かつ少なくとも1つの大文字を含めてください',
+                        },
+                        validate: (value) =>
+                          value === getValues('password') ||
+                          'パスワードが一致しません',
+                      })}
+                    />
+                    <InputRightElement width='4.5rem'>
+                      <Button h='1.75rem' size='sm' onClick={confirmClick}>
+                        {confirm ? 'Hide' : 'Show'}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <FormErrorMessage>
+                    {errors.confirm && errors.confirm.message}
+                  </FormErrorMessage>
+                </FormControl>
+  
+                <Button
+                  marginTop='4'
+                  color='white'
+                  bg='blue.400'
+                  isLoading={isSubmitting}
+                  type='submit'
+                  paddingX='auto'
+                  _hover={{
+                    borderColor: 'transparent',
+                    boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
+                  }}
+                >
+                  新規登録
+                </Button>
+              </VStack>
+            </form>
+            <Button
+              as={NextLink}
+              href='/signin'
+              bg='white'
+              width='50%'
+              _hover={{
+                borderColor: 'transparent',
+                boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              ログインはこちらから
+            </Button>
+          </VStack>
+        </Box>
       </Flex>
 		</div>
   )
 }
-
-/*
-// 新規登録ボタンハンドラ
-	// signUpWithEmailはfirebaseの応答を待つためhandleSubmitは非同期処理となっている
-	// thenメソッドでログイン成功/失敗時の結果をresに格納
-  const onSubmit = handleSubmit(async (data) => {
-
-    // DBに登録するユーザー情報
-    const userData = {
-      email: data.email,
-      name: data.username,
-      password: data.password,
-    };
-
-    await fetch('/api/users', {
-      // '/api/users'はユーザ情報を受け取るエンドポイント
-      method: 'POST', // 指定のURL(/api/users)にデータを送信するメソッド
-                      // Post→routes.rb→Userモデルのコントローラーファイルの流れでDBにデータを保存
-      // リクエストヘッダー：リクエストに関する追加情報をサーバーに伝えるためのキーと値のペアの集合
-      //  下記の場合は、送信するデータがJSON形式であることをサーバーに伝えている
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData), // 送信するデータをJSON形式に変換
-    }).then((response) => {
-      // レスポンスを処理　ここ何を処理すればいいんだろう？hara
-    });
-
-		await signUpWithEmail({
-			email: data.email,
-			password: data.password,
-		}).then((res: FirebaseResult) => {
-			if (res.isSuccess) {
-				toast({
-					title: res.message,
-					status: 'success',
-					duration: 2000,
-					isClosable: true,
-        })
-        // ここにユーザー情報のDBへの登録処理を配置する
-				router.push('/home'); // 新規登録後にホーム画面に遷移
-			} else {
-					toast({
-						title: res.message, 
-						status: 'error',
-						duration: 2000,
-						isClosable: true,
-					})
-			}
-		})
-	})
-*/

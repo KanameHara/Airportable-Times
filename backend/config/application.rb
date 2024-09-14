@@ -4,12 +4,17 @@ require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
+
+# 環境変数を読み込む
 Bundler.require(*Rails.groups)
 
 module Airapp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
+
+    # Dotenv
+    Dotenv::Railtie.load
 
     # Configuration for the application, engines, and railties goes here.
     #
