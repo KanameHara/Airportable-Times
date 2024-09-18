@@ -88,6 +88,7 @@ export default function SignInScreen() {
             w="23%"
             height="auto"
             borderRadius={20}
+            bg="white"
           >
             <VStack spacing='10'>
               <Heading>ログイン</Heading>

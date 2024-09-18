@@ -48,16 +48,31 @@ export default function Home() {
       <Header showButtonFlag={true} />
       <Box
         p={5}
-        mt={10}
+        mt={79}
         shadow="md"
         borderWidth="1px"
-        borderRadius="md"
+        borderRadius={20}
         width="78%"
         mx="auto"
-        maxW="1100px"
+        maxW="755px"
         maxH="800px"
+        bg="white"
       >
-        <div style={{ marginLeft: '135px' }}>日本各地の空港を検索できます。</div>
+        <Flex alignItems="center">
+          <Box 
+            width="10px"
+            height="50px"
+            bg="blue.500"
+            mr={3}
+          />
+          <Box fontSize="3xl" fontWeight="bold">
+            空港検索
+          </Box>
+        </Flex>
+        <div style={{ marginTop: '30px'}}>
+          日本の各空港の航空機・イベントなど空港関連の投稿を見ることができます。<br />
+          まずはチェックしたい空港を検索してみましょう！
+        </div>
         <Flex>
           <div style={{ marginBottom: '40px', flex: 1 }}>
             <Map onOkButtonClick={handleOkButtonClick} onCancelButtonClick={handleCancelButtonClick}/>

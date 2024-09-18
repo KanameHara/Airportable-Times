@@ -15,25 +15,24 @@ interface MapProps {
 
 // スタイルの定義
 const containerStyle: React.CSSProperties = {
-  width: '800px',
-  height: '600px',
-  marginRight: '350px',
+  width: '700px',
+  height: '480px',
+  marginRight: '890px',
+  borderRadius: '20px',
 };
 
 const inputStyle: React.CSSProperties = {
   boxSizing: 'border-box',
-  border: '1px solid transparent',
+  border: '1px solid #E2E8F0',
   width: '400px',
   height: '40px',
   padding: '0 12px',
   borderRadius: '5px',
-  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
   fontSize: '14px',
-  outline: 'none',
   textOverflow: 'ellipsis',
   position: 'absolute',
-  top: '355px',
-  left: '37%',
+  top: '330px',
+  left: '41%',
   transform: 'translateX(-50%)',
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定
 };
@@ -42,7 +41,7 @@ const mapWrapperStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '100vh', // 画面全体の高さ
+  height: '80vh', // 画面全体の高さ
   width: '100vw', // 画面全体の幅
 };
 
@@ -52,6 +51,7 @@ const infoWindowContentStyle: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
+  fontSize : '16px',
 };
 
 const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
@@ -118,8 +118,20 @@ const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
             onCloseClick={() => updateSelectedPlaceInfo(initializedSelectedPlaceInfo)}
           >
             <div style={infoWindowContentStyle}>
-              <h3>{selectedPlaceInfo.selectedPlace.name}に決定しますか？</h3>
-              <Button width='105px' m={5} onClick={onOkButtonClick}>決定</Button>
+              <h2>{selectedPlaceInfo.selectedPlace.name}に決定しますか？</h2>
+              <Button
+                width='105px'
+                m={5}
+                bg='blue.400'
+                color='white'
+                onClick={onOkButtonClick}
+                _hover={{
+                  borderColor: 'transparent',
+                  boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
+                }}
+              >
+                決定
+              </Button>
               <Button onClick={onCancelButtonClick}>キャンセル</Button>
             </div>
           </InfoWindow>
