@@ -8,6 +8,13 @@ import { AuthProvider } from "@/components/contexts/AuthContext";
 // カスタムテーマの定義
 const theme = extendTheme({
   // グローバルスタイルの定義があればここに記述
+  styles: {
+    global: {
+      body: {
+        bg: "#F7FAFC",
+      },
+    },
+  },
 })
 
   // Autocompleteコンポーネントでplacesライブラリを利用
