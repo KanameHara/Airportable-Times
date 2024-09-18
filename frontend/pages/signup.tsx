@@ -123,14 +123,25 @@ export default function SignUpScreen() {
 				<title>新規登録</title>
 			</Head>
 			<Header showButtonFlag={false} />
-			<Flex height='100vh' justifyContent='center' alignItems='center'>
-        <Box p={5} mt={20} shadow="md" borderWidth="1px" flex="1" w="50%" maxW="600px" height="auto">
-          <VStack spacing='10'>
-            <Heading>Airportable Timesにようこそ！</Heading>
+      <Flex mt={250} height='auto' justifyContent='center' alignItems='center'>
+        <Box
+          p={7}
+          mt={20}
+          shadow="md"
+          borderWidth="1px"
+          flex="1"
+          w="auto"
+          maxW="400px"
+          height="auto"
+          borderRadius={20}
+          bg="white"
+        >
+          <VStack spacing='4'>
+            <Heading mb={7}>ようこそ！</Heading>
             <form onSubmit={onSubmit}>
               <VStack alignItems='left'>
 							  <FormControl isInvalid={Boolean(errors.email)}>
-                  <FormLabel htmlFor='email' textAlign='start'>
+                  <FormLabel htmlFor='email' textAlign='center'>
                     メールアドレス
                   </FormLabel>
                   <Input
@@ -154,7 +165,7 @@ export default function SignUpScreen() {
 							  </FormControl>
 							
 							  <FormControl isInvalid={Boolean(errors.username)}>
-                  <FormLabel htmlFor='username'>ユーザー名</FormLabel>
+                  <FormLabel htmlFor='username' textAlign='center'>ユーザー名</FormLabel>
 								  <Input id='username' {...register('username', {
 									  required: '必須項目です',
 									  minLength: {
@@ -176,7 +187,7 @@ export default function SignUpScreen() {
                 </FormControl>
   
                 <FormControl isInvalid={Boolean(errors.password)}>
-                  <FormLabel htmlFor='password'>パスワード</FormLabel>
+                  <FormLabel htmlFor='password' textAlign='center'>パスワード</FormLabel>
 								  <InputGroup size='md'>
 									  <Input
                       pr='4.5rem'
@@ -210,7 +221,7 @@ export default function SignUpScreen() {
                 </FormControl>
   
                 <FormControl isInvalid={Boolean(errors.confirm)}>
-                  <FormLabel htmlFor='confirm'>パスワード確認</FormLabel>
+                  <FormLabel htmlFor='confirm' textAlign='center'>パスワード確認</FormLabel>
                   <InputGroup size='md'>
                     <Input
                       pr='4.5rem'
@@ -265,8 +276,9 @@ export default function SignUpScreen() {
             <Button
               as={NextLink}
               href='/signin'
-              bg='white'
-              width='50%'
+              color='white'
+              bg='blue.400'
+              width='77%'
               _hover={{
                 borderColor: 'transparent',
                 boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
