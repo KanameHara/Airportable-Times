@@ -8,6 +8,7 @@ import { useMap } from '../components/contexts/MapContext';
 import { Flex, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import Footer from "@/components/layouts/Footer";
 
 export default function Home() { 
   // ログイン後ユーザー名を取得してHeaderコンポーネントの引数に渡す。※現時点では仮にuserNameとしておく
@@ -56,13 +57,14 @@ export default function Home() {
         maxW="1100px"
         maxH="800px"
       >
-        <div style={{ marginBottom: '40px', marginLeft: '135px' }}>日本各地の空港を検索できます。</div>
+        <div style={{ marginLeft: '135px' }}>日本各地の空港を検索できます。</div>
         <Flex>
-          <div style={{ marginBottom: '50px', flex: 1 }}>
+          <div style={{ marginBottom: '40px', flex: 1 }}>
             <Map onOkButtonClick={handleOkButtonClick} onCancelButtonClick={handleCancelButtonClick}/>
           </div>
         </Flex>
       </Box>
+      <Footer />
     </div>
   );
 }

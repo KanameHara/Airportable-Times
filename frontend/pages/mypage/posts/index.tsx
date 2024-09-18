@@ -13,6 +13,7 @@ import axios from 'axios';
 import PostCard from '@/components/UI/PostCard';
 import Pagination from '@/components/UI/Pagination';
 import CategoryDropdown from '@/components/UI/CategoryDropdown';
+import Footer from '@/components/layouts/Footer';
 import {
   Flex,
   Box,
@@ -146,6 +147,7 @@ const MyPagePostIndex: FC = () => {
         </SimpleGrid>
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </Box>
+      <Footer />
 		</div>
 	);
 };

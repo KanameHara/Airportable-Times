@@ -11,6 +11,7 @@ import { PostInfoType } from "@/types/PostInfoType";
 import PostCard from "@/components/UI/PostCard";
 import Pagination from "@/components/UI/Pagination";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
+import Footer from "@/components/layouts/Footer";
 import {
   Text,
   Flex,
@@ -146,6 +147,7 @@ const AirportPostIndex: FC = () => {
           </Button>
         </Flex>
       </Box>
+      <Footer />
     </div>
   );
 };

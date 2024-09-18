@@ -6,7 +6,6 @@ import NextLink from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
-
 import {
   Button,
   Flex,
@@ -21,12 +20,12 @@ import {
   VStack,
   Box
 } from '@chakra-ui/react'
-
 import Head from "next/head";
 import Header from "@/components/layouts/Header";
 import { signUpWithEmail } from '@/lib/firebase/api/auth'
 import { useRouter } from 'next/router';
 import { FirebaseResult } from '@/lib/firebase/api/auth'
+import Footer from '@/components/layouts/Footer'
 
 // フォームで使用する変数の型を定義
 type formInputs = {
@@ -278,6 +277,7 @@ export default function SignUpScreen() {
           </VStack>
         </Box>
       </Flex>
+      <Footer />
 		</div>
   )
 }

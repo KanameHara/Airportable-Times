@@ -9,6 +9,7 @@ import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import { PostInfoType } from '@/types/PostInfoType';
 import axios from 'axios';
 import ConfirmModal from '@/components/UI/ConfirmModal';
+import Footer from '@/components/layouts/Footer';
 import {
   Text,
   Flex,
@@ -208,7 +209,8 @@ const MyPagePostShow: FC = () => {
         </Button>
       </Box>
 
-      <ConfirmModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDelete} mainText='投稿を削除' confirmText='本当に削除しますか？'/>
+      <ConfirmModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDelete} mainText='投稿を削除' confirmText='本当に削除しますか？' />
+      <Footer />
     </div>
   );
 };

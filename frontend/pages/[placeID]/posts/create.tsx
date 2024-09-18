@@ -15,6 +15,7 @@ import { UserInfoType } from "@/types/UserInfoType";
 import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
+import Footer from "@/components/layouts/Footer";
 import {
   Text,
   Flex,
@@ -311,6 +312,7 @@ export default function AirportPostCreate() {
           </Flex>
         </form>
       </Box>
+      <Footer />
     </div>
   )
 }

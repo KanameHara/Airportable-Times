@@ -16,6 +16,7 @@ import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
 import { PostInfoType } from "@/types/PostInfoType";
 import { Image } from "@chakra-ui/react";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
+import Footer from "@/components/layouts/Footer";
 import {
   Text,
   Flex,
@@ -377,6 +378,7 @@ export default function MyPagePostEdit() {
           </Flex>
         </form>
       </Box>
+      <Footer />
     </div>
   )
 }

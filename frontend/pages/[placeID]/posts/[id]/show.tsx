@@ -9,6 +9,7 @@ import { useMap } from '../../../../components/contexts/MapContext';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
 import { PostInfoType } from "@/types/PostInfoType";
+import Footer from "@/components/layouts/Footer";
 import {
   Text,
   Flex,
@@ -155,6 +156,7 @@ const AirportPostShow: FC = () => {
           前の画面に戻る
         </Button>
       </Box>
+      <Footer />
     </div>
   );
 };

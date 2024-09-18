@@ -10,6 +10,7 @@ import Header from '../components/layouts/Header';
 import Image from 'next/image';
 import React, { FC, useCallback } from 'react';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import Footer from '@/components/layouts/Footer';
 
 const AirportTop: FC = () => {
 	
@@ -112,6 +113,7 @@ const AirportTop: FC = () => {
 				</Flex>
 				<Button mt={5} mb={100} ml={700} onClick={handleBackButtonClick}>前の画面へ</Button>
 			</Box>
+			<Footer />
 		</div>
 	);
 };
