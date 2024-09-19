@@ -16,10 +16,11 @@ const AirportTop: FC = () => {
 	
 	// スタイルの定義
 	const containerStyle: React.CSSProperties = {
-		width: '600px',
-		height: '350px',
-		marginBottom: '40px',
-		marginLeft: '185px'
+		width: '700px',
+		height: '480px',
+		marginTop: '20px',
+		marginLeft: '8px',
+		borderRadius: '20px',
 	};	
 
   const router = useRouter();
@@ -51,30 +52,55 @@ const AirportTop: FC = () => {
 		router.push(`${currentPath}/posts`);
 	}
 
+	const handleCreatePostButtonClick = () => {
+    router.push(`/${placeID}/posts/create`);
+  }
+
 	return (
 		<div>
 			<Head>
 				<title>{selectedPlaceInfo.selectedPlace.name}</title>
 			</Head>
 			<Header showButtonFlag={true} />
-			<Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="70%" height="auto" mx="auto">
-				<h1 style={{ fontSize: '25px',marginLeft: '150px', marginBottom: '20px' }}>
-					【{selectedPlaceInfo.selectedPlace.name}】
-				</h1>
-				<Flex ml={10}>
-					{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
-						<div style={{ marginBottom: '20px', marginLeft: '150px'}}>
-							<Image
-								src={selectedPlaceInfo.selectedPlace.photos[0].getUrl()}
-								alt="空港の写真"
-								width={500}
-								height={500}
-								objectFit="contain" // 画像が指定された枠に収まるように調整
-							/>
-						</div>
-					)}
+			<Box
+				p={5}
+				mt={79}
+				shadow="md"
+				borderWidth="1px"
+				borderRadius={20}
+				width="47%"
+				height="auto"
+				mx="auto"
+				bg="white"
+			>
+				<Flex alignItems="center">
+          <Box 
+            width="10px"
+            height="50px"
+            bg="blue.500"
+            mr={3}
+          />
+          <Box fontSize="3xl" fontWeight="bold">
+						{selectedPlaceInfo.selectedPlace.name}
+          </Box>
+        </Flex>
+				<Flex mt={10} ml={1}>
+				{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
+						<Flex direction="column" align="center" gap={4}>
+            {selectedPlaceInfo.selectedPlace.photos.slice(0, 2).map((photo, index) => (
+              <Box key={index} borderRadius="20px" overflow="hidden">
+								<Image
+									src={photo.getUrl()}
+									alt={`空港の写真${index + 1}`}
+									width={700}
+									height={480}
+									objectFit="contain"
+								/>
+							</Box>
+            ))}
+          </Flex>
+        )}
 				</Flex>
-				<p style={{ marginBottom: '20px', marginLeft: '180px' }}>住所 : {selectedPlaceInfo.selectedPlace.formatted_address}</p>
 				<GoogleMap
 					mapContainerStyle={containerStyle}
 					center={selectedPlaceInfo.center}
@@ -82,36 +108,44 @@ const AirportTop: FC = () => {
 				>
 					<Marker position={selectedPlaceInfo.markerPosition} />
 				</GoogleMap>
-				<Flex direction="column" m={4} ml={185}>
-					<Box p={5} shadow="md" borderWidth="1px" flex="1" w="80%">
+				<Flex direction="column" ml={2} mt={5}>
+					<Box
+						shadow="md"
+						borderWidth="1px"
+						flex="1"
+						width="700px"
+						borderRadius={20}
+					>
 						<Flex direction="row" justify="flex-start" align="center">
-							<Box p={5}>
-								<Text fontSize="xl" fontWeight="bold">
-									ゲストのみなさんが
-								</Text>
-								<Text fontSize="xl" fontWeight="bold">
-									投稿した航空関連フォトを
-								</Text>
-								<Text fontSize="xl" fontWeight="bold">
-									確認することができます
-								</Text>
-								<Button colorScheme="blue" mt={3} onClick={handlePostListButtonClick}>
-									投稿一覧
-								</Button>
-							</Box>
 							<Box p={5} width="50%" flexShrink={0}>
-								<Image
-									src="/images/airplane_01.jpg"
-									alt="投稿画像例"
-									width={420}
-									height={500}
-									objectFit="cover"
-								/>
+								<Box borderRadius="10px" overflow="hidden">
+									<Image
+										src="/images/airplane_01.jpg"
+										alt="投稿画像例"
+										width={420}
+										height={300}
+										objectFit="cover"
+									/>
+								</Box>
+							</Box>
+							<Box p={5}>
+								<Text fontSize="16px" >
+									ゲストの皆さんによる投稿をチェック<br />
+									または作成してみましょう！
+								</Text>
+								<Flex mt={5}>
+									<Button bg='blue.400' color='white' mt={3} ml={7} onClick={handlePostListButtonClick}>
+										投稿一覧
+									</Button>
+									<Button bg='blue.400' color='white' mt={3} ml={5} onClick={handleCreatePostButtonClick}>
+										投稿作成
+									</Button>
+								</Flex>
 							</Box>
 						</Flex>
 					</Box>
 				</Flex>
-				<Button mt={5} mb={100} ml={700} onClick={handleBackButtonClick}>前の画面へ</Button>
+				<Button mt={5} mb={30} ml={580} onClick={handleBackButtonClick}>前の画面へ</Button>
 			</Box>
 			<Footer />
 		</div>
