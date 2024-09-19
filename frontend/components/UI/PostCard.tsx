@@ -2,41 +2,51 @@
 // 投稿データ簡易表示カードコンポーネント
 //----------------------------------------------------------------
 import React, { FC } from 'react';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Card, CardBody, CardFooter, Image, Box, Text } from '@chakra-ui/react';
 import { PostInfoType } from "@/types/PostInfoType";
 
 interface PostCardProps {
   post: PostInfoType;
   onClick: (postId: bigint) => void;
+  text: string;
 }
 
-const PostCard: FC<PostCardProps> = ({ post, onClick }) => {
+const PostCard: FC<PostCardProps> = ({ post, onClick, text }) => {
   return (
-    <Box
+    <Card
       key={post.id}
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      width="300px"
+      width="86%"
       height="300px"
-      onClick={() => onClick(post.id)}
       cursor="pointer"
+      borderColor="gray.300" 
+      onClick={() => onClick(post.id)}
     >
-      {post.image_urls && post.image_urls.length > 0 ? (
-        <Image src={post.image_urls[0]} alt={post.title} objectFit="cover" height="200px" />
-      ) : (
-        <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.200">
-          <Text>No Image</Text>
-        </Box>
-      )}
-      <Box p="6">
-        <Box display="flex" alignItems="baseline">
-          <Text fontWeight="bold" as="h4" lineHeight="tight" isTruncated>
-            {post.title}
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+      <CardBody p={0}>
+        {post.image_urls && post.image_urls.length > 0 ? (
+          <Image
+            src={post.image_urls[0]}
+            alt={post.title}
+            objectFit="cover"
+            height="200px"
+            width="100%"
+          />
+        ) : (
+          <Box height="200px" display="flex" alignItems="center" justifyContent="center" bg="gray.200">
+            <Text>No Image</Text>
+          </Box>
+        )}
+      </CardBody>
+
+      <CardFooter>
+        <Text fontWeight="bold" as="h4" isTruncated>
+          {post.title}<br />
+          {text}
+        </Text>
+      </CardFooter>
+    </Card>
   );
 };
 

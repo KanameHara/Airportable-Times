@@ -120,31 +120,52 @@ const AirportPostIndex: FC = () => {
         <title>{selectedPlaceInfo.selectedPlace?.name}投稿一覧</title>
       </Head>
       <Header showButtonFlag={true} />  
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="80%" mx="auto">
-        <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
-          【{selectedPlaceInfo.selectedPlace?.name}投稿一覧】
-        </h1>
-        <Text mt={5} ml={10} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex justifyContent="flex-start" mt={5} ml={70}>
+      <Box
+        p={5}
+        mt={10}
+        bg="white"
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="1100px"
+        mx="auto"
+      >
+        <Flex alignItems="center">
+          <Box 
+            width="10px"
+            height="50px"
+            bg="blue.500"
+            mr={3}
+          />
+          <Box fontSize="3xl" fontWeight="bold">
+						{selectedPlaceInfo.selectedPlace?.name} 投稿一覧
+          </Box>
+        </Flex>
+        <Text mt={7} fontSize="16px">投稿のカテゴリーを選択できます。</Text>
+        <Flex justifyContent="flex-start" mt={5} ml={1}>
           <CategoryDropdown
             categories={categories}
             selectedCategory={selectedCategory}
             onSelect={handleSelect}
           />
-        </Flex>
-        <SimpleGrid columns={3} spacing={2} m={10}>
-          {currentPosts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={handlePostClick} />
-          ))}
-        </SimpleGrid>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-        <Flex justifyContent="center">
-          <Button colorScheme="blue" onClick={handleCreatePostButtonClick} mx={2}>
+          <Button
+            ml={660}
+            bg="blue.400"
+            color="white"
+            onClick={handleCreatePostButtonClick}>
             投稿作成
           </Button>
-          <Button colorScheme="blue" onClick={handleBackButtonClick} mx={2}>
+          <Button ml={5} onClick={handleBackButtonClick}>
             戻る
           </Button>
+        </Flex>
+        <SimpleGrid columns={3} mt={10} ml={10} rowGap={7}>
+          {currentPosts.map((post) => (
+            <PostCard key={post.id} post={post} onClick={handlePostClick} text={""} />
+          ))}
+        </SimpleGrid>
+        <Flex mt={10} justifyContent="center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </Flex>
       </Box>
       <Footer />
