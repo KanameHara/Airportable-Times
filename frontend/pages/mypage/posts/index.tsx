@@ -117,35 +117,46 @@ const MyPagePostIndex: FC = () => {
 				<title>マイページ</title>
 			</Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="80%" mx="auto" bg="white">
-        <h1 style={{ fontSize: '25px', marginTop: '20px', marginBottom: '20px', marginLeft: '20px' }}>
-          【{userInfo?.userName}さんマイページ】
-        </h1>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">ユーザー名：</Text>
-          <Text mt={5} ml={2} fontWeight="bold">{userInfo?.userName}</Text>
+      <Box
+        p={5}
+        mt={10}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="1100px"
+        mx="auto"
+        bg="white"
+      >
+        <Flex alignItems="center">
+          <Box 
+            width="10px"
+            height="50px"
+            bg="blue.500"
+            mr={3}
+          />
+          <Box fontSize="3xl" fontWeight="bold">
+            マイページ
+          </Box>
         </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">メールアドレス：</Text>
-          <Text mt={5} ml={2} fontWeight="bold">{userInfo?.email}</Text>
-        </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">過去の投稿一覧：</Text>
-        </Flex>
-        <Text mt={5} ml={16} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex justifyContent="flex-start" mt={5} ml={70}>
+        <Text mt={7} fontSize="16px">
+          作成済みの投稿を確認・編集することができます。<br />
+          投稿のカテゴリーを選択できます。
+        </Text>
+        <Flex justifyContent="flex-start" mt={5} ml={1}>
           <CategoryDropdown
             categories={categories}
             selectedCategory={selectedCategory}
             onSelect={handleSelect}
           />
         </Flex>
-        <SimpleGrid columns={3} spacing={2} m={10}>
+        <SimpleGrid columns={3} mt={10} ml={10} rowGap={7}>
           {currentPosts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={handlePostClick} />
+            <PostCard key={post.id} post={post} onClick={handlePostClick} text={""} />
           ))}
         </SimpleGrid>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <Flex mt={10} justifyContent="center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        </Flex>
       </Box>
       <Footer />
 		</div>
