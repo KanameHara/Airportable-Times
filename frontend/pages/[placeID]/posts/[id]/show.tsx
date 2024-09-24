@@ -129,14 +129,14 @@ const AirportPostShow: FC = () => {
             width={{ base: "100%", md: "600px" }}
             height={{ base: "auto", md: "400px" }}
           >
-          <Image 
-            src={post.image_urls[currentImageIndex]}
-            alt={`Image ${currentImageIndex + 1}`}
-            width="100%"   
-            height="100%"  
-            objectFit="cover"
-            style={{ borderRadius: '10px' }}
-          />
+            <Image 
+              src={post.image_urls[currentImageIndex]}
+              alt={`Image ${currentImageIndex + 1}`}
+              width="100%"   
+              height="100%"  
+              objectFit="cover"
+              style={{ borderRadius: '10px' }}
+            />
           </Box>
           <Button onClick={handleNextClick}>&gt;</Button>
         </Box>
