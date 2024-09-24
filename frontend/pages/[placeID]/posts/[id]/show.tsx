@@ -11,6 +11,7 @@ import axios from 'axios';
 import { PostInfoType } from "@/types/PostInfoType";
 import Footer from "@/components/layouts/Footer";
 import HighlightedText from "@/components/UI/HighlightedText";
+import PageHeading from "@/components/UI/PageHeading";
 import {
   Text,
   Flex,
@@ -119,17 +120,7 @@ const AirportPostShow: FC = () => {
         mx="auto"
         bg="white"
       >
-        <Flex alignItems="center">
-          <Box 
-            width="10px"
-            height="50px"
-            bg="blue.500"
-            mr={3}
-          />
-          <Box fontSize="3xl" fontWeight="bold">
-						{post.title}
-          </Box>
-        </Flex>
+        <PageHeading title={post.title} />
         <Box ml={3.5} mt={5} display="flex" alignItems="center">
           <Button onClick={handlePreviousClick}>&lt;</Button>
           <Box

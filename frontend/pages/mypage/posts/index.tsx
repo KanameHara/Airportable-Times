@@ -14,6 +14,7 @@ import PostCard from '@/components/UI/PostCard';
 import Pagination from '@/components/UI/Pagination';
 import CategoryDropdown from '@/components/UI/CategoryDropdown';
 import Footer from '@/components/layouts/Footer';
+import PageHeading from '@/components/UI/PageHeading';
 import {
   Flex,
   Box,
@@ -127,17 +128,7 @@ const MyPagePostIndex: FC = () => {
         mx="auto"
         bg="white"
       >
-        <Flex alignItems="center">
-          <Box 
-            width="10px"
-            height="50px"
-            bg="blue.500"
-            mr={3}
-          />
-          <Box fontSize="3xl" fontWeight="bold">
-            マイページ
-          </Box>
-        </Flex>
+        <PageHeading title={"マイページ"} />
         <Text mt={7} fontSize="16px">
           作成済みの投稿を確認・編集することができます。<br />
           投稿のカテゴリーを選択できます。

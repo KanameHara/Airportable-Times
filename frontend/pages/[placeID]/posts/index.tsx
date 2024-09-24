@@ -12,6 +12,7 @@ import PostCard from "@/components/UI/PostCard";
 import Pagination from "@/components/UI/Pagination";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import Footer from "@/components/layouts/Footer";
+import PageHeading from "@/components/UI/PageHeading";
 import {
   Text,
   Flex,
@@ -130,17 +131,7 @@ const AirportPostIndex: FC = () => {
         width="1100px"
         mx="auto"
       >
-        <Flex alignItems="center">
-          <Box 
-            width="10px"
-            height="50px"
-            bg="blue.500"
-            mr={3}
-          />
-          <Box fontSize="3xl" fontWeight="bold">
-						{selectedPlaceInfo.selectedPlace?.name} 投稿一覧
-          </Box>
-        </Flex>
+        <PageHeading title={`${selectedPlaceInfo.selectedPlace?.name} 投稿一覧`} />
         <Text mt={7} fontSize="16px">投稿のカテゴリーを選択できます。</Text>
         <Flex justifyContent="flex-start" mt={5} ml={1}>
           <CategoryDropdown

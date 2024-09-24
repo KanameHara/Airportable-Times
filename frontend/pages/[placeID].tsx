@@ -11,6 +11,7 @@ import Image from 'next/image';
 import React, { FC, useCallback } from 'react';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
 import Footer from '@/components/layouts/Footer';
+import PageHeading from '@/components/UI/PageHeading';
 
 const AirportTop: FC = () => {
 	
@@ -73,17 +74,7 @@ const AirportTop: FC = () => {
 				mx="auto"
 				bg="white"
 			>
-				<Flex alignItems="center">
-          <Box 
-            width="10px"
-            height="50px"
-            bg="blue.500"
-            mr={3}
-          />
-          <Box fontSize="3xl" fontWeight="bold">
-						{selectedPlaceInfo.selectedPlace.name}
-          </Box>
-        </Flex>
+				<PageHeading title={selectedPlaceInfo.selectedPlace.name} />
 				<Flex mt={10} ml={1}>
 				{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
 						<Flex direction="column" align="center" gap={4}>
