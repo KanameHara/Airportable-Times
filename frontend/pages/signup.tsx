@@ -123,10 +123,9 @@ export default function SignUpScreen() {
 				<title>新規登録</title>
 			</Head>
 			<Header showButtonFlag={false} />
-      <Flex mt={220} height='auto' justifyContent='center' alignItems='center'>
+      <Flex mt={370} height='auto' justifyContent='center' alignItems='center'>
         <Box
           p={7}
-          mt={20}
           shadow="md"
           borderWidth="1px"
           flex="1"

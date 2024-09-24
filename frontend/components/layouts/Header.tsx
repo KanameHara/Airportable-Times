@@ -15,10 +15,12 @@ import Link from 'next/link';
 import ConfirmModal from '../UI/ConfirmModal';
 
 const containerStyle: React.CSSProperties = {
-  position: 'relative',
+  position: 'fixed',
+  top: 0,
   width: '100%',
   height: '70px',
   backgroundColor: '#90cdf4',
+  zIndex: 1000,
 };
 
 const userNameStyle: React.CSSProperties = {

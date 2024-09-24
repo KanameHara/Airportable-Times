@@ -120,7 +120,7 @@ const MyPagePostIndex: FC = () => {
       <Header showButtonFlag={true} />
       <Box
         p={5}
-        mt={10}
+        mt={111}
         shadow="md"
         borderWidth="1px"
         borderRadius="20px"

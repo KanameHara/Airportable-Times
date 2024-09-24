@@ -123,7 +123,7 @@ const AirportPostIndex: FC = () => {
       <Header showButtonFlag={true} />  
       <Box
         p={5}
-        mt={10}
+        mt={111}
         bg="white"
         shadow="md"
         borderWidth="1px"
