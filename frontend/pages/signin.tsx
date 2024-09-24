@@ -76,7 +76,7 @@ export default function SignInScreen() {
           flexDirection='column'
           width='100%'
           height='auto'
-          mt={330}
+          mt={300}
           justifyContent='center'
           alignItems='center'
         >

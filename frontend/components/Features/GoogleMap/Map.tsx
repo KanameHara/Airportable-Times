@@ -31,7 +31,7 @@ const inputStyle: React.CSSProperties = {
   fontSize: '14px',
   textOverflow: 'ellipsis',
   position: 'absolute',
-  top: '330px',
+  top: '300px',
   left: '41%',
   transform: 'translateX(-50%)',
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定

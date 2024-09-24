@@ -49,7 +49,7 @@ export default function Home() {
       <Header showButtonFlag={true} />
       <Box
         p={5}
-        mt={79}
+        mt={41}
         shadow="md"
         borderWidth="1px"
         borderRadius={20}

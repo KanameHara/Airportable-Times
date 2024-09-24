@@ -65,7 +65,7 @@ const AirportTop: FC = () => {
 			<Header showButtonFlag={true} />
 			<Box
 				p={5}
-				mt={79}
+				mt={41}
 				shadow="md"
 				borderWidth="1px"
 				borderRadius={20}
@@ -136,7 +136,7 @@ const AirportTop: FC = () => {
 						</Flex>
 					</Box>
 				</Flex>
-				<Button mt={5} mb={30} ml={580} onClick={handleBackButtonClick}>前の画面へ</Button>
+				<Button mt={5} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
 			</Box>
 			<Footer />
 		</div>

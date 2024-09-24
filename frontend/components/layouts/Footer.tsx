@@ -11,7 +11,7 @@ const Footer: FC = () => {
 			<Box
 				width="100%"
 				height={70}
-				mt={85}
+				mt={41}
 				backgroundColor={'#90cdf4'}
         color="White"
 				fontSize="30px"
