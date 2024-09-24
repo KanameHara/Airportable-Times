@@ -78,10 +78,9 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
   const handleLogout = async () => {
     const result = await logout();
     if (result) {
-      console.log('ログアウト成功');
+      updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
       router.push('/signin');
     } else {
-      console.error('ログアウト失敗');
       alert('ログアウトに失敗しました');
     }
   };
