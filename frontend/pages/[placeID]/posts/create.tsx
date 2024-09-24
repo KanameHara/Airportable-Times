@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // 各空港投稿作成画面
 //----------------------------------------------------------------
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback ,useRef } from "react";
 import Head from "next/head"; 
 import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
@@ -16,6 +16,8 @@ import { fetchUserInfoByEmail } from "@/lib/mysql/api/database";
 import { SelectedPhotoPositionType } from "@/types/SelectePhotoPositionType";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import Footer from "@/components/layouts/Footer";
+import PageHeading from "@/components/UI/PageHeading";
+import HighlightedText from "@/components/UI/HighlightedText";
 import {
   Text,
   Flex,
@@ -26,6 +28,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
 
 export default function AirportPostCreate() { 
@@ -37,8 +40,11 @@ export default function AirportPostCreate() {
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
 
+  const toast = useToast();
+
   // 画像未選択時のエラーメッセージ
   const [errMsgforImg, setErrMsgforImg] = useState<string | null>();
+  const imageErrorRef = useRef<HTMLDivElement>(null);
 
   // 投稿種別データの初期化
   interface Category {
@@ -129,8 +135,7 @@ export default function AirportPostCreate() {
   // 投稿作成キャンセルボタン押下時のハンドラ
   const handleCancelButtonClick = () => {
 
-    // 各空港投稿一覧に戻る
-    router.push(`/${placeID}/posts`);
+    router.push(`/${placeID}`);
   }
 
   const handleSelectedPhotoPosition = useCallback((latitude: number, longitude: number) => {
@@ -152,6 +157,9 @@ export default function AirportPostCreate() {
     // 画像未選択時にはエラー表示
     if (!isImagesSelected) {
       setErrMsgforImg('少なくとも１つの画像を選択してください。');
+      if (imageErrorRef.current) {
+        imageErrorRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
       return;
     } else {
       setErrMsgforImg(null);
@@ -191,12 +199,27 @@ export default function AirportPostCreate() {
       // 完全なURLに変換
       const fullImageUrls = imageUrls.map((url: string) => `${baseURL}${url}`);
       console.log('投稿された画像の完全なURL:', fullImageUrls);
+
+      toast({
+        title: '投稿が完了しました。',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
       
       // 登録成功なら各空港投稿一覧に戻る
       router.push(`/${placeID}/posts`);
 
     } catch (error) {
       console.error('axios.postのエラー内容', error);
+
+      toast({
+        title: '投稿に失敗しました。',
+        description: "再度お試しください。",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   }, [userInfo, selectedPlaceInfo, selectedCategory, selectedImageList, selectedPosition, router, placeID]);
 
@@ -206,25 +229,60 @@ export default function AirportPostCreate() {
         <title>{selectedPlaceInfo.selectedPlace?.name}投稿作成</title>
       </Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="55%" mx="auto">
+      <Box
+        p={5}
+        mt={111}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="47%"
+        mx="auto"
+        bg="white"
+      >
+        <PageHeading title={`${selectedPlaceInfo.selectedPlace?.name} 投稿作成`} />
+        <Flex mt={5} ml={1}>
+          <Text color='red.500'>*</Text>
+          <Text>は必須項目です。</Text>
+        </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Text mt={50} mb={5} fontWeight="bold">ステップ１&nbsp;&nbsp;投稿する写真を5枚まで選択してください。</Text>
-          <Box position="relative" zIndex="0" p={5} bgColor="#E2E8F0" h="550px">
-            <Box position="absolute" top="0" left="0" right="0" bottom="10" display="flex" flexDirection="column" justifyContent="space-between" p={4} zIndex="1">
-              <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
-              {Array.from({ length: 5 }, (_, index) => (
-                <Flex key={index + 1} alignItems="center">
-                  <ImageUploadForm
-                    id={index + 1}
-                    onImageChange={handleImageChange}
-                  />
-                </Flex>
-              ))}
+          <Box mt={5} position="relative">
+            <HighlightedText text={"写真選択"} />
+            <Box 
+              position="absolute"
+              top="10px"
+              left="80px"
+              bg="rgba(255, 255, 255, 0)"
+              zIndex={1}
+            >
+              <Text color="red.500">*</Text>
             </Box>
           </Box>
+          <Text ml={1}>{"5枚まで選択することができます。"}</Text>
+          <Box ml={5} mt={10} ref={imageErrorRef} scrollMarginTop="70px">
+            <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
+            {Array.from({ length: 5 }, (_, index) => (
+              <Flex key={index + 1} mb={70} alignItems="center">
+                <ImageUploadForm
+                  id={index + 1}
+                  onImageChange={handleImageChange}
+                />
+              </Flex>
+            ))}
+          </Box>
   
-          <Text mt={20} fontWeight="bold">ステップ２&nbsp;&nbsp;投稿のカテゴリーを選択してください。</Text>
-          <Flex justifyContent="flex-start" mt={5}>
+          <Box mt={5} position="relative">
+            <HighlightedText text={"投稿のカテゴリー選択"} />
+            <Box 
+              position="absolute"
+              top="10px"
+              left="188px"
+              bg="rgba(255, 255, 255, 0)"
+              zIndex={1}
+            >
+              <Text color="red.500">*</Text>
+            </Box>
+          </Box>
+          <Flex justifyContent="flex-start" mt={2}>
             <CategoryDropdown
               categories={categories}
               selectedCategory={selectedCategory}
@@ -232,13 +290,23 @@ export default function AirportPostCreate() {
             />
           </Flex>
   
-          <Text mt={20} fontWeight="bold">ステップ３&nbsp;&nbsp;投稿する各情報を入力してください。</Text>
           <Flex>
             <FormControl isInvalid={Boolean(errors.title)}>
               <FormLabel htmlFor='title' textAlign='start' mt={5}>
-                投稿のタイトル
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"タイトル"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="80px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
-              <Input placeholder="入力必須" w="400px" h="30px"
+              <Input w="400px" h="30px"
                 {...register('title', {
                   required: 'タイトルは必須です',
                   maxLength: {
@@ -256,7 +324,18 @@ export default function AirportPostCreate() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.date)}>
               <FormLabel htmlFor='date' mt={5}>
-                撮影日
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"撮影日"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="62px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
               <Input type="date" w="200px" h="30px"
                 {...register('date', { required: '撮影日は必須です' })}
@@ -270,9 +349,20 @@ export default function AirportPostCreate() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.location)}>
               <FormLabel htmlFor='location' mt={5}>
-                撮影場所名
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"撮影した場所"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="118px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
-              <Input placeholder="入力必須" w="400px" h="30px"
+              <Input placeholder="例）第１展望台" w="400px" h="30px"
                 {...register('location', {
                   required: '撮影場所は必須です',
                   maxLength: {
@@ -286,12 +376,16 @@ export default function AirportPostCreate() {
               </FormErrorMessage>
             </FormControl>
           </Flex>
-          <Text mt={10} mb={5}>撮影場所を地図上でクリックまたは検索してください。</Text>
-          <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} />
+          <Text ml={1} mt={7} mb={2}>{"撮影した場所を地図上でクリックまたは検索してください。"}</Text>
+          <Box>
+            <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} />
+          </Box>
 
           <FormControl isInvalid={Boolean(errors.comment)}>
             <FormLabel htmlFor='comment' mt={5}>
-              コメント
+              <Box mt={5}>
+                <HighlightedText text={"コメント"}  />
+              </Box>
             </FormLabel>
             <Textarea w="700px" h="100px"
               {...register('comment', {
@@ -306,10 +400,10 @@ export default function AirportPostCreate() {
             </FormErrorMessage>
           </FormControl>
 
-          <Flex justifyContent="center" mt={10}>
-						<Button type="submit" w={40} ml={80} bg='blue.400' color='white'>投稿</Button>
-            <Button w={40} ml={5} bg='blue.400' color='white' onClick={handleCancelButtonClick}>キャンセル</Button>
-          </Flex>
+          <Box mt={10} mb={5}>
+            <Button ml={5} onClick={handleCancelButtonClick}>戻る</Button>
+            <Button type="submit" ml={500} bg='blue.400' color='white'>投稿する</Button>
+          </Box>
         </form>
       </Box>
       <Footer />
