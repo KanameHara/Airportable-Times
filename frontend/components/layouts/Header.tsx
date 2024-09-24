@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // 全ページのヘッダーコンポーネント
 //----------------------------------------------------------------
-import { Box, Flex, Button } from '@chakra-ui/react';
+import { Box, Flex, Button, useDisclosure } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { FC, useState, useEffect, useCallback } from 'react';
 import { logout } from '@/lib/firebase/api/auth';
@@ -12,6 +12,7 @@ import { UserInfoType } from '@/types/UserInfoType';
 import { useMap } from '../contexts/MapContext';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
 import Link from 'next/link';
+import ConfirmModal from '../UI/ConfirmModal';
 
 const containerStyle: React.CSSProperties = {
   position: 'relative',
@@ -46,6 +47,7 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
   const router = useRouter();
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfoType>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -67,6 +69,10 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
 
   const handleMyPageButtonClick = () => {
     router.push('/mypage/posts');
+  };
+
+  const handLogoutButtonClick = () => {
+    onOpen();
   };
 
   const handleLogout = async () => {
@@ -99,9 +105,19 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
           <>
             <div style={userNameStyle}>{userInfo?.userName}さん</div>
             <div style={buttonContainerStyle}>
-              <Button onClick={handleHomeButtonClick} width={36}>HOME</Button>
-              <Button onClick={handleMyPageButtonClick} width={36}>マイページ</Button>
-              <Button onClick={handleLogout} width={36}>ログアウト</Button>
+              <Box
+                sx={{
+                  '& button': {
+                    bg: 'white',
+                    width: '135px',
+                    mr: '15px',
+                  },
+                }}
+              >
+                <Button onClick={handleHomeButtonClick}>ホーム</Button>
+                <Button onClick={handleMyPageButtonClick}>マイページ</Button>
+                <Button onClick={handLogoutButtonClick}>ログアウト</Button>
+              </Box>
             </div>
           </>
         )}
@@ -111,6 +127,13 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
           <Image src="/images/headerImage1.jpg" alt="ヘッダー画像" layout="fill" objectFit="cover" />
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleLogout}
+        mainText='ログアウト'
+        confirmText='本当にログアウトしますか？' />
     </div>
   );
 };
