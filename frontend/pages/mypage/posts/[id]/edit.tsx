@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // マイページ投稿編集画面
 //----------------------------------------------------------------
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Head from "next/head"; 
 import Header from "@/components/layouts/Header";
 import { useRouter } from 'next/router';
@@ -17,6 +17,8 @@ import { PostInfoType } from "@/types/PostInfoType";
 import { Image } from "@chakra-ui/react";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import Footer from "@/components/layouts/Footer";
+import PageHeading from "@/components/UI/PageHeading";
+import HighlightedText from "@/components/UI/HighlightedText";
 import {
   Text,
   Flex,
@@ -27,6 +29,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
 
 export default function MyPagePostEdit() { 
@@ -34,6 +37,7 @@ export default function MyPagePostEdit() {
   const router = useRouter();
   const { id: postID } = router.query;
   const [errMsgforImg, setErrMsgforImg] = useState<string | null>(null);
+  const imageErrorRef = useRef<HTMLDivElement>(null);
   
   interface Category {
     id: bigint;
@@ -43,6 +47,7 @@ export default function MyPagePostEdit() {
   const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
   const [post, setPost] = useState<PostInfoType | null>(null);
   const [airportName, setAirportName] = useState<string>('');
+  const toast = useToast();
 
   type previewImageListType = {
     [key: number]: string | null;
@@ -209,6 +214,9 @@ export default function MyPagePostEdit() {
 
     if (!isImagesSelected) {
       setErrMsgforImg(`${errorImageIndex}番目以前の画像を選択しているか確認してください。`);
+      if (imageErrorRef.current) {
+        imageErrorRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
       return;
     } else {
       setErrMsgforImg(null);
@@ -239,10 +247,26 @@ export default function MyPagePostEdit() {
     
     try {
       await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
+      
+      toast({
+        title: '編集が完了しました。',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+
       router.push(`/mypage/posts`);
 
     } catch (error) {
       console.error('axios.postのエラー内容', error);
+
+      toast({
+        title: '編集に失敗しました。',
+        description: "再度お試しください。",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   }, [selectedImageList, previousImageList, selectedCategory, userInfo, selectedPosition, postID, post, router]);
 
@@ -252,57 +276,116 @@ export default function MyPagePostEdit() {
         <title>投稿編集</title>
       </Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="63%" mx="auto">
-        <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
-					【{airportName}投稿編集】
-				</h1>
+      <Box
+        p={5}
+        mt={111}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="47%"
+        mx="auto"
+        bg="white"
+      >
+        <PageHeading title={`${airportName} 投稿編集`} />
+        <Flex mt={5} ml={1}>
+          <Text color='red.500'>*</Text>
+          <Text>は必須項目です。</Text>
+        </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Text mt={50} mb={5} fontWeight="bold">ステップ１&nbsp;&nbsp;変更する写真を5枚まで選択してください。</Text>
-          <Box position="relative" zIndex="0" p={5} bgColor="#E2E8F0" h="550px">
-            <Box position="absolute" top="0" left="0" right="0" bottom="10" display="flex" flexDirection="column" justifyContent="space-between" p={4} zIndex="1">
-              <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
-              {Array.from({ length: 5 }, (_, index) => (
-                <Flex key={index + 1} alignItems="center">
-                  <ImageUploadForm
-                    id={index + 1}
-                    onImageChange={handleImageChange}
-                  />
-                  <Text mt={9} ml={10}>変更前の画像{index+1}</Text>
-                  {previousImageList[index + 1] ? (
-                    <Image
-                      src={previousImageList[index + 1] || undefined}
-                      alt={`Previous image ${index + 1}`}
-                      width={20}
-                      height={10}
-                      objectFit="cover"
-                      mt={9}
-                      ml={4}
-                    />
-                  ) : (
-                    <Text mt={9} ml={4}>未選択</Text>
-                  )}
-                  <Button h={7} mt={10} ml={2} onClick={() => handleDeletePreviousImage(index+1)}>
-                    削除
-                  </Button>
-                </Flex>
-              ))}
+          <Box mt={5} position="relative">
+            <HighlightedText text={"写真選択"} />
+            <Box 
+              position="absolute"
+              top="10px"
+              left="80px"
+              bg="rgba(255, 255, 255, 0)"
+              zIndex={1}
+            >
+              <Text color="red.500">*</Text>
             </Box>
           </Box>
-  
-          <Text mt={20} fontWeight="bold">ステップ２&nbsp;&nbsp;投稿のカテゴリーを選択してください。</Text>
-          <Flex justifyContent="flex-start" mt={5}>
+          <Text ml={1}>{"5枚まで選択することができます。"}</Text>
+          <Box ml={5} mt={10} ref={imageErrorRef} scrollMarginTop="70px">
+            <Text fontWeight="bold" color='red'>{errMsgforImg}</Text>
+            {Array.from({ length: 5 }, (_, index) => (
+              <Flex key={index + 1} mb={70} alignItems="center">
+                <ImageUploadForm
+                  id={index + 1}
+                  onImageChange={handleImageChange}
+                />
+                <Text ml={selectedImageList[index + 1] ? 10 : 205}>変更前の画像{index+1}</Text>
+                {previousImageList[index + 1] ? (
+                  <Image
+                    src={previousImageList[index + 1] || undefined}
+                    alt={`Previous image ${index + 1}`}
+                    width={20}
+                    height={10}
+                    objectFit="cover"
+                    ml={4}
+                  />
+                ) : (
+                    <Box
+                      ml={4}
+                      h={7}
+                      w={20}
+                      bg='gray.500'
+                      color='white'
+                      textAlign='center'
+                      fontWeight='bold'
+                      borderRadius="5px"
+                    >
+                      未選択
+                    </Box>
+                )}
+                {previousImageList[index + 1] && (
+                  <Button
+                    h={7}
+                    ml={2}
+                    bg='red.100'
+                    onClick={() => handleDeletePreviousImage(index + 1)}
+                  >
+                    削除
+                  </Button>
+                )}
+              </Flex>
+            ))}
+          </Box>
+
+          <Box mt={5} position="relative">
+            <HighlightedText text={"投稿のカテゴリー選択"} />
+            <Box 
+              position="absolute"
+              top="10px"
+              left="188px"
+              bg="rgba(255, 255, 255, 0)"
+              zIndex={1}
+            >
+              <Text color="red.500">*</Text>
+            </Box>
+          </Box>
+          <Flex justifyContent="flex-start" mt={2}>
             <CategoryDropdown
               categories={categories}
               selectedCategory={selectedCategory}
               onSelect={handleSelect}
             />
           </Flex>
-  
-          <Text mt={20} fontWeight="bold">ステップ３&nbsp;&nbsp;投稿する各情報を入力してください。</Text>
+
           <Flex>
             <FormControl isInvalid={Boolean(errors.title)}>
               <FormLabel htmlFor='title' textAlign='start' mt={5}>
-                投稿のタイトル
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"タイトル"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="80px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
               <Input placeholder="入力必須" w="400px" h="30px"
                 {...register('title', {
@@ -322,7 +405,18 @@ export default function MyPagePostEdit() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.date)}>
               <FormLabel htmlFor='date' mt={5}>
-                撮影日
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"撮影日"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="62px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
               <Input type="date" w="200px" h="30px"
                 {...register('date', { required: '撮影日は必須です' })}
@@ -336,9 +430,20 @@ export default function MyPagePostEdit() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.location)}>
               <FormLabel htmlFor='location' mt={5}>
-                撮影場所名
+                <Box mt={5} position="relative">
+                  <HighlightedText text={"撮影した場所"} />
+                  <Box 
+                    position="absolute"
+                    top="10px"
+                    left="118px"
+                    bg="rgba(255, 255, 255, 0)"
+                    zIndex={1}
+                  >
+                    <Text color="red.500">*</Text>
+                  </Box>
+                </Box>
               </FormLabel>
-              <Input placeholder="入力必須" w="400px" h="30px"
+              <Input placeholder="例）第１展望台" w="400px" h="30px"
                 {...register('location', {
                   required: '撮影場所は必須です',
                   maxLength: {
@@ -352,12 +457,14 @@ export default function MyPagePostEdit() {
               </FormErrorMessage>
             </FormControl>
           </Flex>
-          <Text mt={10} mb={5}>撮影場所を地図上でクリックまたは検索してください。</Text>
+          <Text ml={1} mt={7} mb={2}>{"撮影した場所を地図上でクリックまたは検索してください。"}</Text>
           <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} selectedPhotoPosition={selectedPosition} />
 
           <FormControl isInvalid={Boolean(errors.comment)}>
             <FormLabel htmlFor='comment' mt={5}>
-              コメント
+              <Box mt={5}>
+                <HighlightedText text={"コメント"}  />
+              </Box>
             </FormLabel>
             <Textarea w="700px" h="100px"
               {...register('comment', {
@@ -372,10 +479,10 @@ export default function MyPagePostEdit() {
             </FormErrorMessage>
           </FormControl>
 
-          <Flex justifyContent="center" mt={10}>
-						<Button type="submit" w={40} ml={80} bg='blue.400' color='white'>編集を完了</Button>
-            <Button w={40} ml={5} bg='blue.400' color='white' onClick={handleCancelButtonClick}>キャンセル</Button>
-          </Flex>
+          <Box mt={10} mb={5}>
+            <Button ml={5} onClick={handleCancelButtonClick}>戻る</Button>
+            <Button type="submit" ml={500} bg='blue.400' color='white'>編集を完了</Button>
+          </Box>
         </form>
       </Box>
       <Footer />
