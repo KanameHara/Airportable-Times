@@ -81,7 +81,7 @@ export default function MyPagePostEdit() {
   type selectedImageListType = {
     [key: number]: File | null;
   };
-  const [selectedImageList, setSelectedImageList] = useState<selectedImageListType>({});
+  const [selectedImageList, setSelectedImageList] = useState<selectedImageListType>(initialImageListState);
   const [selectedPosition, setSelectedPosition] = useState<SelectedPhotoPositionType>({
     latitude: null,
     longitude: null,

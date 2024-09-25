@@ -37,8 +37,8 @@ class PostsController < ApplicationController
       @post.update!(post_params)
   
       if params[:previous_images].present? || params[:images].present?
-        previous_images_params = params[:previous_images].to_unsafe_h
-        images_params = params[:images].to_unsafe_h
+        previous_images_params = params[:previous_images]&.to_unsafe_h || {}
+        images_params = params[:images]&.to_unsafe_h || {}
         
         # 削除する画像をまとめる
         images_to_purge = []
