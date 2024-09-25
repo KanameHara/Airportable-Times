@@ -22,7 +22,7 @@ const inputStyle: React.CSSProperties = {
   height: '40px',
   padding: '0 12px',
   borderRadius: '5px',
-  fontSize: '14px',
+  fontSize: '16px',
   outline: 'none',
   textOverflow: 'ellipsis',
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定

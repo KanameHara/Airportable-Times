@@ -28,7 +28,7 @@ const inputStyle: React.CSSProperties = {
   height: '40px',
   padding: '0 12px',
   borderRadius: '5px',
-  fontSize: '14px',
+  fontSize: '16px',
   textOverflow: 'ellipsis',
   position: 'absolute',
   top: '185px',
@@ -108,7 +108,7 @@ const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
           }
         }}
       >
-        <input type="text" placeholder="空港名を入力してください。" style={inputStyle} />
+        <input type="text" placeholder="空港を検索" style={inputStyle} />
       </Autocomplete>
       <GoogleMap mapContainerStyle={containerStyle} center={selectedPlaceInfo.center} zoom={selectedPlaceInfo.zoom}>
         {selectedPlaceInfo.markerPosition && <Marker position={selectedPlaceInfo.markerPosition} />}

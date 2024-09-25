@@ -466,7 +466,7 @@ export default function MyPagePostEdit() {
                 <HighlightedText text={"コメント"}  />
               </Box>
             </FormLabel>
-            <Textarea w="700px" h="100px"
+            <Textarea w="700px" h="100px" placeholder="自由に記載してください。"
               {...register('comment', {
                 maxLength: {
                   value: 1000,
