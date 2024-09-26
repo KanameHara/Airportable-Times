@@ -152,7 +152,31 @@ const AirportPostIndex: FC = () => {
         </Flex>
         <SimpleGrid columns={3} mt={10} ml={10} rowGap={7}>
           {currentPosts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={handlePostClick} text={""} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onClick={handlePostClick}
+              text={
+                <Box
+                  h={7}
+                  w="fit-content"
+                  px={2}
+                  bg={
+                    BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
+                    BigInt(post.category_id) === BigInt(2) ? 'teal.400' :
+                    BigInt(post.category_id) === BigInt(3) ? 'green.400' :
+                    BigInt(post.category_id) === BigInt(4) ? 'cyan.400' :
+                    'gray.500'
+                  }
+                  color='white'
+                  textAlign='center'
+                  lineHeight='1.75'
+                  borderRadius="20px"
+                >
+                  {categories.find(category => category.id === post.category_id)?.name || '未指定'}
+                </Box>
+              }
+            />
           ))}
         </SimpleGrid>
         <Flex mt={10} justifyContent="center">

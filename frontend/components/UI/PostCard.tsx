@@ -2,13 +2,13 @@
 // 投稿データ簡易表示カードコンポーネント
 //----------------------------------------------------------------
 import React, { FC } from 'react';
-import { Card, CardBody, CardFooter, Image, Box, Text } from '@chakra-ui/react';
+import { Card, CardBody, CardFooter, Image, Box, Text, Flex } from '@chakra-ui/react';
 import { PostInfoType } from "@/types/PostInfoType";
 
 interface PostCardProps {
   post: PostInfoType;
   onClick: (postId: bigint) => void;
-  text: string;
+  text: JSX.Element; 
 }
 
 const PostCard: FC<PostCardProps> = ({ post, onClick, text }) => {
@@ -41,10 +41,12 @@ const PostCard: FC<PostCardProps> = ({ post, onClick, text }) => {
       </CardBody>
 
       <CardFooter>
-        <Text fontWeight="bold" as="h4" isTruncated>
-          {post.title}<br />
+        <Flex direction="column">
+          <Text fontWeight="bold" isTruncated>
+            {post.title}
+          </Text>
           {text}
-        </Text>
+        </Flex>
       </CardFooter>
     </Card>
   );
