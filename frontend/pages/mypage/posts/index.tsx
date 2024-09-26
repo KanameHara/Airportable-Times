@@ -151,6 +151,7 @@ const MyPagePostIndex: FC = () => {
                   h={7}
                   w="fit-content"
                   px={2}
+                  mt={3}
                   bg={
                     BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
                     BigInt(post.category_id) === BigInt(2) ? 'teal.400' :

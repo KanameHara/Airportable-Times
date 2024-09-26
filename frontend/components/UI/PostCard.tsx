@@ -19,7 +19,7 @@ const PostCard: FC<PostCardProps> = ({ post, onClick, text }) => {
       borderRadius="lg"
       overflow="hidden"
       width="86%"
-      height="300px"
+      height="auto"
       cursor="pointer"
       borderColor="gray.300" 
       onClick={() => onClick(post.id)}

@@ -20,6 +20,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def index
+    users = User.all
+    render json: users
+  end
+
   # mailアドレスからユーザー情報を取得
   def show_by_email
     # 動作確認用のため残す Rails.logger.debug "Requested email: #{params[:email]}"

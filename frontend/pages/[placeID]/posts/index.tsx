@@ -13,6 +13,7 @@ import Pagination from "@/components/UI/Pagination";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
 import Footer from "@/components/layouts/Footer";
 import PageHeading from "@/components/UI/PageHeading";
+import { UserInfoType } from "@/types/UserInfoType";
 import {
   Text,
   Flex,
@@ -29,6 +30,29 @@ const AirportPostIndex: FC = () => {
 
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
+
+  interface UserName {
+    id: bigint;
+    name: string;
+  }
+  const [users, setUsers] = useState<UserName[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users`);
+        const usersData = response.data.map((user: any) => ({
+          id: BigInt(user.id),
+          name: user.name
+        }));
+    
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // 投稿種別データの初期化
   interface Category {
@@ -157,24 +181,29 @@ const AirportPostIndex: FC = () => {
               post={post}
               onClick={handlePostClick}
               text={
-                <Box
-                  h={7}
-                  w="fit-content"
-                  px={2}
-                  bg={
-                    BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
-                    BigInt(post.category_id) === BigInt(2) ? 'teal.400' :
-                    BigInt(post.category_id) === BigInt(3) ? 'green.400' :
-                    BigInt(post.category_id) === BigInt(4) ? 'cyan.400' :
-                    'gray.500'
-                  }
-                  color='white'
-                  textAlign='center'
-                  lineHeight='1.75'
-                  borderRadius="20px"
-                >
-                  {categories.find(category => category.id === post.category_id)?.name || '未指定'}
-                </Box>
+                <div>
+                  <Box mt={3}>
+                    <Text>{users.find(user => user.id === BigInt(post.user_id))?.name} さん</Text>
+                    <Box
+                      h={7}
+                      w="fit-content"
+                      px={2}
+                      bg={
+                        BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
+                        BigInt(post.category_id) === BigInt(2) ? 'teal.400' :
+                        BigInt(post.category_id) === BigInt(3) ? 'green.400' :
+                        BigInt(post.category_id) === BigInt(4) ? 'cyan.400' :
+                        'gray.500'
+                      }
+                      color='white'
+                      textAlign='center'
+                      lineHeight='1.75'
+                      borderRadius="20px"
+                    >
+                      {categories.find(category => category.id === post.category_id)?.name || '未指定'}
+                    </Box>
+                  </Box>
+                </div>
               }
             />
           ))}
