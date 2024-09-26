@@ -48,11 +48,11 @@ const MyPagePostIndex: FC = () => {
   }
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
-  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
+  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(0));
 
   const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
+    setCurrentPage(1);
   }, []);
 
   // 投稿種別データを取得
@@ -62,8 +62,8 @@ const MyPagePostIndex: FC = () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
         setCategories(response.data);
         
-        // カテゴリのデータ取得後に初期選択状態を設定
-        setSelectedCategory(response.data[0].id);
+        const allCategory = { id: BigInt(0), name: '指定なし' };
+        setCategories([allCategory, ...response.data]);
       }
       catch (error){
         console.error('Error fetching categories:', error);
@@ -76,24 +76,24 @@ const MyPagePostIndex: FC = () => {
 	// ユーザー投稿データのうち選択中のカテゴリーのものを取得
   const [posts, setPosts] = useState<PostInfoType[]>([]);
   useEffect(() => {
+    if (((selectedCategory < 0) && (selectedCategory > 4)) || !userInfo?.id) return;
+    
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
-          params: {
-            category: selectedCategory,
-            user_id: userInfo?.id,
-          },
-        });
+        const params: any = { user_id: userInfo.id };
+        
+        if (selectedCategory !== BigInt(0)) {
+          params.category = selectedCategory;
+        }
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, { params });
         setPosts(response.data);
-      }
-      catch (error){
+      } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
-
-    if (selectedCategory && userInfo?.id) {
-      fetchPosts();
-    }
+    
+    fetchPosts();
   }, [selectedCategory, userInfo?.id]);
 
   // ページネーションのための設定

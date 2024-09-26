@@ -19,7 +19,7 @@ interface CategoryDropdownProps {
 const CategoryDropdown: FC<CategoryDropdownProps> = ({ categories, selectedCategory, onSelect }) => {
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w={60} textAlign='left'>
         {categories.length > 0 
           ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
           : 'カテゴリを選択'}
