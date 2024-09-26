@@ -166,7 +166,14 @@ const AirportPostShow: FC = () => {
         <Box mt={5}>
           <HighlightedText text={"コメント"}  />
         </Box>
-        <Text ml={1} mb={3}>{post.comment}</Text>
+        <Text ml={1} mb={3}>
+          {post.comment.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
+        </Text>
         <Button mt={10} mb={5} ml={5} onClick={handleBackButtonClick}>
           戻る
         </Button>
