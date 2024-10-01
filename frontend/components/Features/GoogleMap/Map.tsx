@@ -58,6 +58,7 @@ const infoBoxStyle: React.CSSProperties = {
 
 const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null); 
   const { selectedPlaceInfo, updateSelectedPlaceInfo } = useMap();
 
   const onPlaceSelected = (place: google.maps.places.PlaceResult | null) => {
@@ -85,6 +86,13 @@ const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
     }
   };
 
+  const handleCancelButtonClick = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+    onCancelButtonClick();
+  };
+
   return (
     <div style={mapWrapperStyle}>
       <Autocomplete
@@ -98,7 +106,7 @@ const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
           }
         }}
       >
-        <input type="text" placeholder="空港を検索" style={inputStyle} />
+        <input ref={inputRef} type="text" placeholder="空港を検索" style={inputStyle} />
       </Autocomplete>
       <GoogleMap mapContainerStyle={containerStyle} center={selectedPlaceInfo.center} zoom={selectedPlaceInfo.zoom}>
         {selectedPlaceInfo.markerPosition && <Marker position={selectedPlaceInfo.markerPosition} />}
@@ -125,7 +133,7 @@ const Map: FC<MapProps> = ({ onOkButtonClick, onCancelButtonClick }) => {
             >
               決定
             </Button>
-            <Button onClick={onCancelButtonClick}>
+            <Button onClick={handleCancelButtonClick}>
               キャンセル
             </Button>
           </Box>
