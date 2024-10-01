@@ -67,6 +67,13 @@ const AirportPostShow: FC = () => {
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
 
+  const [isMarkerReady, setIsMarkerReady] = useState(false);
+  useEffect(() => {
+    if (post?.taking_position_latitude && post?.taking_position_longitude) {
+      setIsMarkerReady(true);
+    }
+  }, [post?.taking_position_latitude, post?.taking_position_longitude]);
+
   // 戻るボタン押下時のハンドラ
   const handleBackButtonClick = () => {
 
@@ -153,16 +160,14 @@ const AirportPostShow: FC = () => {
         </Box>
         <Text ml={1} mb={3}>{post.location}</Text>
         <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}
-            zoom={15}
-          >
-            <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-              <InfoWindow position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-                <div>撮影場所</div>
-              </InfoWindow>
-            </Marker>
-          </GoogleMap>
+          mapContainerStyle={containerStyle}
+          center={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}
+          zoom={15}
+        >
+          {isMarkerReady && (
+            <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }} />
+          )}
+        </GoogleMap>
         <Box mt={5}>
           <HighlightedText text={"コメント"}  />
         </Box>

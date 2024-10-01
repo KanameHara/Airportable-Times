@@ -98,6 +98,13 @@ const MyPagePostShow: FC = () => {
     }
   };
 
+  const [isMarkerReady, setIsMarkerReady] = useState(false);
+  useEffect(() => {
+    if (post?.taking_position_latitude && post?.taking_position_longitude) {
+      setIsMarkerReady(true);
+    }
+  }, [post?.taking_position_latitude, post?.taking_position_longitude]);
+
   // useDisclosureフックを使用してモーダルの状態を管理
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -202,11 +209,9 @@ const MyPagePostShow: FC = () => {
             center={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}
             zoom={15}
           >
-            <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-              <InfoWindow position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-                <div>撮影場所</div>
-              </InfoWindow>
-            </Marker>
+            {isMarkerReady && (
+              <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }} />
+            )}
           </GoogleMap>
         </div>
         <Box mt={5}>
