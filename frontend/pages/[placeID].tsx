@@ -8,7 +8,7 @@ import { GoogleMap, Marker } from '@react-google-maps/api';
 import Head from 'next/head';
 import Header from '../components/layouts/Header';
 import Image from 'next/image';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState, useEffect } from 'react';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
 import Footer from '@/components/layouts/Footer';
 import PageHeading from '@/components/UI/PageHeading';
@@ -32,6 +32,14 @@ const AirportTop: FC = () => {
 	const { selectedPlaceInfo, updateSelectedPlaceInfo } = useMap();
 
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+	const [isMarkerReady, setIsMarkerReady] = useState(false);
+
+	useEffect(() => {
+    if (selectedPlaceInfo.markerPosition) {
+      setIsMarkerReady(true);
+    }
+  }, [selectedPlaceInfo.markerPosition]);
 
   const handlePreviousImageClick = () => {
 		const photos = selectedPlaceInfo.selectedPlace?.photos ?? [];
@@ -227,7 +235,9 @@ const AirportTop: FC = () => {
 					center={selectedPlaceInfo.center}
 					zoom={selectedPlaceInfo.zoom}
 				>
-					<Marker position={selectedPlaceInfo.markerPosition} />
+					{isMarkerReady && (
+            <Marker position={selectedPlaceInfo.markerPosition} />
+          )}
 				</GoogleMap>
 				
 				<Button mt={5} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
