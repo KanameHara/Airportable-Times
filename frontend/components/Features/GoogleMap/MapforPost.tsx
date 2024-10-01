@@ -104,6 +104,15 @@ const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition, selectedPhot
         };
         
         setPostPlaceInfo(newPostPlaceInfo);
+
+        const positionInfo = {
+          geometry: {
+            location: {
+              toJSON: () => ({ lat, lng })
+            }
+          }
+        };
+        onPlaceSelected(positionInfo as google.maps.places.PlaceResult);
       }
     }
   };
