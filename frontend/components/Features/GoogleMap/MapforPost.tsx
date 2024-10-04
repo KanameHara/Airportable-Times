@@ -10,22 +10,21 @@ import { SelectedPhotoPositionType } from '@/types/SelectePhotoPositionType';
 
 // スタイルの定義
 const containerStyle: React.CSSProperties  = {
-  width: '600px',
-  height: '400px'
+  width: '700px',
+  height: '480px',
+  borderRadius: '20px',
 };
 
 const inputStyle: React.CSSProperties = {
   boxSizing: 'border-box',
-  border: '1px solid transparent',
-  width: '300px',
+  border: '1px solid #E2E8F0',
+  width: '400px',
   height: '40px',
   padding: '0 12px',
   borderRadius: '5px',
-  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-  fontSize: '14px',
+  fontSize: '16px',
   outline: 'none',
   textOverflow: 'ellipsis',
-  marginLeft: '10px',
   zIndex: 1000, // 全面に表示するためにz-indexを高く設定
 };
 
@@ -105,6 +104,15 @@ const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition, selectedPhot
         };
         
         setPostPlaceInfo(newPostPlaceInfo);
+
+        const positionInfo = {
+          geometry: {
+            location: {
+              toJSON: () => ({ lat, lng })
+            }
+          }
+        };
+        onPlaceSelected(positionInfo as google.maps.places.PlaceResult);
       }
     }
   };
@@ -122,9 +130,9 @@ const MapforPost: FC<MapforPostProps> = ({ onSelectedPhotoPosition, selectedPhot
           }
         }}
       >
-        <input type="text" style={inputStyle} />
+        <input type="text" placeholder='場所を検索' style={inputStyle} />
       </Autocomplete>
-      <div style={{ marginTop: '15px', marginLeft: '10px', marginBottom: '50px' }}>
+      <div style={{ marginTop: '15px'}}>
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={postPlaceInfo.center}

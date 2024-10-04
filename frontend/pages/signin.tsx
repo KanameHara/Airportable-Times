@@ -1,11 +1,9 @@
 //----------------------------------------------------------------
 // ログインページ
 //----------------------------------------------------------------
-'use client'
 import NextLink from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-
 import {
   Button,
   Flex,
@@ -20,12 +18,12 @@ import {
   VStack,
   Box
 } from '@chakra-ui/react'
-
 import Head from "next/head";
 import Header from "@/components/layouts/Header";
 import { signInWithEmail } from '@/lib/firebase/api/auth'
 import { useRouter } from 'next/router';
 import { FirebaseResult } from '@/lib/firebase/api/auth'
+import Footer from '@/components/layouts/Footer'
 
 // フォームで使用する変数の型を定義
 type formInputs = {
@@ -77,17 +75,27 @@ export default function SignInScreen() {
         <Flex
           flexDirection='column'
           width='100%'
-          height='80vh'
+          height='auto'
+          mt={370}
           justifyContent='center'
           alignItems='center'
         >
-          <Box p={5} mt={20} shadow="md" borderWidth="1px" flex="1" w="40%" height="auto" maxH="450px">
+          <Box
+            p={7}
+            shadow="md"
+            borderWidth="1px"
+            flex="1"
+            w="23%"
+            height="auto"
+            borderRadius={20}
+            bg="white"
+          >
             <VStack spacing='10'>
-              <Heading>Airportable Timesにログイン</Heading>
+              <Heading>ログイン</Heading>
               <form onSubmit={onSubmit}>
                 <VStack spacing='4' alignItems='left'>
                   <FormControl isInvalid={Boolean(errors.email)}>
-                    <FormLabel htmlFor='email' textAlign='start'>
+                    <FormLabel htmlFor='email' textAlign='center'>
                       メールアドレス
                     </FormLabel>
                     <Input
@@ -106,7 +114,7 @@ export default function SignInScreen() {
                   </FormControl>
                     
                   <FormControl isInvalid={Boolean(errors.password)}>
-                    <FormLabel htmlFor='password'>パスワード</FormLabel>
+                    <FormLabel htmlFor='password' textAlign='center'>パスワード</FormLabel>
                     <InputGroup size='md'>
                       <Input
                         pr='4.5rem'
@@ -150,8 +158,8 @@ export default function SignInScreen() {
                   </Button>
                   <Button
                     as={NextLink}
-                    bg='white'
-                    color='black'
+                    color='white'
+                    bg='blue.400'
                     href='/signup'
                     width='100%'
                     _hover={{
@@ -166,6 +174,7 @@ export default function SignInScreen() {
             </VStack>
           </Box>
         </Flex>
+      <Footer />
 		</div>
   )
 }

@@ -19,12 +19,12 @@ interface CategoryDropdownProps {
 const CategoryDropdown: FC<CategoryDropdownProps> = ({ categories, selectedCategory, onSelect }) => {
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />} w={60} textAlign='left'>
         {categories.length > 0 
           ? categories.find(category => category.id === selectedCategory)?.name || 'カテゴリを選択'
           : 'カテゴリを選択'}
       </MenuButton>
-      <MenuList>
+      <MenuList zIndex={1000}>
         {categories.map((category) => (
           <MenuItem key={category.id} onClick={() => onSelect(category.id)}>
             {category.name}

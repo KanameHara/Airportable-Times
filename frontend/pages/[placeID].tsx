@@ -2,23 +2,27 @@
 // 各空港TOP画面
 //----------------------------------------------------------------
 import { useRouter } from 'next/router';
-import { Button, Flex, Box, Text } from '@chakra-ui/react'
+import { Button, Flex, Box, Text, CircularProgress } from '@chakra-ui/react'
 import { useMap } from '../components/contexts/MapContext';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import Head from 'next/head';
 import Header from '../components/layouts/Header';
 import Image from 'next/image';
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState, useEffect } from 'react';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import Footer from '@/components/layouts/Footer';
+import PageHeading from '@/components/UI/PageHeading';
+import HighlightedText from '@/components/UI/HighlightedText';
 
 const AirportTop: FC = () => {
 	
 	// スタイルの定義
 	const containerStyle: React.CSSProperties = {
-		width: '600px',
-		height: '350px',
-		marginBottom: '40px',
-		marginLeft: '185px'
+		width: '700px',
+		height: '480px',
+		marginTop: '20px',
+		marginLeft: '8px',
+		borderRadius: '20px',
 	};	
 
   const router = useRouter();
@@ -26,6 +30,54 @@ const AirportTop: FC = () => {
 
 	// マップの選択地情報を取得
 	const { selectedPlaceInfo, updateSelectedPlaceInfo } = useMap();
+
+	const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+	const [isMarkerReady, setIsMarkerReady] = useState(false);
+
+	useEffect(() => {
+    if (selectedPlaceInfo.markerPosition) {
+      setIsMarkerReady(true);
+    }
+  }, [selectedPlaceInfo.markerPosition]);
+
+  const handlePreviousImageClick = () => {
+		const photos = selectedPlaceInfo.selectedPlace?.photos ?? [];
+		if (photos.length > 0) {
+			setCurrentImageIndex((prevIndex) => 
+				prevIndex === 0 ? photos.length - 1 : prevIndex - 1
+			);
+		}
+	};
+
+	const handleNextImageClick = () => {
+		const photos = selectedPlaceInfo.selectedPlace?.photos ?? [];
+		if (photos.length > 0) {
+			setCurrentImageIndex((prevIndex) => 
+				prevIndex === photos.length - 1 ? 0 : prevIndex + 1
+			);
+		}
+	};
+
+	const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+
+	const handlePreviousReviewClick = () => {
+		const reviews = selectedPlaceInfo.selectedPlace?.reviews ?? [];
+		if (reviews.length > 0) {
+			setCurrentReviewIndex((prevIndex) =>
+				prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+			);
+		}
+	};
+	
+	const handleNextReviewClick = () => {
+		const reviews = selectedPlaceInfo.selectedPlace?.reviews ?? [];
+		if (reviews.length > 0) {
+			setCurrentReviewIndex((prevIndex) =>
+				prevIndex === reviews.length - 1 ? 0 : prevIndex + 1
+			);
+		}
+	};	
 
 	// 戻るボタンクリック時のハンドラ
 	const handleBackButtonClick = useCallback(() => {
@@ -50,68 +102,147 @@ const AirportTop: FC = () => {
 		router.push(`${currentPath}/posts`);
 	}
 
+	const handleCreatePostButtonClick = () => {
+    router.push(`/${placeID}/posts/create`);
+  }
+
 	return (
 		<div>
 			<Head>
 				<title>{selectedPlaceInfo.selectedPlace.name}</title>
 			</Head>
 			<Header showButtonFlag={true} />
-			<Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="70%" height="auto" mx="auto">
-				<h1 style={{ fontSize: '25px',marginLeft: '150px', marginBottom: '20px' }}>
-					【{selectedPlaceInfo.selectedPlace.name}】
-				</h1>
-				<Flex ml={10}>
-					{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
-						<div style={{ marginBottom: '20px', marginLeft: '150px'}}>
-							<Image
-								src={selectedPlaceInfo.selectedPlace.photos[0].getUrl()}
-								alt="空港の写真"
-								width={500}
-								height={500}
-								objectFit="contain" // 画像が指定された枠に収まるように調整
-							/>
+			<Box
+				p={5}
+				mt={111}
+				shadow="md"
+				borderWidth="1px"
+				borderRadius={20}
+				width="47%"
+				height="auto"
+				mx="auto"
+				bg="white"
+			>
+				<PageHeading title={selectedPlaceInfo.selectedPlace.name} />
+				<Flex direction="column" ml={1} mt={5}>
+					<Box
+						shadow="md"
+						borderWidth="1px"
+						flex="1"
+						width="700px"
+						borderRadius={20}
+					>
+						<Flex direction="row" justify="flex-start" align="center">
+							<Box p={5} width="50%" flexShrink={0}>
+								<Box borderRadius="10px" overflow="hidden">
+									<Image
+										src="/images/airplane_01.jpg"
+										alt="投稿画像例"
+										width={420}
+										height={300}
+										objectFit="cover"
+									/>
+								</Box>
+							</Box>
+							<Box p={5}>
+								<Text fontSize="16px" >
+									ゲストの皆さんによる投稿をチェック<br />
+									または作成してみましょう！
+								</Text>
+								<Flex mt={5}>
+									<Button bg='blue.400' color='white' mt={3} ml={7} onClick={handlePostListButtonClick}>
+										投稿一覧
+									</Button>
+									<Button bg='blue.400' color='white' mt={3} ml={5} onClick={handleCreatePostButtonClick}>
+										投稿作成
+									</Button>
+								</Flex>
+							</Box>
+						</Flex>
+					</Box>
+				</Flex>
+
+				<Box mt={41}>
+					<Button width="100px" ml={235} onClick={handlePreviousImageClick}>&lt;</Button>
+					<Button width="100px" ml={10} onClick={handleNextImageClick}>&gt;</Button>
+				</Box>
+				{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
+					<Flex direction="column" align="center" gap={4}>
+						<Box
+              p={3}
+              overflow="hidden"
+              width="100%"
+              height="auto"
+            >
+              <Image 
+                src={selectedPlaceInfo.selectedPlace.photos[currentImageIndex].getUrl()}
+								alt={`Image ${currentImageIndex + 1}`} 
+								width="700"
+								height="480"
+                objectFit="cover"
+                style={{ borderRadius: '10px' }}
+              />
+						</Box>
+					</Flex>
+				)}
+
+				<Box mt={5}>
+          <HighlightedText text={"利用者レビュー"}  />
+				</Box>
+				<Box mt={3}>
+					<Button width="100px" ml={235} onClick={handlePreviousReviewClick}>&lt;</Button>
+					<Button width="100px" ml={10} onClick={handleNextReviewClick}>&gt;</Button>
+				</Box>
+				<Text ml={1} mt={2}>
+					{selectedPlaceInfo.selectedPlace.reviews && selectedPlaceInfo.selectedPlace.reviews.length > 0 && (
+						<div>
+							<Box
+								p={4}
+								bg='yellow.50'
+								borderRadius="30px"
+								border="1px"
+								borderColor="gray.400"
+							>
+								<Flex>
+									<CircularProgress
+										value={
+											selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating === 1 ? 20 :
+											selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating === 2 ? 40 :
+											selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating === 3 ? 60 :
+											selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating === 4 ? 80 :
+											selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating === 5 ? 100 : 0
+										}
+									/>
+									<Text
+										ml={2}
+										mt={2.5}
+										fontSize="20px"
+										fontWeight='bold'
+									>
+										評価: {selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating}/5
+									</Text>
+								</Flex>
+								<Text ml={1} mt={2}>
+									{selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.text}
+								</Text>	
+							</Box>	
 						</div>
 					)}
-				</Flex>
-				<p style={{ marginBottom: '20px', marginLeft: '180px' }}>住所 : {selectedPlaceInfo.selectedPlace.formatted_address}</p>
+        </Text>
+
 				<GoogleMap
 					mapContainerStyle={containerStyle}
 					center={selectedPlaceInfo.center}
 					zoom={selectedPlaceInfo.zoom}
 				>
-					<Marker position={selectedPlaceInfo.markerPosition} />
+					{isMarkerReady && (
+            <Marker position={selectedPlaceInfo.markerPosition} />
+          )}
 				</GoogleMap>
-				<Flex direction="column" m={4} ml={185}>
-					<Box p={5} shadow="md" borderWidth="1px" flex="1" w="80%">
-						<Flex direction="row" justify="flex-start" align="center">
-							<Box p={5}>
-								<Text fontSize="xl" fontWeight="bold">
-									ゲストのみなさんが
-								</Text>
-								<Text fontSize="xl" fontWeight="bold">
-									投稿した航空関連フォトを
-								</Text>
-								<Text fontSize="xl" fontWeight="bold">
-									確認することができます
-								</Text>
-								<Button colorScheme="blue" mt={3} onClick={handlePostListButtonClick}>
-									投稿一覧
-								</Button>
-							</Box>
-							<Box p={5} width="50%" flexShrink={0}>
-								<Image
-									src="/images/airplane_01.jpg"
-									alt="投稿画像例"
-									width={420}
-									height={500}
-									objectFit="cover"
-								/>
-							</Box>
-						</Flex>
-					</Box>
-				</Flex>
-				<Button mt={5} mb={100} ml={700} onClick={handleBackButtonClick}>前の画面へ</Button>
+				
+				<Button mt={5} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
 			</Box>
+			<Footer />
 		</div>
 	);
 };

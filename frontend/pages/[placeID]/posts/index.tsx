@@ -11,6 +11,9 @@ import { PostInfoType } from "@/types/PostInfoType";
 import PostCard from "@/components/UI/PostCard";
 import Pagination from "@/components/UI/Pagination";
 import CategoryDropdown from "@/components/UI/CategoryDropdown";
+import Footer from "@/components/layouts/Footer";
+import PageHeading from "@/components/UI/PageHeading";
+import { UserInfoType } from "@/types/UserInfoType";
 import {
   Text,
   Flex,
@@ -28,6 +31,29 @@ const AirportPostIndex: FC = () => {
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
 
+  interface UserName {
+    id: bigint;
+    name: string;
+  }
+  const [users, setUsers] = useState<UserName[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users`);
+        const usersData = response.data.map((user: any) => ({
+          id: BigInt(user.id),
+          name: user.name
+        }));
+    
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   // 投稿種別データの初期化
   interface Category {
     id: bigint;
@@ -35,11 +61,11 @@ const AirportPostIndex: FC = () => {
   }
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
-  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
+  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(0));
 
   const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
+    setCurrentPage(1);
   }, []);
 
   // 投稿種別データを取得
@@ -49,8 +75,8 @@ const AirportPostIndex: FC = () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
         setCategories(response.data);
         
-        // カテゴリのデータ取得後に初期選択状態を設定
-        setSelectedCategory(response.data[0].id);
+        const allCategory = { id: BigInt(0), name: '指定なし' };
+        setCategories([allCategory, ...response.data]);
       }
       catch (error){
         console.error('Error fetching categories:', error);
@@ -63,17 +89,17 @@ const AirportPostIndex: FC = () => {
   // 選択中の空港とカテゴリに該当する投稿データのみ取得
   const [posts, setPosts] = useState<PostInfoType[]>([]);
   useEffect(() => {
-    if (!selectedCategory || !placeID) return;
+    if (((selectedCategory < 0) && (selectedCategory > 4)) || !placeID) return;
     
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
-          params: {
-            category: selectedCategory,
-            airport_id: placeID
-          }
-        });
+        const params: any = { airport_id: placeID };
+        
+        if (selectedCategory !== BigInt(0)) {
+          params.category = selectedCategory;
+        }
 
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, { params });
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -119,33 +145,74 @@ const AirportPostIndex: FC = () => {
         <title>{selectedPlaceInfo.selectedPlace?.name}投稿一覧</title>
       </Head>
       <Header showButtonFlag={true} />  
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="80%" mx="auto">
-        <h1 style={{ fontSize: '25px', marginBottom: '20px' }}>
-          【{selectedPlaceInfo.selectedPlace?.name}投稿一覧】
-        </h1>
-        <Text mt={5} ml={10} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex justifyContent="flex-start" mt={5} ml={70}>
+      <Box
+        p={5}
+        mt={111}
+        bg="white"
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="1100px"
+        mx="auto"
+      >
+        <PageHeading title={`${selectedPlaceInfo.selectedPlace?.name} 投稿一覧`} />
+        <Text mt={7} fontSize="16px">投稿のカテゴリーを選択できます。</Text>
+        <Flex justifyContent="flex-start" mt={5} ml={1}>
           <CategoryDropdown
             categories={categories}
             selectedCategory={selectedCategory}
             onSelect={handleSelect}
           />
-        </Flex>
-        <SimpleGrid columns={3} spacing={2} m={10}>
-          {currentPosts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={handlePostClick} />
-          ))}
-        </SimpleGrid>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-        <Flex justifyContent="center">
-          <Button colorScheme="blue" onClick={handleCreatePostButtonClick} mx={2}>
+          <Button
+            ml={620}
+            bg="blue.400"
+            color="white"
+            onClick={handleCreatePostButtonClick}>
             投稿作成
           </Button>
-          <Button colorScheme="blue" onClick={handleBackButtonClick} mx={2}>
+          <Button ml={5} onClick={handleBackButtonClick}>
             戻る
           </Button>
         </Flex>
+        <SimpleGrid columns={3} mt={10} ml={10} rowGap={7}>
+          {currentPosts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onClick={handlePostClick}
+              text={
+                <div>
+                  <Box mt={3}>
+                    <Text>{users.find(user => user.id === BigInt(post.user_id))?.name} さん</Text>
+                    <Box
+                      h={7}
+                      w="fit-content"
+                      px={2}
+                      bg={
+                        BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
+                        BigInt(post.category_id) === BigInt(2) ? 'teal.400' :
+                        BigInt(post.category_id) === BigInt(3) ? 'green.400' :
+                        BigInt(post.category_id) === BigInt(4) ? 'cyan.400' :
+                        'gray.500'
+                      }
+                      color='white'
+                      textAlign='center'
+                      lineHeight='1.75'
+                      borderRadius="20px"
+                    >
+                      {categories.find(category => category.id === post.category_id)?.name || '未指定'}
+                    </Box>
+                  </Box>
+                </div>
+              }
+            />
+          ))}
+        </SimpleGrid>
+        <Flex mt={10} justifyContent="center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        </Flex>
       </Box>
+      <Footer />
     </div>
   );
 };

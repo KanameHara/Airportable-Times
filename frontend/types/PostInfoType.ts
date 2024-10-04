@@ -1,6 +1,7 @@
 // 投稿情報の型定義
 export interface PostInfoType {
 	id: bigint;
+	user_id: bigint;
 	airport_id: string;
 	category_id: bigint;
 	title: string;

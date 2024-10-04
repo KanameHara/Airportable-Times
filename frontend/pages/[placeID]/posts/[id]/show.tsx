@@ -9,6 +9,9 @@ import { useMap } from '../../../../components/contexts/MapContext';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
 import { PostInfoType } from "@/types/PostInfoType";
+import Footer from "@/components/layouts/Footer";
+import HighlightedText from "@/components/UI/HighlightedText";
+import PageHeading from "@/components/UI/PageHeading";
 import {
   Text,
   Flex,
@@ -21,9 +24,10 @@ const AirportPostShow: FC = () => {
 
   // マップスタイルの定義
   const containerStyle: React.CSSProperties  = {
-    width: '600px',
-    height: '400px',
-    marginLeft: '40px'
+    width: '700px',
+    height: '480px',
+    marginLeft: '6px',
+    borderRadius: '20px',
   };
 
   // URLからplaceIDとpostIDを取得
@@ -62,6 +66,13 @@ const AirportPostShow: FC = () => {
   
   // 選択空港の情報を取得
   const { selectedPlaceInfo } = useMap();
+
+  const [isMarkerReady, setIsMarkerReady] = useState(false);
+  useEffect(() => {
+    if (post?.taking_position_latitude && post?.taking_position_longitude) {
+      setIsMarkerReady(true);
+    }
+  }, [post?.taking_position_latitude, post?.taking_position_longitude]);
 
   // 戻るボタン押下時のハンドラ
   const handleBackButtonClick = () => {
@@ -106,55 +117,73 @@ const AirportPostShow: FC = () => {
         <title>投稿詳細</title>
       </Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="50%" mx="auto">
-        <Text mt={5} ml={10} fontWeight="bold">{post.title}</Text>
-        <Box mt={5} ml={10} display="flex" alignItems="center">
+      <Box
+        p={5}
+        mt={111}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="47%"
+        mx="auto"
+        bg="white"
+      >
+        <PageHeading title={post.title} />
+        <Box ml={3.5} mt={5} display="flex" alignItems="center">
           <Button onClick={handlePreviousClick}>&lt;</Button>
-          <Image src={post.image_urls[currentImageIndex]}
-            alt={`Image ${currentImageIndex + 1}`}
-            width="500px" 
-            height="500px" 
-            objectFit="contain" 
-            ml={5} 
-            mr={5}
-          />
+          <Box
+            p={3}
+            overflow="hidden"
+            width={{ base: "100%", md: "600px" }}
+            height={{ base: "auto", md: "400px" }}
+          >
+            <Image 
+              src={post.image_urls[currentImageIndex]}
+              alt={`Image ${currentImageIndex + 1}`}
+              width="100%"   
+              height="100%"  
+              objectFit="cover"
+              style={{ borderRadius: '10px' }}
+            />
+          </Box>
           <Button onClick={handleNextClick}>&gt;</Button>
         </Box>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">撮影日：</Text>
-          <Text mt={5} ml={5} fontWeight="bold">{post.taking_at}</Text>
-        </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">空港名：</Text>
-          <Text mt={5} ml={5} fontWeight="bold">{selectedPlaceInfo.selectedPlace?.name}</Text>
-        </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">撮影場所名：</Text>
-          <Text mt={5} ml={5} fontWeight="bold">{post.location}</Text>
-        </Flex>
-        <div style={{ marginTop: '15px', marginBottom: '50px' }}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}
-            zoom={15}
-          >
-            <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-              <InfoWindow position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}>
-                <div>撮影場所</div>
-              </InfoWindow>
-            </Marker>
-          </GoogleMap>
-        </div>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">コメント：</Text>
-        </Flex>
-        <Flex>
-          <Text mt={2} ml={20} fontWeight="bold">{post.comment}</Text>
-        </Flex>
-        <Button mt={10} mb={50} ml={500} colorScheme="blue" onClick={handleBackButtonClick} alignSelf="center">
-          前の画面に戻る
+        <Box mt={5}>
+          <HighlightedText text={"撮影日"}  />
+        </Box>
+        <Text ml={1}>{post.taking_at}</Text>
+        <Box mt={2}>
+          <HighlightedText text={"空港名"}  />
+        </Box>
+        <Text ml={1}>{selectedPlaceInfo.selectedPlace?.name}</Text>
+        <Box mt={2}>
+          <HighlightedText text={"撮影場所名"}  />
+        </Box>
+        <Text ml={1} mb={3}>{post.location}</Text>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }}
+          zoom={15}
+        >
+          {isMarkerReady && (
+            <Marker position={{ lat: post.taking_position_latitude, lng: post.taking_position_longitude }} />
+          )}
+        </GoogleMap>
+        <Box mt={5}>
+          <HighlightedText text={"コメント"}  />
+        </Box>
+        <Text ml={1} mb={3}>
+          {post.comment.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
+        </Text>
+        <Button mt={10} mb={5} ml={5} onClick={handleBackButtonClick}>
+          戻る
         </Button>
       </Box>
+      <Footer />
     </div>
   );
 };

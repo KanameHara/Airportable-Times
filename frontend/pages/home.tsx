@@ -5,9 +5,11 @@ import Head from "next/head";
 import Header from "../components/layouts/Header";
 import Map from "../components/Features/GoogleMap/Map";
 import { useMap } from '../components/contexts/MapContext';
-import { Flex, Button, Box } from '@chakra-ui/react';
+import { Flex, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import Footer from "@/components/layouts/Footer";
+import PageHeading from "@/components/UI/PageHeading";
 
 export default function Home() { 
   // ログイン後ユーザー名を取得してHeaderコンポーネントの引数に渡す。※現時点では仮にuserNameとしておく
@@ -47,22 +49,28 @@ export default function Home() {
       <Header showButtonFlag={true} />
       <Box
         p={5}
-        mt={10}
+        mt={111}
         shadow="md"
         borderWidth="1px"
-        borderRadius="md"
+        borderRadius={20}
         width="78%"
         mx="auto"
-        maxW="1100px"
+        maxW="755px"
         maxH="800px"
+        bg="white"
       >
-        <div style={{ marginBottom: '40px', marginLeft: '135px' }}>日本各地の空港を検索できます。</div>
+        <PageHeading title={"空港検索"} />
+        <div style={{ marginTop: '30px'}}>
+          日本の各空港の航空機・イベントなど空港関連の投稿を見ることができます。<br />
+          まずはチェックしたい空港を検索してみましょう！
+        </div>
         <Flex>
-          <div style={{ marginBottom: '50px', flex: 1 }}>
+          <div style={{ marginBottom: '40px', flex: 1 }}>
             <Map onOkButtonClick={handleOkButtonClick} onCancelButtonClick={handleCancelButtonClick}/>
           </div>
         </Flex>
       </Box>
+      <Footer />
     </div>
   );
 }

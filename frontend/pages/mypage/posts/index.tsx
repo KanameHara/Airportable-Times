@@ -13,6 +13,8 @@ import axios from 'axios';
 import PostCard from '@/components/UI/PostCard';
 import Pagination from '@/components/UI/Pagination';
 import CategoryDropdown from '@/components/UI/CategoryDropdown';
+import Footer from '@/components/layouts/Footer';
+import PageHeading from '@/components/UI/PageHeading';
 import {
   Flex,
   Box,
@@ -46,11 +48,11 @@ const MyPagePostIndex: FC = () => {
   }
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // 選択中の投稿種別の初期化(初期値は「航空機・風景」を選択した状態としておく)
-  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(1));
+  const [selectedCategory, setSelectedCategory] = useState<bigint>(BigInt(0));
 
   const handleSelect = useCallback((categoryId: bigint) => {
     setSelectedCategory(categoryId);
+    setCurrentPage(1);
   }, []);
 
   // 投稿種別データを取得
@@ -60,8 +62,8 @@ const MyPagePostIndex: FC = () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
         setCategories(response.data);
         
-        // カテゴリのデータ取得後に初期選択状態を設定
-        setSelectedCategory(response.data[0].id);
+        const allCategory = { id: BigInt(0), name: '指定なし' };
+        setCategories([allCategory, ...response.data]);
       }
       catch (error){
         console.error('Error fetching categories:', error);
@@ -74,24 +76,24 @@ const MyPagePostIndex: FC = () => {
 	// ユーザー投稿データのうち選択中のカテゴリーのものを取得
   const [posts, setPosts] = useState<PostInfoType[]>([]);
   useEffect(() => {
+    if (((selectedCategory < 0) && (selectedCategory > 4)) || !userInfo?.id) return;
+    
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
-          params: {
-            category: selectedCategory,
-            user_id: userInfo?.id,
-          },
-        });
+        const params: any = { user_id: userInfo.id };
+        
+        if (selectedCategory !== BigInt(0)) {
+          params.category = selectedCategory;
+        }
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, { params });
         setPosts(response.data);
-      }
-      catch (error){
+      } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
-
-    if (selectedCategory && userInfo?.id) {
-      fetchPosts();
-    }
+    
+    fetchPosts();
   }, [selectedCategory, userInfo?.id]);
 
   // ページネーションのための設定
@@ -116,36 +118,63 @@ const MyPagePostIndex: FC = () => {
 				<title>マイページ</title>
 			</Head>
       <Header showButtonFlag={true} />
-      <Box p={5} mt={10} shadow="md" borderWidth="1px" borderRadius="md" width="80%" mx="auto" bg="white">
-        <h1 style={{ fontSize: '25px', marginTop: '20px', marginBottom: '20px', marginLeft: '20px' }}>
-          【{userInfo?.userName}さんマイページ】
-        </h1>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">ユーザー名：</Text>
-          <Text mt={5} ml={2} fontWeight="bold">{userInfo?.userName}</Text>
-        </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">メールアドレス：</Text>
-          <Text mt={5} ml={2} fontWeight="bold">{userInfo?.email}</Text>
-        </Flex>
-        <Flex>
-          <Text mt={5} ml={12} fontWeight="bold">過去の投稿一覧：</Text>
-        </Flex>
-        <Text mt={5} ml={16} fontWeight="bold">投稿のカテゴリーを選択できます。</Text>
-        <Flex justifyContent="flex-start" mt={5} ml={70}>
+      <Box
+        p={5}
+        mt={111}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="20px"
+        width="1100px"
+        mx="auto"
+        bg="white"
+      >
+        <PageHeading title={"マイページ"} />
+        <Text mt={7} fontSize="16px">
+          作成済みの投稿を確認・編集することができます。<br />
+          投稿のカテゴリーを選択できます。
+        </Text>
+        <Flex justifyContent="flex-start" mt={5} ml={1}>
           <CategoryDropdown
             categories={categories}
             selectedCategory={selectedCategory}
             onSelect={handleSelect}
           />
         </Flex>
-        <SimpleGrid columns={3} spacing={2} m={10}>
+        <SimpleGrid columns={3} mt={10} ml={10} rowGap={7}>
           {currentPosts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={handlePostClick} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onClick={handlePostClick}
+              text={
+                <Box
+                  h={7}
+                  w="fit-content"
+                  px={2}
+                  mt={3}
+                  bg={
+                    BigInt(post.category_id) === BigInt(1) ? 'blue.400' :
+                    BigInt(post.category_id) === BigInt(2) ? 'teal.400' :
+                    BigInt(post.category_id) === BigInt(3) ? 'green.400' :
+                    BigInt(post.category_id) === BigInt(4) ? 'cyan.400' :
+                    'gray.500'
+                  }
+                  color='white'
+                  textAlign='center'
+                  lineHeight='1.75'
+                  borderRadius="20px"
+                >
+                  {categories.find(category => category.id === post.category_id)?.name || '未指定'}
+                </Box>
+              }
+            />
           ))}
         </SimpleGrid>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <Flex mt={10} justifyContent="center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        </Flex>
       </Box>
+      <Footer />
 		</div>
 	);
 };

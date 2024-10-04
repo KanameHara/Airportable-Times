@@ -1,7 +1,7 @@
 //----------------------------------------------------------------
 // 全ページのヘッダーコンポーネント
 //----------------------------------------------------------------
-import { Box, Flex, Button } from '@chakra-ui/react';
+import { Box, Flex, Button, useDisclosure } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { FC, useState, useEffect, useCallback } from 'react';
 import { logout } from '@/lib/firebase/api/auth';
@@ -11,41 +11,45 @@ import { fetchUserInfoByEmail } from '@/lib/mysql/api/database';
 import { UserInfoType } from '@/types/UserInfoType';
 import { useMap } from '../contexts/MapContext';
 import { initializedSelectedPlaceInfo } from "@/constants/InitializedSelectedPlaceInfo";
+import Link from 'next/link';
+import ConfirmModal from '../UI/ConfirmModal';
 
-// スタイルの定義
 const containerStyle: React.CSSProperties = {
-  position: 'relative'
+  position: 'fixed',
+  top: 0,
+  width: '100%',
+  height: '70px',
+  backgroundColor: '#90cdf4',
+  zIndex: 1000,
 };
 
 const userNameStyle: React.CSSProperties = {
   position: 'absolute',
-  fontSize: '35px',
+  fontSize: '16px',
+  fontWeight: 'bold',
   color: 'white',
-  bottom: '140px', // 画像の下から1pxの位置に配置
-  right: '5%',      // 右から15%の位置に配置
-  textAlign: 'right' // テキストを右揃えにする
+  top: '24px',
+  right: '33%',
+  textAlign: 'right',
 };
 
-const buttonStyle: React.CSSProperties = {
+const buttonContainerStyle: React.CSSProperties = {
   position: 'absolute',
-  bottom: '1px', // 画像の下から1pxの位置に配置
-  left: '75%', // 左から75%の位置に配置
+  bottom: '15px',
+  right: '3%',
+  display: 'flex',
+  gap: '10px', 
 };
 
-// Propsの型定義
 interface HeaderProps {
   showButtonFlag: boolean;
 }
 
-// <引数>
-//  showButtonFlag:マイページのボタンコンポーネント表示フラグ(TRUE：表示，FALSE：非表示)
 const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
-
   const router = useRouter();
-
-  // // ユーザー名を取得
   const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfoType>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -56,62 +60,83 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
     if (currentUser?.email) {
       getUserInfo();
     }
-  }, [currentUser?.email]);  // currentUser.email が変更されたときに再実行
+  }, [currentUser?.email]);
 
-  // マップ選択地情報の変更関数を取得
   const { updateSelectedPlaceInfo } = useMap();
 
-  // 戻るボタンクリック時のハンドラ
-	const handleHomeButtonClick = useCallback(() => {
-
-		// ここでマップの選択状態を初期化
+  const handleHomeButtonClick = useCallback(() => {
     updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
-    
-		// 初期化後にホーム画面に遷移
-		router.push('/home');
+    router.push('/home');
   }, [updateSelectedPlaceInfo, router]);
 
-  // マイページボタンのハンドラ
   const handleMyPageButtonClick = () => {
-
-    // マイページ投稿一覧画面に遷移
     router.push('/mypage/posts');
   };
 
-  // ログアウトボタンのハンドラ
+  const handLogoutButtonClick = () => {
+    onOpen();
+  };
+
   const handleLogout = async () => {
     const result = await logout();
     if (result) {
-      console.log('ログアウト成功');
-      router.push('/signin'); // ログインページにリダイレクト
+      updateSelectedPlaceInfo(initializedSelectedPlaceInfo);
+      router.push('/signin');
     } else {
-      console.error('ログアウト失敗');
       alert('ログアウトに失敗しました');
     }
   };
 
   return (
     <div style={containerStyle}>
-      <Flex>
-        <Box p={5} fontSize="80px" bgColor="#BEE3F8" w="60%" h="200px">
-          Airportable Times
-        </Box>
-        <div style={{ position: 'relative', height: '200px', width: '40%' }}>
-          <Image src="/images/headerimage.png" alt="ヘッダー画像" layout="fill" objectFit="contain" />
-        </div>
+      <Flex ml={10} align="center" position="relative" height="100%">
+        <Link href="/home" passHref>
+          <Box 
+            as="a" 
+            color="white" 
+            fontSize="30px" 
+            position="relative" 
+            zIndex={1} 
+            cursor="pointer"
+          >
+            Airportable Times
+          </Box>
+        </Link>
+        {showButtonFlag && (
+          <>
+            <div style={userNameStyle}>{userInfo?.userName}さん</div>
+            <div style={buttonContainerStyle}>
+              <Box
+                sx={{
+                  '& button': {
+                    bg: 'white',
+                    width: '135px',
+                    mr: '15px',
+                  },
+                }}
+              >
+                <Button onClick={handleHomeButtonClick}>ホーム</Button>
+                <Button onClick={handleMyPageButtonClick}>マイページ</Button>
+                <Button onClick={handLogoutButtonClick}>ログアウト</Button>
+              </Box>
+            </div>
+          </>
+        )}
       </Flex>
-      {showButtonFlag && (
-        <div>
-          <div style={userNameStyle}>{userInfo?.userName}さん</div>
-          <div style={buttonStyle}>
-            <Button colorScheme="blue" onClick={handleHomeButtonClick}>HOME</Button>
-            <Button margin="15px" colorScheme="blue" onClick={handleMyPageButtonClick}>マイページ</Button>
-            <Button colorScheme="blue" onClick={handleLogout}>ログアウト</Button>
-          </div>
+      {!showButtonFlag && (
+        <div style={{ position: 'relative', height: '260px', width: '100%' }}>
+          <Image src="/images/headerImage1.jpg" alt="ヘッダー画像" layout="fill" objectFit="cover" />
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleLogout}
+        mainText='ログアウト'
+        confirmText='本当にログアウトしますか？' />
     </div>
   );
-}
+};
 
 export default React.memo(Header);
