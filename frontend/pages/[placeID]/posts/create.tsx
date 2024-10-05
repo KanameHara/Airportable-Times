@@ -142,6 +142,12 @@ export default function AirportPostCreate() {
     setSelectedPosition({ latitude, longitude });
   }, []);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };  
+
   // 投稿ボタン押下時のハンドラ
   const onSubmit = useCallback(async (data: FormValues) => {
     
@@ -244,7 +250,7 @@ export default function AirportPostCreate() {
           <Text color='red.500'>*</Text>
           <Text>は必須項目です。</Text>
         </Flex>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
           <Box mt={5} position="relative">
             <HighlightedText text={"写真選択"} />
             <Box 

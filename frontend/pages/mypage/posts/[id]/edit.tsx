@@ -193,6 +193,12 @@ export default function MyPagePostEdit() {
     setPreviousImageList(prev => ({ ...prev, [index]: null }));
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };  
+
   const onSubmit = useCallback(async (data: FormValues) => { 
     let isImagesSelected = true;
     let errorImageIndex = -1;
@@ -291,7 +297,7 @@ export default function MyPagePostEdit() {
           <Text color='red.500'>*</Text>
           <Text>は必須項目です。</Text>
         </Flex>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
           <Box mt={5} position="relative">
             <HighlightedText text={"写真選択"} />
             <Box 
