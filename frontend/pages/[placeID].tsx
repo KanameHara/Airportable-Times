@@ -163,8 +163,8 @@ const AirportTop: FC = () => {
 				</Flex>
 
 				<Box mt={41}>
-					<Button width="100px" ml={235} onClick={handlePreviousImageClick}>&lt;</Button>
-					<Button width="100px" ml={10} onClick={handleNextImageClick}>&gt;</Button>
+					<Button width="100px" ml={235} onClick={handlePreviousImageClick}>&lt; 前の画像</Button>
+					<Button width="100px" ml={10} onClick={handleNextImageClick}>次の画像 &gt;</Button>
 				</Box>
 				{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
 					<Flex direction="column" align="center" gap={4}>
@@ -190,8 +190,8 @@ const AirportTop: FC = () => {
           <HighlightedText text={"利用者レビュー"}  />
 				</Box>
 				<Box mt={3}>
-					<Button width="100px" ml={235} onClick={handlePreviousReviewClick}>&lt;</Button>
-					<Button width="100px" ml={10} onClick={handleNextReviewClick}>&gt;</Button>
+					<Button width="125px" ml={210} onClick={handlePreviousReviewClick}>&lt; 前のレビュー</Button>
+					<Button width="125px" ml={10} onClick={handleNextReviewClick}>次のレビュー &gt;</Button>
 				</Box>
 				<Text ml={1} mt={2}>
 					{selectedPlaceInfo.selectedPlace.reviews && selectedPlaceInfo.selectedPlace.reviews.length > 0 && (
@@ -219,7 +219,7 @@ const AirportTop: FC = () => {
 										fontSize="20px"
 										fontWeight='bold'
 									>
-										評価: {selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating}/5
+										評価: {selectedPlaceInfo.selectedPlace.reviews[currentReviewIndex]?.rating}/5 点
 									</Text>
 								</Flex>
 								<Text ml={1} mt={2}>
