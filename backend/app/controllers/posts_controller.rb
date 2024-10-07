@@ -98,6 +98,9 @@ class PostsController < ApplicationController
     # 投稿IDでフィルタリング
     @posts = @posts.where(id: params[:id]) if params[:id]
 
+    # 作成日が新しいものから先頭に並び替え
+    @posts = @posts.order(created_at: :desc)
+
     # 各投稿に紐づく画像のURLを含めてJSONレスポンスを構築
     posts_with_images = @posts.map do |post|
       post.as_json.merge({

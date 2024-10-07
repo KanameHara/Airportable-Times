@@ -142,6 +142,12 @@ export default function AirportPostCreate() {
     setSelectedPosition({ latitude, longitude });
   }, []);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };  
+
   // 投稿ボタン押下時のハンドラ
   const onSubmit = useCallback(async (data: FormValues) => {
     
@@ -244,7 +250,7 @@ export default function AirportPostCreate() {
           <Text color='red.500'>*</Text>
           <Text>は必須項目です。</Text>
         </Flex>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
           <Box mt={5} position="relative">
             <HighlightedText text={"写真選択"} />
             <Box 
@@ -378,7 +384,10 @@ export default function AirportPostCreate() {
           </Flex>
           <Text ml={1} mt={7} mb={2}>{"撮影した場所を地図上でクリックまたは検索してください。"}</Text>
           <Box>
-            <MapforPost onSelectedPhotoPosition={handleSelectedPhotoPosition} />
+            <MapforPost
+              onSelectedPhotoPosition={handleSelectedPhotoPosition}
+              selectedPhotoPosition={selectedPosition}
+            />
           </Box>
 
           <FormControl isInvalid={Boolean(errors.comment)}>
