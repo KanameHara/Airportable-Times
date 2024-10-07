@@ -233,7 +233,8 @@ cd frontend/<br>
 yarn dev -p 8000
 
 #### バックエンド・データベース
-docker-compose up --build backend
+docker-compose build --no-cache backend
+docker-compose up -d backend
 
 ### 動作確認
 
@@ -250,6 +251,6 @@ Windows: ctrl + Q
 #### バックエンド・データベース
 docker-compose down
 
-<!-- その他デプロイ完了後に再度構築の手順を確認し記載すること -->
+<!-- その他デプロイ完了後に再度構築の手順を確認し記載すること(gcs.keyfileのことも含めること) -->
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
