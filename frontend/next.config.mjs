@@ -4,9 +4,12 @@ const nextConfig = {
 
   // 画像をImagesコンポーネントで表示するための設定
   images: {
-
-    // 本番環境ではlocalhostを修正する必要あり
-    domains: ['maps.googleapis.com', 'localhost'],
+    domains: [
+      'maps.googleapis.com',
+      process.env.NODE_ENV === 'development'
+        ? 'localhost'
+        : process.env.NEXT_PUBLIC_RAILS_SERVER_URL,
+    ],
   },
 
   // 開発環境でのパフォーマンス向上のためのwebpackDevMiddleware設定
