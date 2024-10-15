@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  root to: redirect('https://airportable-times.vercel.app/signin')
+
   # User関連のエンドポイントを設定
   resources :users do
     collection do

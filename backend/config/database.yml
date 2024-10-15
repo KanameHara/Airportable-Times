@@ -56,3 +56,6 @@ production:
   username: <%= ENV["MYSQL_USERNAME"] %>
   password: <%= ENV["MYSQL_PASSWORD"] %>
   host: <%= ENV["MYSQL_HOST"] %>
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
