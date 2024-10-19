@@ -52,10 +52,4 @@ test:
 #
 production:
   <<: *default
-  database: <%= ENV["MYSQL_PRD_DATABASE"] %>
-  username: <%= ENV["MYSQL_USERNAME"] %>
-  password: <%= ENV["MYSQL_PASSWORD"] %>
-  host: <%= ENV["MYSQL_HOST"] %>
-  adapter: postgresql
-  encoding: unicode
-  pool: 5
+  url: <%= ENV['JAWSDB_URL'] %>
