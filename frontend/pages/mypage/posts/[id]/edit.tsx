@@ -93,7 +93,7 @@ export default function MyPagePostEdit() {
       if (!postID) return;
 
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts`, {
           params: { id: postID }
         });
 
@@ -102,7 +102,7 @@ export default function MyPagePostEdit() {
         postData.taking_position_longitude = parseFloat(postData.taking_position_longitude);
         setPost(postData);
 
-        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/places/show`, {
+        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/places/show`, {
           params: { place_id: postData.airport_id }
         });
         setAirportName(placesResponse.data.result.name);
@@ -111,7 +111,7 @@ export default function MyPagePostEdit() {
         const previewImages: previewImageListType = { ...initialImageListState };
 
         imageUrls.forEach((url: string, index: number) => {
-          const fullUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}${url}`;
+          const fullUrl = url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}${url}`;
           previewImages[index + 1] = fullUrl;
         });
         
@@ -146,7 +146,7 @@ export default function MyPagePostEdit() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/categories`);
         setCategories(response.data);
         setSelectedCategory(response.data[0].id);
       } catch (error) {
@@ -252,7 +252,7 @@ export default function MyPagePostEdit() {
     });
     
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`, formData);
+      await axios.put(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts/${postID}`, formData);
       
       toast({
         title: '編集が完了しました。',

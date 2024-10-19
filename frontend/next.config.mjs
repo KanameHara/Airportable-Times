@@ -4,9 +4,16 @@ const nextConfig = {
 
   // 画像をImagesコンポーネントで表示するための設定
   images: {
+    domains: [
+      'maps.googleapis.com',
+      process.env.NEXT_PUBLIC_RAILS_SERVER_URL,
+    ],
+  },
 
-    // 本番環境ではlocalhostを修正する必要あり
-    domains: ['maps.googleapis.com', 'localhost'],
+  env: {
+    BACKEND_API_URL: process.env.NODE_ENV === 'production'
+      ? 'https://airportable-times-724d7bfa5bb8.herokuapp.com/'
+      : 'http://localhost:3000',
   },
 
   // 開発環境でのパフォーマンス向上のためのwebpackDevMiddleware設定

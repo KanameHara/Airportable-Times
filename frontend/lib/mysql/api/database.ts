@@ -12,7 +12,7 @@ export const fetchUserInfoByEmail = async (email: string | null | undefined) => 
 
 	try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users/find_by_email`,
+      `${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/users/find_by_email`,
       {
         params: { email },
         withCredentials: true,

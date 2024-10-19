@@ -91,7 +91,7 @@ export default function AirportPostCreate() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/categories`);
         setCategories(response.data);
         
         // カテゴリのデータ取得後に初期選択状態を設定
@@ -194,13 +194,13 @@ export default function AirportPostCreate() {
 
     // //投稿情報をDBに登録
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, formData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts`, formData);
 
       // レスポンスから画像のURLを取得してコンソールに表示
       const imageUrls = response.data.image_urls;
         
       // ベースURLを環境変数から取得
-      const baseURL = process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV;
+      const baseURL = process.env.NEXT_PUBLIC_RAILS_SERVER_URL;
 
       // 完全なURLに変換
       const fullImageUrls = imageUrls.map((url: string) => `${baseURL}${url}`);

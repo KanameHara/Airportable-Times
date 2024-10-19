@@ -59,7 +59,7 @@ const MyPagePostIndex: FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/categories`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/categories`);
         setCategories(response.data);
         
         const allCategory = { id: BigInt(0), name: '指定なし' };
@@ -86,7 +86,7 @@ const MyPagePostIndex: FC = () => {
           params.category = selectedCategory;
         }
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, { params });
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts`, { params });
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);

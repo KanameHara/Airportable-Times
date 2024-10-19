@@ -65,160 +65,157 @@ Airportable-Times
 ├── .env
 ├── .gitignore
 ├── backend
-│   ├── .DS_Store
-│   ├── .env
-│   ├── .gitattributes
-│   ├── .gitignore
-│   ├── .ruby-version
-│   ├── Dockerfile
-│   ├── Gemfile
-│   ├── Gemfile.lock
-│   ├── README.md
-│   ├── Rakefile
-│   ├── app
-│   │   ├── controllers
-│   │   │   ├── application_controller.rb
-│   │   │   ├── categories_controller.rb
-│   │   │   ├── concerns
-│   │   │   │   └── .keep
-│   │   │   ├── places_controller.rb
-│   │   │   ├── posts_controller.rb
-│   │   │   └── users_controller.rb
-│   │   ├── models
-│   │   │   ├── application_record.rb
-│   │   │   ├── category.rb
-│   │   │   ├── concerns
-│   │   │   │   └── .keep
-│   │   │   ├── post.rb
-│   │   │   └── user.rb
-│   │   └── uploaders
-│   │       └── image_uploader.rb
-│   ├── bin
-│   │   ├── bundle
-│   │   ├── rails
-│   │   ├── rake
-│   │   └── setup
-│   ├── config
-│   │   ├── application.rb
-│   │   ├── boot.rb
-│   │   ├── cable.yml
-│   │   ├── database.yml
-│   │   ├── environment.rb
-│   │   ├── environments
-│   │   │   ├── development.rb
-│   │   │   ├── production.rb
-│   │   │   └── test.rb
-│   │   ├── initializers
-│   │   │   ├── cors.rb
-│   │   │   ├── filter_parameter_logging.rb
-│   │   │   └── inflections.rb
-│   │   ├── locales
-│   │   │   └── en.yml
-│   │   ├── puma.rb
-│   │   ├── routes.rb
-│   │   ├── secrets
-│   │   │   └── gcs.keyfile
-│   │   └── storage.yml
-│   ├── config.ru
-│   ├── db
-│   │   ├── schema.rb
-│   │   └── seeds.rb
-│   ├── entrypoint.sh
-│   ├── lib
-│   │   └── tasks
-│   │       └── .keep
-│   ├── log
-│   │   ├── .keep
-│   │   └── development.log
-│   ├── public
-│   │   └── robots.txt
-│   ├── storage
-│   │   └── .keep
-│   └── vendor
-│       └── .keep
+│   	├── .DS_Store
+│   	├── .env
+│   	├── .gitattributes
+│   	├── .gitignore
+│   	├── .ruby-version
+│   	├── Dockerfile
+│   	├── Gemfile
+│   	├── Gemfile.lock
+│   	├── README.md
+│   	├── Rakefile
+│   	├── app
+│   	│   ├── controllers
+│   	│   │   ├── application_controller.rb
+│   	│   │   ├── categories_controller.rb
+│   	│   │   ├── concerns
+│   	│   │   │   └── .keep
+│   	│   │   ├── places_controller.rb
+│   	│   │   ├── posts_controller.rb
+│   	│   │   └── users_controller.rb
+│   	│   ├── models
+│   	│   │   ├── application_record.rb
+│   	│   │   ├── category.rb
+│   	│   │   ├── concerns
+│   	│   │   │   └── .keep
+│   	│   │   ├── post.rb
+│   	│   │   └── user.rb
+│   	│   └── uploaders
+│   	│       └── image_uploader.rb
+│   	├── bin
+│   	│   ├── bundle
+│   	│   ├── rails
+│   	│   ├── rake
+│   	│   └── setup
+│   	├── config
+│   	│   ├── application.rb
+│   	│   ├── boot.rb
+│   	│   ├── cable.yml
+│   	│   ├── database.yml
+│   	│   ├── environment.rb
+│   	│   ├── environments
+│   	│   │   ├── development.rb
+│   	│   │   ├── production.rb
+│   	│   │   └── test.rb
+│   	│   ├── initializers
+│   	│   │   ├── cors.rb
+│   	│   │   ├── filter_parameter_logging.rb
+│   	│   │   └── inflections.rb
+│   	│   ├── locales
+│   	│   │   └── en.yml
+│   	│   ├── puma.rb
+│   	│   ├── routes.rb
+│   	│   ├── secrets
+│   	│   │   └── gcs.keyfile
+│   	│   └── storage.yml
+│   	├── config.ru
+│   	├── db
+│   	│   ├── schema.rb
+│   	│   └── seeds.rb
+│   	├── entrypoint.sh
+│   	├── lib
+│   	│   └── tasks
+│   	│       └── .keep
+│   	├── log
+│   	│   ├── .keep
+│   	│   └── development.log
+│   	├── public
+│   	│   └── robots.txt
+│   	├── storage
+│   	│   └── .keep
+│   	└── vendor
+│   	    └── .keep
 ├── docker-compose.yml
 └── frontend
-		├── .DS_Store
-		├── .env
-		├── .env.development
-		├── .env.production
-		├── .eslintrc.json
-		├── .gitignore
-		├── README.md
-		├── components
-		│   ├── Features
-		│   │   └── GoogleMap
-		│   │       ├── Map.tsx
-		│   │       └── MapforPost.tsx
-		│   ├── UI
-		│   │   ├── CategoryDropdown.tsx
-		│   │   ├── ConfirmModal.tsx
-		│   │   ├── ImageUploadForm.tsx
-		│   │   ├── Pagination.tsx
-		│   │   └── PostCard.tsx
-		│   ├── contexts
-		│   │   ├── AuthContext.tsx
-		│   │   └── MapContext.tsx
-		│   └── layouts
-		│       └── Header.tsx
-		├── constants
-		│   └── InitializedSelectedPlaceInfo.ts
-		├── lib
-		│   ├── firebase
-		│   │   ├── api
-		│   │   │   └── auth.ts
-		│   │   └── config.ts
-		│   └── mysql
-		│       └── api
-		│           └── database.ts
-		├── next-env.d.ts
-		├── next.config.mjs
-		├── package.json
-		├── pages
-		│   ├── [placeID]
-		│   │   └── posts
-		│   │       ├── [id]
-		│   │       │   └── show.tsx
-		│   │       ├── create.tsx
-		│   │       └── index.tsx
-		│   ├── [placeID].tsx
-		│   ├── _app.tsx
-		│   ├── _document.tsx
-		│   ├── api
-		│   │   └── hello.ts
-		│   ├── home.tsx
-		│   ├── index.tsx
-		│   ├── mypage
-		│   │   └── posts
-		│   │       ├── [id]
-		│   │       │   ├── edit.tsx
-		│   │       │   └── show.tsx
-		│   │       └── index.tsx
-		│   ├── signin.tsx
-		│   └── signup.tsx
-		├── postcss.config.js
-		├── public
-		│   ├── favicon.ico
-		│   ├── images
-		│   │   ├── headerimage.png
-		│   │   ├── photo_sample.jpg
-		│   │   └── sample
-		│   │       ├── Boeing747.jpg
-		│   │       └── Boeing777.jpg
-		│   ├── next.svg
-		│   └── vercel.svg
-		├── styles
-		│   └── globals.css
-		├── tailwind.config.ts
-		├── tsconfig.json
-		├── types
-		│   ├── ImageUploadFormPropsType.ts
-		│   ├── PostInfoType.ts
-		│   ├── SelectePhotoPositionType.ts
-		│   ├── SelectedPlaceInfoType.ts
-		│   └── UserInfoType.ts
-		├── yarn-error.log
-		└── yarn.lock
+	├── .DS_Store
+	├── .env
+	├── .env.development
+	├── .env.production
+	├── .eslintrc.json
+	├── .gitignore
+	├── README.md
+	├── components
+	│   ├── Features
+	│   │   └── GoogleMap
+	│   │       ├── Map.tsx
+	│   │       └── MapforPost.tsx
+	│   ├── UI
+	│   │   ├── CategoryDropdown.tsx
+	│   │   ├── ConfirmModal.tsx
+	│   │   ├── ImageUploadForm.tsx
+	│   │   ├── Pagination.tsx
+	│   │   └── PostCard.tsx
+	│   ├── contexts
+	│   │   ├── AuthContext.tsx
+	│   │   └── MapContext.tsx
+	│   └── layouts
+	│       └── Header.tsx
+	├── constants
+	│   └── InitializedSelectedPlaceInfo.ts
+	├── lib
+	│   ├── firebase
+	│   │   ├── api
+	│   │   │   └── auth.ts
+	│   │   └── config.ts
+	│   └── mysql
+	│       └── api
+	│           └── database.ts
+	├── next-env.d.ts
+	├── next.config.mjs
+	├── package.json
+	├── pages
+	│   ├── [placeID]
+	│   │   └── posts
+	│   │       ├── [id]
+	│   │       │   └── show.tsx
+	│   │       ├── create.tsx
+	│   │       └── index.tsx
+	│   ├── [placeID].tsx
+	│   ├── _app.tsx
+	│   ├── _document.tsx
+	│   ├── api
+	│   │   └── hello.ts
+	│   ├── home.tsx
+	│   ├── index.tsx
+	│   ├── mypage
+	│   │   └── posts
+	│   │       ├── [id]
+	│   │       │   ├── edit.tsx
+	│   │       │   └── show.tsx
+	│   │       └── index.tsx
+	│   ├── signin.tsx
+	│   └── signup.tsx
+	├── postcss.config.js
+	├── public
+	│   ├── favicon.ico
+	│   ├── images
+	│   │   ├── headerimage.png
+	│   │   └── photo_sample.jpg
+	│   ├── next.svg
+	│   └── vercel.svg
+	├── styles
+	│   └── globals.css
+	├── tailwind.config.ts
+	├── tsconfig.json
+	├── types
+	│   ├── ImageUploadFormPropsType.ts
+	│   ├── PostInfoType.ts
+	│   ├── SelectePhotoPositionType.ts
+	│   ├── SelectedPlaceInfoType.ts
+	│   └── UserInfoType.ts
+	├── yarn-error.log
+	└── yarn.lock
 </pre>
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
@@ -233,12 +230,12 @@ cd frontend/<br>
 yarn dev -p 8000
 
 #### バックエンド・データベース
-docker-compose build --no-cache backend
+docker-compose build --no-cache backend<br>
 docker-compose up -d backend
 
 ### 動作確認
 
-<デプロイ後のURLに変更> にアクセスできるか確認
+" https://airportable-times.vercel.app/ "にアクセスできるか確認<br>
 アクセスできたら成功
 
 ### サーバーの停止
@@ -250,7 +247,5 @@ Windows: ctrl + Q
 
 #### バックエンド・データベース
 docker-compose down
-
-<!-- その他デプロイ完了後に再度構築の手順を確認し記載すること(gcs.keyfileのことも含めること) -->
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
