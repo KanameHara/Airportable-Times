@@ -78,7 +78,7 @@ export default function SignUpScreen() {
         };
         
         // ユーザー情報をDBに登録する
-        axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/users`, userData)
+        axios.post(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/users`, userData)
         .then((response) => {
           // 登録成功時
           toast({

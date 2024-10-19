@@ -44,7 +44,7 @@ const MyPagePostShow: FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts`, {
           params: {
             id: postID
           }
@@ -61,7 +61,7 @@ const MyPagePostShow: FC = () => {
         setPost(postData);
 
         // バックエンドのエンドポイント経由でGoogle Places APIで空港名を取得
-        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/places/show`, {
+        const placesResponse = await axios.get(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/places/show`, {
           params: {
             place_id: postData.airport_id
           }
@@ -127,7 +127,7 @@ const MyPagePostShow: FC = () => {
     try {
 
       // DBから投稿データを削除する
-      await axios.delete(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL_DEV}/posts/${postID}`);
+      await axios.delete(`${process.env.NEXT_PUBLIC_RAILS_SERVER_URL}/posts/${postID}`);
       
       // モーダルを閉じる
       onClose();
