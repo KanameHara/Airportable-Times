@@ -8,6 +8,6 @@ test:
 
 google:
   service: GCS
-  project: <%= Rails.application.credentials.dig(:google, :project_id) %>
-  credentials: <%= Rails.root.join("config/secrets/gcs.keyfile") %>
+  project: <%= Rails.application.credentials.dig(:google, :project_id) || ENV['GOOGLE_CLOUD_PROJECT_ID'] %>
+  credentials: <%= ENV['GOOGLE_CLOUD_KEYFILE_JSON'] ? StringIO.new(ENV['GOOGLE_CLOUD_KEYFILE_JSON']) : Rails.root.join("config/secrets/gcs.keyfile") %>
   bucket: airapp_storage_bucket
