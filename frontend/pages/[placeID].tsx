@@ -136,7 +136,7 @@ const AirportTop: FC = () => {
 							<Box p={5} width="50%" flexShrink={0}>
 								<Box borderRadius="10px" overflow="hidden">
 									<Image
-										src="/images/airplane_01.jpg"
+										src="/images/photo_sample.jpg"
 										alt="投稿画像例"
 										width={420}
 										height={300}

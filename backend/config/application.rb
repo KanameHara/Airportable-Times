@@ -5,7 +5,6 @@ require "rails/all"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 
-# 環境変数を読み込む
 Bundler.require(*Rails.groups)
 
 module Airapp
@@ -13,8 +12,10 @@ module Airapp
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
-    # Dotenv
-    Dotenv::Railtie.load
+    # Dotenvの読み込みを開発環境とテスト環境に限定
+    if Rails.env.development? || Rails.env.test?
+      Dotenv::Railtie.load
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #

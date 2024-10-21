@@ -235,7 +235,7 @@ docker-compose up -d backend
 
 ### 動作確認
 
-" https://airportable-times.vercel.app/ "にアクセスできるか確認<br>
+" http://localhost:8000/ "にアクセスできるか確認<br>
 アクセスできたら成功
 
 ### サーバーの停止
