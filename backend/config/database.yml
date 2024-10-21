@@ -53,3 +53,5 @@ test:
 production:
   <<: *default
   url: <%= ENV['JAWSDB_URL'] %>
+  adapter: mysql2
+

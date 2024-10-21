@@ -40,6 +40,8 @@ gem 'google-cloud-storage'
 
 gem 'google-cloud-env'
 
+gem 'carrierwave'
+
 gem 'dotenv-rails', groups: [:development, :test]
 
 group :development, :test do
