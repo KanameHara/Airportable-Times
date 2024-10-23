@@ -18,8 +18,8 @@ const AirportTop: FC = () => {
 	
 	// スタイルの定義
 	const containerStyle: React.CSSProperties = {
-		width: '700px',
-		height: '480px',
+		width: '622px',
+		height: '430px',
 		marginTop: '20px',
 		marginLeft: '8px',
 		borderRadius: '20px',
@@ -129,11 +129,11 @@ const AirportTop: FC = () => {
 						shadow="md"
 						borderWidth="1px"
 						flex="1"
-						width="700px"
+						width="625px"
 						borderRadius={20}
 					>
 						<Flex direction="row" justify="flex-start" align="center">
-							<Box p={5} width="50%" flexShrink={0}>
+							<Box p={5} width="48%" flexShrink={0}>
 								<Box borderRadius="10px" overflow="hidden">
 									<Image
 										src="/images/photo_sample.jpg"
@@ -163,7 +163,7 @@ const AirportTop: FC = () => {
 				</Flex>
 
 				<Box mt={41}>
-					<Button width="100px" ml={235} onClick={handlePreviousImageClick}>&lt; 前の画像</Button>
+					<Button width="100px" ml={198} onClick={handlePreviousImageClick}>&lt; 前の画像</Button>
 					<Button width="100px" ml={10} onClick={handleNextImageClick}>次の画像 &gt;</Button>
 				</Box>
 				{selectedPlaceInfo.selectedPlace.photos && selectedPlaceInfo.selectedPlace.photos.length > 0 && (
@@ -190,7 +190,7 @@ const AirportTop: FC = () => {
           <HighlightedText text={"利用者レビュー"}  />
 				</Box>
 				<Box mt={3}>
-					<Button width="125px" ml={210} onClick={handlePreviousReviewClick}>&lt; 前のレビュー</Button>
+					<Button width="125px" ml={173} onClick={handlePreviousReviewClick}>&lt; 前のレビュー</Button>
 					<Button width="125px" ml={10} onClick={handleNextReviewClick}>次のレビュー &gt;</Button>
 				</Box>
 				<Text ml={1} mt={2}>
@@ -240,7 +240,7 @@ const AirportTop: FC = () => {
           )}
 				</GoogleMap>
 				
-				<Button mt={5} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
+				<Button mt={7} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
 			</Box>
 		</div>
 	);
