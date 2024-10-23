@@ -241,7 +241,7 @@ export default function AirportPostCreate() {
         shadow="md"
         borderWidth="1px"
         borderRadius="20px"
-        width="47%"
+        width="49%"
         mx="auto"
         bg="white"
       >
@@ -299,7 +299,7 @@ export default function AirportPostCreate() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.title)}>
               <FormLabel htmlFor='title' textAlign='start' mt={5}>
-                <Box mt={5} position="relative">
+                <Box mt={5} width="663px" position="relative">
                   <HighlightedText text={"タイトル"} />
                   <Box 
                     position="absolute"
@@ -330,7 +330,7 @@ export default function AirportPostCreate() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.date)}>
               <FormLabel htmlFor='date' mt={5}>
-                <Box mt={5} position="relative">
+                <Box mt={5} width="663px" position="relative">
                   <HighlightedText text={"撮影日"} />
                   <Box 
                     position="absolute"
@@ -355,7 +355,7 @@ export default function AirportPostCreate() {
           <Flex>
             <FormControl isInvalid={Boolean(errors.location)}>
               <FormLabel htmlFor='location' mt={5}>
-                <Box mt={5} position="relative">
+                <Box mt={5} width="663px" position="relative">
                   <HighlightedText text={"撮影した場所"} />
                   <Box 
                     position="absolute"
@@ -392,11 +392,11 @@ export default function AirportPostCreate() {
 
           <FormControl isInvalid={Boolean(errors.comment)}>
             <FormLabel htmlFor='comment' mt={5}>
-              <Box mt={5}>
+              <Box width="663px" mt={5}>
                 <HighlightedText text={"コメント"}  />
               </Box>
             </FormLabel>
-            <Textarea w="700px" h="100px" placeholder="自由に記載してください。"
+            <Textarea w="663px" h="100px" placeholder="自由に記載してください。"
               {...register('comment', {
                 maxLength: {
                   value: 1000,
@@ -411,11 +411,10 @@ export default function AirportPostCreate() {
 
           <Box mt={10} mb={5}>
             <Button ml={5} onClick={handleCancelButtonClick}>戻る</Button>
-            <Button type="submit" ml={500} bg='blue.400' color='white'>投稿する</Button>
+            <Button type="submit" ml={463} bg='blue.400' color='white'>投稿する</Button>
           </Box>
         </form>
       </Box>
-      <Footer />
     </div>
   )
 }

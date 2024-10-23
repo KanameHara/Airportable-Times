@@ -29,14 +29,14 @@ const userNameStyle: React.CSSProperties = {
   fontWeight: 'bold',
   color: 'white',
   top: '24px',
-  right: '33%',
+  right: '30%',
   textAlign: 'right',
 };
 
 const buttonContainerStyle: React.CSSProperties = {
   position: 'absolute',
-  bottom: '15px',
-  right: '3%',
+  bottom: '18px',
+  right: '1%',
   display: 'flex',
   gap: '10px', 
 };
@@ -110,8 +110,9 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
                 sx={{
                   '& button': {
                     bg: 'white',
-                    width: '135px',
-                    mr: '15px',
+                    width: '120px',
+                    height: '32px',
+                    mr: '9px',
                   },
                 }}
               >
@@ -124,7 +125,7 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
         )}
       </Flex>
       {!showButtonFlag && (
-        <div style={{ position: 'relative', height: '260px', width: '100%' }}>
+        <div style={{ position: 'relative', height: '235px', width: '100%' }}>
           <Image src="/images/headerImage1.jpg" alt="ヘッダー画像" layout="fill" objectFit="cover" />
         </div>
       )}
