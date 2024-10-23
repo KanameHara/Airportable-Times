@@ -4,6 +4,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { MapProvider } from '../components/contexts/MapContext';
 import { LoadScript } from '@react-google-maps/api';
 import { AuthProvider } from "@/components/contexts/AuthContext";
+import Footer from "@/components/layouts/Footer";
 
 // カスタムテーマの定義
 const theme = extendTheme({
@@ -30,7 +31,12 @@ export default function App({ Component, pageProps }: AppProps) {
         libraries={libraries}
       >
         <AuthProvider>
-          <Component {...pageProps} />
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <main style={{ flexGrow: 1 }}>
+              <Component {...pageProps} />
+            </main>
+            <Footer />
+          </div>
         </AuthProvider>  
       </LoadScript>
       </ChakraProvider>

@@ -491,7 +491,6 @@ export default function MyPagePostEdit() {
           </Box>
         </form>
       </Box>
-      <Footer />
     </div>
   )
 }

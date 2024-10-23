@@ -8,7 +8,8 @@ const Footer: FC = () => {
 
   return (
     <div>
-			<Box
+      <Box
+        as="footer"
 				width="100%"
 				height={70}
 				mt={41}

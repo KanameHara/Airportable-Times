@@ -183,7 +183,6 @@ const AirportPostShow: FC = () => {
           戻る
         </Button>
       </Box>
-      <Footer />
     </div>
   );
 };

@@ -239,7 +239,6 @@ const MyPagePostShow: FC = () => {
       </Box>
 
       <ConfirmModal isOpen={isOpen} onClose={onClose} onConfirm={handleConfirmDelete} mainText='投稿を削除' confirmText='本当に削除しますか？' />
-      <Footer />
     </div>
   );
 };

@@ -242,7 +242,6 @@ const AirportTop: FC = () => {
 				
 				<Button mt={5} mb={30} ml={5} onClick={handleBackButtonClick}>戻る</Button>
 			</Box>
-			<Footer />
 		</div>
 	);
 };

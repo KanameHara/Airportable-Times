@@ -174,7 +174,6 @@ export default function SignInScreen() {
             </VStack>
           </Box>
         </Flex>
-      <Footer />
 		</div>
   )
 }

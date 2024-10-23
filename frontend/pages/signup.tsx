@@ -288,7 +288,6 @@ export default function SignUpScreen() {
           </VStack>
         </Box>
       </Flex>
-      <Footer />
 		</div>
   )
 }

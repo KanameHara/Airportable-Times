@@ -70,7 +70,6 @@ export default function Home() {
           </div>
         </Flex>
       </Box>
-      <Footer />
     </div>
   );
 }

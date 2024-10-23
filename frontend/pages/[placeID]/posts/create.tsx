@@ -415,7 +415,6 @@ export default function AirportPostCreate() {
           </Box>
         </form>
       </Box>
-      <Footer />
     </div>
   )
 }
