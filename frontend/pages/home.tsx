@@ -55,8 +55,8 @@ export default function Home() {
         borderRadius={20}
         width="78%"
         mx="auto"
-        maxW="755px"
-        maxH="800px"
+        maxW="685px"
+        maxH="750px"
         bg="white"
       >
         <PageHeading title={"空港検索"} />
@@ -70,7 +70,6 @@ export default function Home() {
           </div>
         </Flex>
       </Box>
-      <Footer />
     </div>
   );
 }

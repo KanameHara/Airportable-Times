@@ -130,7 +130,7 @@ export default function SignUpScreen() {
           borderWidth="1px"
           flex="1"
           w="auto"
-          maxW="400px"
+          maxW="330px"
           height="auto"
           borderRadius={20}
           bg="white"
@@ -277,7 +277,7 @@ export default function SignUpScreen() {
               href='/signin'
               color='white'
               bg='blue.400'
-              width='77%'
+              width='100%'
               _hover={{
                 borderColor: 'transparent',
                 boxShadow: '0 7px 10px rgba(0, 0, 0, 0.3)',
@@ -288,7 +288,6 @@ export default function SignUpScreen() {
           </VStack>
         </Box>
       </Flex>
-      <Footer />
 		</div>
   )
 }
