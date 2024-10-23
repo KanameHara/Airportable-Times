@@ -14,10 +14,10 @@ interface MapProps {
 
 // スタイルの定義
 const containerStyle: React.CSSProperties = {
-  width: '700px',
-  height: '480px',
-  marginRight: '890px',
-  marginBottom: '110px',
+  width: '622px',
+  height: '430px',
+  marginRight: '810px',
+  marginBottom: '120px',
   borderRadius: '20px',
 };
 
@@ -31,8 +31,8 @@ const inputStyle: React.CSSProperties = {
   fontSize: '16px',
   textOverflow: 'ellipsis',
   position: 'absolute',
-  top: '185px',
-  left: '41%',
+  top: '290px',
+  left: '42.5%',
   transform: 'translateX(-50%)',
 };
 
@@ -46,8 +46,8 @@ const mapWrapperStyle: React.CSSProperties = {
 
 const infoBoxStyle: React.CSSProperties = {
   position: 'absolute',
-  bottom: '515px',
-  right: '340px',
+  bottom: '470px',
+  right: '300px',
   transform: 'translateX(-50%)',
   zIndex: 1000,
   backgroundColor: 'white',
