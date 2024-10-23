@@ -9,9 +9,10 @@ import { SelectedPhotoPositionType } from '@/types/SelectePhotoPositionType';
 
 // スタイルの定義
 const containerStyle: React.CSSProperties  = {
-  width: '700px',
-  height: '480px',
+  width: '644px',
+  height: '430px',
   borderRadius: '20px',
+  marginLeft: '10px',
 };
 
 const inputStyle: React.CSSProperties = {
