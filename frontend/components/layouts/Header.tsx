@@ -124,7 +124,7 @@ const Header: FC<HeaderProps> = ({ showButtonFlag }) => {
         )}
       </Flex>
       {!showButtonFlag && (
-        <div style={{ position: 'relative', height: '260px', width: '100%' }}>
+        <div style={{ position: 'relative', height: '235px', width: '100%' }}>
           <Image src="/images/headerImage1.jpg" alt="ヘッダー画像" layout="fill" objectFit="cover" />
         </div>
       )}
