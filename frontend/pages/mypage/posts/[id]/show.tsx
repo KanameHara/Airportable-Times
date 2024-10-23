@@ -25,8 +25,8 @@ const MyPagePostShow: FC = () => {
 
   // マップスタイルの定義
   const containerStyle: React.CSSProperties  = {
-    width: '700px',
-    height: '480px',
+    width: '622px',
+    height: '430px',
     marginLeft: '6px',
     borderRadius: '20px',
   };
@@ -172,7 +172,18 @@ const MyPagePostShow: FC = () => {
         bg="white"
       >
         <PageHeading title={post.title} />
-        <Box ml={3.5} mt={5} display="flex" alignItems="center">
+        <Box
+          mt={5}
+          display="flex"
+          alignItems="center"
+          sx={{
+            '& button': {
+              minWidth: '25px',
+              height: '100px',
+              padding: '0',
+            },
+          }}
+        >
           <Button onClick={handlePreviousClick}>&lt;</Button>
           <Box
             p={3}
@@ -228,7 +239,7 @@ const MyPagePostShow: FC = () => {
         <Button mt={10} ml={5} mb={5} onClick={handleBackButtonClick}>
           戻る
         </Button>
-        <Button mt={10} ml={455} mb={5} bg="blue.400" color="white"
+        <Button mt={10} ml={380} mb={5} bg="blue.400" color="white"
           onClick={() => handleEditButtonClick(post.id)}
         >
           編集

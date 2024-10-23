@@ -24,8 +24,8 @@ const AirportPostShow: FC = () => {
 
   // マップスタイルの定義
   const containerStyle: React.CSSProperties  = {
-    width: '700px',
-    height: '480px',
+    width: '622px',
+    height: '430px',
     marginLeft: '6px',
     borderRadius: '20px',
   };
@@ -128,7 +128,18 @@ const AirportPostShow: FC = () => {
         bg="white"
       >
         <PageHeading title={post.title} />
-        <Box ml={3.5} mt={5} display="flex" alignItems="center">
+        <Box
+          mt={5}
+          display="flex"
+          alignItems="center"
+          sx={{
+            '& button': {
+              minWidth: '25px',
+              height: '100px',
+              padding: '0',
+            },
+          }}
+        >
           <Button onClick={handlePreviousClick}>&lt;</Button>
           <Box
             p={3}
